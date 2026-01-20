@@ -1,4 +1,3 @@
-
 # Crypto Profiler & Risk Investigator
 
 An advanced, privacy-focused crypto wallet risk scoring engine. It combines **deterministic analysis** (OFAC sanctions, government watchlists) with **heuristic behavioral analysis** (velocity, mixer interaction, age) to generate a multi-dimensional risk score.
@@ -8,12 +7,13 @@ An advanced, privacy-focused crypto wallet risk scoring engine. It combines **de
 The system follows a microservices architecture split into two containers:
 
 1. **Watchlist Engine (Server):**
+
    * Runs 24/7 in the background.
    * Automatically downloads and parses the **OFAC SDN List** (Sanctions).
    * Stores ~500+ sanctioned crypto addresses (BTC, ETH, XMR, etc.) in a local SQLite database.
    * Exposes a high-speed internal HTTP API for checking addresses.
-
 2. **Validator (Client):**
+
    * CLI tool that accepts a wallet address.
    * Fetches on-chain data (Etherscan, CoinStats).
    * Queries the **Watchlist Engine** to check for federal sanctions.
@@ -56,7 +56,7 @@ Below are actual results from the investigator running against various networks 
 
 ### 1. 🚨 Critical Risk: OFAC Sanctioned Bitcoin Address
 
-This address is on the federal blacklist. The engine detects this immediately via the Watchlist Engine.
+This address is on the OFAC SDN blacklist. The engine detects this immediately via the Watchlist Engine.
 
 **Command:**
 
@@ -201,24 +201,26 @@ The risk score (0-100) is calculated based on three weighted categories.
 
 ### 1. Categories
 
-| Category | Weight | Description |
-| --- | --- | --- |
-| **FRAUD** | 50% | Criminal activity, Mixers (Tornado Cash), Scams, Botting. |
-| **REPUTATION** | 30% | Account age, Connection to KYC Exchanges (Coinbase/Binance). |
-| **LENDING** | 20% | Creditworthiness, Balance retention, History length. |
+
+| Category       | Weight | Description                                                  |
+| -------------- | ------ | ------------------------------------------------------------ |
+| **FRAUD**      | 50%    | Criminal activity, Mixers (Tornado Cash), Scams, Botting.    |
+| **REPUTATION** | 30%    | Account age, Connection to KYC Exchanges (Coinbase/Binance). |
+| **LENDING**    | 20%    | Creditworthiness, Balance retention, History length.         |
 
 ### 2. Risk Factors & Offsets
 
 The engine uses "Explainable AI" logic. Every score change is logged with a reason.
 
-| Detection Type | Impact | Example Reason |
-| --- | --- | --- |
-| **OFAC Sanction** | **CRITICAL** | `CRITICAL: Wallet is on OFAC SDN List (XBT)` |
-| **Mixer Interaction** | +55.0 (Fraud) | `Direct Interaction with Tornado Cash Router` |
-| **High Velocity** | +25.0 (Fraud) | `High Velocity Behavior (>20 Tx/Hour)` |
-| **Fresh Wallet** | +35.0 (Fraud) | `Freshly Created Wallet (<24h)` |
-| **KYC Exchange** | -15.0 (Reputation) | `Verified Exchange Link (Likely KYC)` |
-| **Long History** | -10.0 (Lending) | `Established History (>1 Year)` |
+
+| Detection Type        | Impact             | Example Reason                                |
+| --------------------- | ------------------ | --------------------------------------------- |
+| **OFAC Sanction**     | **CRITICAL**       | `CRITICAL: Wallet is on OFAC SDN List (XBT)`  |
+| **Mixer Interaction** | +55.0 (Fraud)      | `Direct Interaction with Tornado Cash Router` |
+| **High Velocity**     | +25.0 (Fraud)      | `High Velocity Behavior (>20 Tx/Hour)`        |
+| **Fresh Wallet**      | +35.0 (Fraud)      | `Freshly Created Wallet (<24h)`               |
+| **KYC Exchange**      | -15.0 (Reputation) | `Verified Exchange Link (Likely KYC)`         |
+| **Long History**      | -10.0 (Lending)    | `Established History (>1 Year)`               |
 
 ### 3. Grading Scale
 

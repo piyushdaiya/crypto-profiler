@@ -38,11 +38,9 @@ func (e *EVMStrategy) FetchState(ctx context.Context, address string, apiKey str
 		return profile, nil
 	}
 
-	client := &http.Client{Timeout: 10 * time.Second}
-	
-	// V2 Endpoint
+	client := &http.Client{Timeout: 15 * time.Second}
 	baseURL := "https://api.etherscan.io/v2/api"
-	chainID := "1" // Ethereum Mainnet
+	chainID := "1" 
 
 	// ---------------------------------------------------------
 	// CALL 1: Get Balance
@@ -104,39 +102,58 @@ func (e *EVMStrategy) FetchState(ctx context.Context, address string, apiKey str
 		}
 	}
 
-	var txs []struct {
+	// ---------------------------------------------------------
+	// PREPARE FOR INVESTIGATOR
+	// ---------------------------------------------------------
+	var rawTxs []struct {
 		TimeStamp string `json:"timeStamp"`
+		From      string `json:"from"`
+		To        string `json:"to"`
+		Value     string `json:"value"`
+		Hash      string `json:"hash"`
 	}
-	if err := json.Unmarshal(txResp.Result, &txs); err != nil {
+	
+	if err := json.Unmarshal(txResp.Result, &rawTxs); err != nil {
 		profile.ValidationDetails += " | Error parsing tx list"
 		return profile, nil
 	}
 
-	if len(txs) > 0 {
-		profile.IsActive = true
-		profile.TxCount = len(txs)
+	var investigationTxs []Transaction
+	for _, t := range rawTxs {
+		ts, _ := strconv.ParseInt(t.TimeStamp, 10, 64)
+		investigationTxs = append(investigationTxs, Transaction{
+			TimeStamp: ts,
+			From:      t.From,
+			To:        t.To,
+			Value:     t.Value,
+			Hash:      t.Hash,
+		})
+	}
 
-		firstTx := txs[0]
-		ts, _ := strconv.ParseInt(firstTx.TimeStamp, 10, 64)
-		firstTime := time.Unix(ts, 0)
+	if len(investigationTxs) > 0 {
+		profile.IsActive = true
+		profile.TxCount = len(investigationTxs)
+
+		firstTime := time.Unix(investigationTxs[0].TimeStamp, 0)
 		profile.FirstSeen = &firstTime
 
-		lastTx := txs[len(txs)-1]
-		tsLast, _ := strconv.ParseInt(lastTx.TimeStamp, 10, 64)
-		lastTime := time.Unix(tsLast, 0)
+		lastTime := time.Unix(investigationTxs[len(investigationTxs)-1].TimeStamp, 0)
 		profile.LastSeen = &lastTime
 
 		profile.ValidationDetails = fmt.Sprintf("Active | First Seen: %s", firstTime.Format("2006-01-02"))
 	}
 
+	// ---------------------------------------------------------
+	// CALL 3: THE INVESTIGATOR
+	// ---------------------------------------------------------
+	// UPDATED: Now calls Investigate with only 2 arguments.
+	// The HTTP client inside Investigate handles the engine connection.
+	Investigate(profile, investigationTxs)
+
 	return profile, nil
 }
 
-// ---------------------------------------------------------
-// MISSING HELPER FUNCTION ADDED BELOW
-// ---------------------------------------------------------
-
-// getJSON handles GET requests and decodes the response
+// getJSON Helper
 func getJSON(ctx context.Context, client *http.Client, url string, target interface{}) error {
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {

@@ -1,0 +1,46 @@
+
+
+services:
+  # -------------------------------------------------------
+  # SERVICE 1: Watchlist Engine (Server)
+  # -------------------------------------------------------
+  engine:
+    image: crypto-profiler:latest
+    container_name: crypto-profiler-engine-1
+    command: ["server"]
+    volumes:
+      - crypto-profiler_ofac-data:/data
+    environment:
+      - DB_PATH=/data/watchlist.db
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # -------------------------------------------------------
+  # SERVICE 2: Validator (Client)
+  # -------------------------------------------------------
+  validator:
+    image: crypto-profiler:latest
+    container_name: crypto-profiler-validator-1
+    # Entrypoint ensures container stays alive for commands
+    entrypoint: ["tail", "-f", "/dev/null"]
+    depends_on:
+      - engine
+    environment:
+      # Connects using the specific container name on the default network
+      - WATCHLIST_ENGINE_URL=http://crypto-profiler-engine-1:8080
+      - ETHERSCAN_API_KEY=${ETHERSCAN_API_KEY}
+      - COINSTATS_API_KEY=${COINSTATS_API_KEY}
+
+volumes:
+  crypto-profiler_ofac-data:
+    name: crypto-profiler_ofac-data
+    driver: local
+
+networks:
+  default:
+    name: crypto-profiler_default

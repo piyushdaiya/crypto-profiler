@@ -1,121 +1,247 @@
-# Crypto Profiler
 
-A robust, strategy-based Go application that validates crypto wallet addresses across multiple chains (EVM, Solana, Bitcoin). It performs **offline syntax checks** (Regex/Checksum) and **online state verification** (API/RPC) to determine if a wallet is active, its age, and its balance.
+# Crypto Profiler & Risk Investigator
 
-## 🏗 Architecture & Design
+An advanced, privacy-focused crypto wallet risk scoring engine. It combines **deterministic analysis** (OFAC sanctions, government watchlists) with **heuristic behavioral analysis** (velocity, mixer interaction, age) to generate a multi-dimensional risk score.
 
-This project uses the **Strategy Design Pattern** to ensure scalability. Adding a new blockchain is as simple as creating a new file that satisfies the `ChainStrategy` interface; no changes to the core logic are required.
+## 🏗 Architecture
 
-### Key Components
+The system follows a microservices architecture split into two containers:
 
-1. **The Interface (`contract.go`)**: Defines the standard behavior every blockchain strategy must implement:
+1. **Watchlist Engine (Server):**
+   * Runs 24/7 in the background.
+   * Automatically downloads and parses the **OFAC SDN List** (Sanctions).
+   * Stores ~500+ sanctioned crypto addresses (BTC, ETH, XMR, etc.) in a local SQLite database.
+   * Exposes a high-speed internal HTTP API for checking addresses.
 
-   * `IsValidSyntax(address)`: Does this string *look* like a valid address? (Offline, Fast)
-   * `FetchState(address, config)`: Query the blockchain for balance and history. (Online, Slower)
-2. **The Strategies (`internal/validator/`)**:
+2. **Validator (Client):**
+   * CLI tool that accepts a wallet address.
+   * Fetches on-chain data (Etherscan, CoinStats).
+   * Queries the **Watchlist Engine** to check for federal sanctions.
+   * Runs behavioral heuristics (Mixers, Botting, Velocity).
+   * Outputs a JSON risk profile.
 
-   * **EVM (Ethereum)**: Uses **Etherscan V2 API**. Checks regex, checksum, balance, and transaction history.
-   * **Solana**: Uses **CoinStats API**. Syncs wallet history, checks curve validity, balance, and first/last seen dates.
-   * **Bitcoin**: Uses **Blockchain.com Explorer API**. Checks Legacy/SegWit/Taproot formats and transaction history.
-3. **The Orchestrator (`main.go`)**:
+## 🚀 Quick Start (Docker Compose)
 
-   * Loads configuration (`.env`).
-   * Iterates through registered strategies.
-   * Detects the correct chain automatically based on syntax.
-   * Injects the correct API credentials (API Key or RPC URL).
-   * Returns a normalized JSON response.
+The easiest way to run the full stack is with Docker Compose. This ensures the Engine and Validator are on the same network.
 
-### Folder Structure
+### 1. Prerequisites
 
-```text
-.
-├── Dockerfile              # Multi-stage build (Builder -> Alpine Runtime)
-├── README.md               # Documentation
-├── go.mod / go.sum         # Go dependencies
-├── main.go                 # Entry point (Orchestrator)
-└── internal
-    └── validator
-        ├── contract.go     # Interface definition & Data structs
-        ├── evm.go          # Ethereum Strategy (Etherscan)
-        ├── solana.go       # Solana Strategy (CoinStats)
-        ├── bitcoin.go      # Bitcoin Strategy (Blockchain.com)
-        └── utils.go        # HTTP/RPC helpers
-```
+* Docker & Docker Compose installed.
+* API Keys for **Etherscan** and **CoinStats** (add them to a `.env` file).
 
+### 2. Setup `.env`
 
-## 🚀 How to Run
+Create a file named `.env` in the root directory:
 
-### Prerequisites
-
-* **Docker** installed on your machine.
-* (Optional) **Go 1.23+** if running locally without Docker.
-
-### 1. Configuration
-
-Create a `.env` file in the root directory with your API keys:
-
-**Code snippet**
+```bash
+ETHERSCAN_API_KEY=your_etherscan_key_here
+COINSTATS_API_KEY=your_coinstats_key_here
 
 ```
-# Get free keys from Etherscan.io and Coinstats.app
-ETHERSCAN_API_KEY=YourEtherscanKeyHere
-COINSTATS_API_KEY=YourCoinStatsKeyHere
-```
 
-### 2. Build with Docker
+### 3. Build & Start the Engine
 
-Build the lightweight Alpine image:
+This starts the Watchlist Engine in the background. It will immediately begin downloading the OFAC list (~100MB).
 
-**Bash**
+```bash
+docker compose up -d --build
 
 ```
-docker build -t crypto-validator .
-```
 
-### 3. Usage
+*Wait ~30 seconds for the engine to initialize and download the initial database.*
 
-Run the container, passing your `.env` file and the wallet address you want to check.
+## Real World Test Scenarios
 
-**Check Ethereum:**
+Below are actual results from the investigator running against various networks and risk profiles.
 
-**Bash**
+### 1. 🚨 Critical Risk: OFAC Sanctioned Bitcoin Address
 
-```
-docker run --env-file .env crypto-validator 0x7dA0aEf1B75035cbf364a690411BCCa7E7859dF8
-```
+This address is on the federal blacklist. The engine detects this immediately via the Watchlist Engine.
 
-**Check Solana:**
+**Command:**
 
-**Bash**
+```bash
+docker compose exec validator ./validator bc1qcp6fr7gtyukympl6unr7uv78h3vprycwj455zx
 
 ```
-docker run --env-file .env crypto-validator LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo 
-```
 
-**Check Bitcoin:**
+**Output:**
 
-**Bash**
-
-```
-docker run --env-file .env crypto-validator bc1q70pfj9ymvrd4rgdkfk0xsch4t7xenna0n0lmdf
-```
-
-## 📦 Output Format
-
-The tool returns a standardized JSON object regardless of the chain:
-
-**JSON**
-
-```
+```json
 {
-  "address": "0x7dA...",
+  "address": "bc1qcp6fr7gtyukympl6unr7uv78h3vprycwj455zx",
+  "network": "BITCOIN",
+  "is_valid": true,
+  "validation_details": "Active Account (History Found) | Last Active: 2023-07-16",
+  "is_active": true,
+  "balance": "0.00000000 BTC",
+  "tx_count": 2,
+  "first_seen": "2023-04-07T07:28:31Z",
+  "last_seen": "2023-07-16T18:19:48Z",
+  "risk_score": 100,
+  "risk_grade": "CRITICAL (Sanctioned)",
+  "risk_breakdown": {
+    "fraud_risk": 100,
+    "reputation_risk": 100,
+    "lending_risk": 100
+  },
+  "risk_reasons": [
+    {
+      "category": "FRAUD",
+      "description": "CRITICAL: OFAC Sanctioned Address (XBT)",
+      "offset": 100
+    },
+    {
+      "category": "REPUTATION",
+      "description": "Government Blacklisted Entity",
+      "offset": 100
+    },
+    {
+      "category": "LENDING",
+      "description": "Prohibited: Federal Sanctions",
+      "offset": 100
+    }
+  ]
+}
+
+```
+
+### 2. ✅ Safe: Inactive Solana Address
+
+A valid but empty wallet with no history.
+
+**Command:**
+
+```bash
+docker compose exec validator ./validator 8i8UWJ1wfnU811iRtUgtn7idUpPttDM1ATt1bmHok4sP
+
+```
+
+**Output:**
+
+```json
+{
+  "address": "8i8UWJ1wfnU811iRtUgtn7idUpPttDM1ATt1bmHok4sP",
+  "network": "SOLANA",
+  "is_valid": true,
+  "validation_details": "Inactive Account (No Tx History)",
+  "is_active": false,
+  "balance": "0.000000000 SOL",
+  "tx_count": 0,
+  "risk_score": 0,
+  "risk_grade": "EXCELLENT (Safe)",
+  "risk_breakdown": {
+    "fraud_risk": 0,
+    "reputation_risk": 0,
+    "lending_risk": 0
+  },
+  "risk_reasons": null
+}
+
+```
+
+### 3. ✅ Excellent: Established EVM Address
+
+An active Ethereum wallet with a long history (>1 Year), earning a reputation bonus.
+
+**Command:**
+
+```bash
+docker compose exec validator ./validator 0x7dA0aEf1B75035cbf364a690411BCCa7E7859dF8
+
+```
+
+**Output:**
+
+```json
+{
+  "address": "0x7dA0aEf1B75035cbf364a690411BCCa7E7859dF8",
   "network": "EVM",
   "is_valid": true,
-  "validation_details": "Active | First Seen: 2015-08-07",
+  "validation_details": "Active | First Seen: 2023-10-27",
   "is_active": true,
-  "balance": "450.2312 ETH",
-  "tx_count": 1082,
-  "first_seen": "2015-08-07T00:00:00Z",
-  "last_seen": "2024-05-20T14:30:00Z"
+  "balance": "0.5156 ETH",
+  "tx_count": 10000,
+  "first_seen": "2023-10-27T09:44:23Z",
+  "last_seen": "2024-08-18T09:23:11Z",
+  "risk_score": 0,
+  "risk_grade": "EXCELLENT (Safe)",
+  "risk_breakdown": {
+    "fraud_risk": 0,
+    "reputation_risk": 0,
+    "lending_risk": 0
+  },
+  "risk_reasons": [
+    {
+      "category": "REPUTATION",
+      "description": "Established History (>1 Year)",
+      "offset": -10
+    }
+  ]
 }
+
+```
+
+## 📋 Usage Examples
+
+Run the validator against any wallet address (ETH, BTC, SOL).
+
+```bash
+# Check an Ethereum Address
+docker compose exec validator ./validator 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+
+# Check a Bitcoin Address
+docker compose exec validator ./validator 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+
+```
+
+## 🔍 The Investigator Logic
+
+The risk score (0-100) is calculated based on three weighted categories.
+
+### 1. Categories
+
+| Category | Weight | Description |
+| --- | --- | --- |
+| **FRAUD** | 50% | Criminal activity, Mixers (Tornado Cash), Scams, Botting. |
+| **REPUTATION** | 30% | Account age, Connection to KYC Exchanges (Coinbase/Binance). |
+| **LENDING** | 20% | Creditworthiness, Balance retention, History length. |
+
+### 2. Risk Factors & Offsets
+
+The engine uses "Explainable AI" logic. Every score change is logged with a reason.
+
+| Detection Type | Impact | Example Reason |
+| --- | --- | --- |
+| **OFAC Sanction** | **CRITICAL** | `CRITICAL: Wallet is on OFAC SDN List (XBT)` |
+| **Mixer Interaction** | +55.0 (Fraud) | `Direct Interaction with Tornado Cash Router` |
+| **High Velocity** | +25.0 (Fraud) | `High Velocity Behavior (>20 Tx/Hour)` |
+| **Fresh Wallet** | +35.0 (Fraud) | `Freshly Created Wallet (<24h)` |
+| **KYC Exchange** | -15.0 (Reputation) | `Verified Exchange Link (Likely KYC)` |
+| **Long History** | -10.0 (Lending) | `Established History (>1 Year)` |
+
+### 3. Grading Scale
+
+* **0 - 10:** EXCELLENT (Safe)
+* **10 - 35:** LOW (Neutral)
+* **35 - 60:** WARNING (Elevated)
+* **60 - 100:** FAILING (High Risk)
+
+## 🧪 Testing & Verification
+
+### Verify the Engine is Running
+
+Check the logs to ensure the OFAC database was built successfully.
+
+```bash
+docker logs -f crypto-profiler-engine-1
+
+```
+
+*Expected Output:*
+
+> `✅ [SYNC] Done. Scanned 18557 parties. Loaded 543 sanctioned addresses.`
+
+```
+
 ```

@@ -1,10 +1,11 @@
-package validator
+package address
 
 import (
 	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/piyushdaiya/crypto-profiler/internal/model"
 	"net/http"
 	"regexp"
 	"strings"
@@ -23,9 +24,9 @@ func (s *SolanaStrategy) IsValidSyntax(address string) bool {
 	return matched
 }
 
-func (s *SolanaStrategy) FetchState(ctx context.Context, address string, apiKey string) (*WalletProfile, error) {
+func (s *SolanaStrategy) FetchState(ctx context.Context, address string, apiKey string) (*model.WalletProfile, error) {
 	cleanAddr := strings.TrimSpace(address)
-	profile := &WalletProfile{
+	profile := &model.WalletProfile{
 		Address: cleanAddr,
 		Network: "SOLANA",
 		IsValid: true,
@@ -49,7 +50,7 @@ func (s *SolanaStrategy) FetchState(ctx context.Context, address string, apiKey 
 
 	// STEP 2: Get Balance
 	balURL := fmt.Sprintf("%s/balance?address=%s&connectionId=%s", baseURL, cleanAddr, connectionID)
-	
+
 	// FIX: Use Slice for Balance Response
 	var balResp []struct {
 		CoinId string  `json:"coinId"`
@@ -66,19 +67,27 @@ func (s *SolanaStrategy) FetchState(ctx context.Context, address string, apiKey 
 	for _, coin := range balResp {
 		if coin.Symbol == "SOL" {
 			profile.Balance = fmt.Sprintf("%.9f SOL", coin.Amount)
-			if coin.Amount > 0 { profile.IsActive = true }
+			if coin.Amount > 0 {
+				profile.IsActive = true
+			}
 			foundSol = true
 			break
 		}
 	}
-	if !foundSol { profile.Balance = "0.00000000 SOL" }
+	if !foundSol {
+		profile.Balance = "0.00000000 SOL"
+	}
 
 	// STEP 3: Get Transaction History (WITH RETRY LOGIC)
 	txURL := fmt.Sprintf("%s/transactions?address=%s&connectionId=%s&limit=50", baseURL, cleanAddr, connectionID)
 
 	var txResp struct {
-		Meta struct { TotalCount int `json:"totalCount"` } `json:"meta"`
-		Result []struct { Date string `json:"date"` } `json:"result"`
+		Meta struct {
+			TotalCount int `json:"totalCount"`
+		} `json:"meta"`
+		Result []struct {
+			Date string `json:"date"`
+		} `json:"result"`
 	}
 
 	// Retry Loop: Try 3 times, waiting 2 seconds between tries
@@ -108,7 +117,7 @@ func (s *SolanaStrategy) FetchState(ctx context.Context, address string, apiKey 
 		firstTx := txResp.Result[len(txResp.Result)-1]
 		parsedFirst, _ := time.Parse(time.RFC3339, firstTx.Date)
 		profile.FirstSeen = &parsedFirst
-		
+
 		profile.ValidationDetails = fmt.Sprintf("Active | Last Seen: %s", parsedLast.Format("2006-01-02"))
 	} else {
 		if !profile.IsActive {
@@ -129,17 +138,25 @@ func makeHTTPRequest(ctx context.Context, client *http.Client, method, url, apiK
 	}
 
 	req, err := http.NewRequestWithContext(ctx, method, url, body)
-	if err != nil { return err }
+	if err != nil {
+		return err
+	}
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("X-API-KEY", apiKey)
 
 	resp, err := client.Do(req)
-	if err != nil { return err }
+	if err != nil {
+		return err
+	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 400 { return fmt.Errorf("HTTP %d", resp.StatusCode) }
+	if resp.StatusCode >= 400 {
+		return fmt.Errorf("HTTP %d", resp.StatusCode)
+	}
 
-	if target != nil { return json.NewDecoder(resp.Body).Decode(target) }
+	if target != nil {
+		return json.NewDecoder(resp.Body).Decode(target)
+	}
 	return nil
 }

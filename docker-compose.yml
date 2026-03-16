@@ -1,10 +1,8 @@
-
-
 services:
   # -------------------------------------------------------
-  # SERVICE 1: Watchlist Engine (Server)
+  # SERVICE 1: Crypto Profiler Server
   # -------------------------------------------------------
-  engine:
+  profiler:
     image: crypto-profiler:latest
     container_name: crypto-profiler-profiler-1
     command: ["server"]
@@ -21,17 +19,15 @@ services:
       retries: 5
 
   # -------------------------------------------------------
-  # SERVICE 2: Validator (Client)
+  # SERVICE 2: Validator CLI
   # -------------------------------------------------------
   validator:
     image: crypto-profiler:latest
     container_name: crypto-profiler-validator-1
-    # Entrypoint ensures container stays alive for commands
     entrypoint: ["tail", "-f", "/dev/null"]
     depends_on:
-      - engine
+      - profiler
     environment:
-      # Connects using the specific container name on the default network
       - WATCHLIST_ENGINE_URL=http://crypto-profiler-profiler-1:8080
       - ETHERSCAN_API_KEY=${ETHERSCAN_API_KEY}
       - COINSTATS_API_KEY=${COINSTATS_API_KEY}

@@ -1,4 +1,4 @@
-package validator
+package model
 
 import (
 	"context"
@@ -32,7 +32,7 @@ type RiskCategory struct {
 type RiskReason struct {
 	Category    string  `json:"category"` // "FRAUD", "REPUTATION"
 	Description string  `json:"description"`
-	Offset      float64 `json:"offset"`    // e.g. +15.5 or -5.0
+	Offset      float64 `json:"offset"` // e.g. +15.5 or -5.0
 }
 
 type Transaction struct {

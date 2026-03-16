@@ -1,9 +1,12 @@
-package validator
+package address
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/piyushdaiya/crypto-profiler/internal/analyzer"
+	"github.com/piyushdaiya/crypto-profiler/internal/model"
+
 	"math/big"
 	"net/http"
 	"regexp"
@@ -24,10 +27,10 @@ func (e *EVMStrategy) IsValidSyntax(address string) bool {
 	return regex.MatchString(cleanAddr)
 }
 
-func (e *EVMStrategy) FetchState(ctx context.Context, address string, apiKey string) (*WalletProfile, error) {
+func (e *EVMStrategy) FetchState(ctx context.Context, address string, apiKey string) (*model.WalletProfile, error) {
 	cleanAddr := strings.TrimSpace(address)
 
-	profile := &WalletProfile{
+	profile := &model.WalletProfile{
 		Address: cleanAddr,
 		Network: "EVM",
 		IsValid: true,
@@ -118,10 +121,10 @@ func (e *EVMStrategy) FetchState(ctx context.Context, address string, apiKey str
 		return profile, nil
 	}
 
-	var investigationTxs []Transaction
+	var investigationTxs []model.Transaction
 	for _, t := range rawTxs {
 		ts, _ := strconv.ParseInt(t.TimeStamp, 10, 64)
-		investigationTxs = append(investigationTxs, Transaction{
+		investigationTxs = append(investigationTxs, model.Transaction{
 			TimeStamp: ts,
 			From:      t.From,
 			To:        t.To,
@@ -148,7 +151,7 @@ func (e *EVMStrategy) FetchState(ctx context.Context, address string, apiKey str
 	// ---------------------------------------------------------
 	// UPDATED: Now calls Investigate with only 2 arguments.
 	// The HTTP client inside Investigate handles the profiler connection.
-	Investigate(profile, investigationTxs)
+	analyzer.Investigate(profile, investigationTxs)
 
 	return profile, nil
 }

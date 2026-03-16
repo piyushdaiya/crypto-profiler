@@ -1,8 +1,9 @@
-package validator
+package address
 
 import (
 	"context"
 	"fmt"
+	"github.com/piyushdaiya/crypto-profiler/internal/model"
 	"net/http"
 	"regexp"
 	"strings"
@@ -25,12 +26,12 @@ func (b *BitcoinStrategy) IsValidSyntax(address string) bool {
 	return legacy.MatchString(cleanAddr) || script.MatchString(cleanAddr) || bech32.MatchString(cleanAddr)
 }
 
-func (b *BitcoinStrategy) FetchState(ctx context.Context, address string, _ string) (*WalletProfile, error) {
+func (b *BitcoinStrategy) FetchState(ctx context.Context, address string, _ string) (*model.WalletProfile, error) {
 	// Note: Blockchain.com public API does not require an API Key for basic usage.
 	// We ignore the configParam (API Key) here.
-	
+
 	cleanAddr := strings.TrimSpace(address)
-	profile := &WalletProfile{
+	profile := &model.WalletProfile{
 		Address: cleanAddr,
 		Network: "BITCOIN",
 		IsValid: true,
@@ -63,10 +64,10 @@ func (b *BitcoinStrategy) FetchState(ctx context.Context, address string, _ stri
 		profile.IsActive = true
 		profile.ValidationDetails = "Active Account (History Found)"
 
-		// API returns transactions sorted by time (newest first usually), 
+		// API returns transactions sorted by time (newest first usually),
 		// but we scan to be safe or just take first/last if confident.
 		// Blockchain.com rawaddr default sort is newest first.
-		
+
 		if len(respObj.Txs) > 0 {
 			// Last Seen = Time of the first tx in the list (Newest)
 			lastTime := time.Unix(respObj.Txs[0].Time, 0)
@@ -74,11 +75,11 @@ func (b *BitcoinStrategy) FetchState(ctx context.Context, address string, _ stri
 
 			// First Seen = Time of the last tx in the list (Oldest)
 			// Note: rawaddr has a limit (default 50). If n_tx > 50, this is the "First Seen *recently*".
-			// To get absolute first seen for huge wallets, you'd need to paginate. 
+			// To get absolute first seen for huge wallets, you'd need to paginate.
 			// For this implementation, we take the oldest returned in the batch.
 			firstTime := time.Unix(respObj.Txs[len(respObj.Txs)-1].Time, 0)
 			profile.FirstSeen = &firstTime
-			
+
 			profile.ValidationDetails += fmt.Sprintf(" | Last Active: %s", lastTime.Format("2006-01-02"))
 		}
 	} else {

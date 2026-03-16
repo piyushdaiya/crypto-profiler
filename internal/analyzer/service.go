@@ -1,53 +1,14 @@
-package validator
+package analyzer
 
 import (
-	"encoding/json"
 	"fmt"
 	"math"
-	"net/http"
-	"os"
 	"strings"
 	"time"
+
+	"github.com/piyushdaiya/crypto-profiler/internal/model"
+	"github.com/piyushdaiya/crypto-profiler/internal/watchlist"
 )
-
-// Response from the Watchlist Engine Service
-type EngineResponse struct {
-	Sanctioned bool   `json:"sanctioned"`
-	Currency   string `json:"currency"`
-	Source     string `json:"source"`
-}
-
-// ---------------------------------------------------------
-// CLIENT: Check Watchlist (HTTP)
-// ---------------------------------------------------------
-
-func CheckWatchlist(address string) (*EngineResponse, error) {
-	// Get Engine URL from Env (defaults to local for dev, or docker service name)
-	engineURL := os.Getenv("WATCHLIST_ENGINE_URL")
-	if engineURL == "" {
-		engineURL = "http://localhost:8080"
-	}
-
-	// Short timeout - we don't want validation to hang if profiler is down
-	client := &http.Client{Timeout: 2 * time.Second}
-	url := fmt.Sprintf("%s/check?address=%s", engineURL, address)
-
-	resp, err := client.Get(url)
-	if err != nil {
-		return nil, fmt.Errorf("connection refused")
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("server error %d", resp.StatusCode)
-	}
-
-	var result EngineResponse
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return nil, err
-	}
-	return &result, nil
-}
 
 // ---------------------------------------------------------
 // CORE: Investigator Logic
@@ -59,13 +20,13 @@ var knownThreats = map[string]string{
 }
 
 // Investigate analyzes risk using both Heuristics and the Remote Watchlist Engine
-func Investigate(profile *WalletProfile, txs []Transaction) {
+func Investigate(profile *model.WalletProfile, txs []model.Transaction) {
 	var fraudScore, repScore, lendScore float64
-	var reasons []RiskReason
+	var reasons []model.RiskReason
 
 	// Helper to track risk
 	addRisk := func(category, desc string, offset float64) {
-		reasons = append(reasons, RiskReason{
+		reasons = append(reasons, model.RiskReason{
 			Category:    category,
 			Description: desc,
 			Offset:      offset,
@@ -83,7 +44,7 @@ func Investigate(profile *WalletProfile, txs []Transaction) {
 	// ---------------------------------------------------------
 	// 1. CALL REMOTE WATCHLIST ENGINE
 	// ---------------------------------------------------------
-	engineResp, err := CheckWatchlist(profile.Address)
+	engineResp, err := watchlist.CheckWatchlist(profile.Address)
 
 	if err != nil {
 		// FAIL OPEN: If profiler is down, warn but don't crash
@@ -98,7 +59,7 @@ func Investigate(profile *WalletProfile, txs []Transaction) {
 		// Force Max Score Immediately
 		profile.RiskScore = 100.0
 		profile.RiskGrade = "CRITICAL (Sanctioned)"
-		profile.RiskBreakdown = RiskCategory{100, 100, 100}
+		profile.RiskBreakdown = model.RiskCategory{100, 100, 100}
 		profile.RiskReasons = reasons
 		return // Stop processing
 	}
@@ -172,7 +133,7 @@ func Investigate(profile *WalletProfile, txs []Transaction) {
 
 	profile.RiskScore = math.Round(combinedRisk*100) / 100
 	profile.RiskGrade = grade
-	profile.RiskBreakdown = RiskCategory{
+	profile.RiskBreakdown = model.RiskCategory{
 		Fraud:      math.Round(fraudScore*100) / 100,
 		Reputation: math.Round(repScore*100) / 100,
 		Lending:    math.Round(lendScore*100) / 100,

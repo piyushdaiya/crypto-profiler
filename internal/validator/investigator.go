@@ -28,7 +28,7 @@ func CheckWatchlist(address string) (*EngineResponse, error) {
 		engineURL = "http://localhost:8080"
 	}
 
-	// Short timeout - we don't want validation to hang if engine is down
+	// Short timeout - we don't want validation to hang if profiler is down
 	client := &http.Client{Timeout: 2 * time.Second}
 	url := fmt.Sprintf("%s/check?address=%s", engineURL, address)
 
@@ -84,9 +84,9 @@ func Investigate(profile *WalletProfile, txs []Transaction) {
 	// 1. CALL REMOTE WATCHLIST ENGINE
 	// ---------------------------------------------------------
 	engineResp, err := CheckWatchlist(profile.Address)
-	
+
 	if err != nil {
-		// FAIL OPEN: If engine is down, warn but don't crash
+		// FAIL OPEN: If profiler is down, warn but don't crash
 		addRisk("SYSTEM", "⚠️ Watchlist Engine Unavailable - Sanctions Check Skipped", 0.0)
 		profile.ValidationDetails += " | [Warning: Sanctions DB Offline]"
 	} else if engineResp.Sanctioned {
@@ -94,7 +94,7 @@ func Investigate(profile *WalletProfile, txs []Transaction) {
 		addRisk("FRAUD", fmt.Sprintf("CRITICAL: %s Sanctioned Address (%s)", engineResp.Source, engineResp.Currency), 100.0)
 		addRisk("REPUTATION", "Government Blacklisted Entity", 100.0)
 		addRisk("LENDING", "Prohibited: Federal Sanctions", 100.0)
-		
+
 		// Force Max Score Immediately
 		profile.RiskScore = 100.0
 		profile.RiskGrade = "CRITICAL (Sanctioned)"
@@ -138,8 +138,10 @@ func Investigate(profile *WalletProfile, txs []Transaction) {
 	// Velocity Check
 	if profile.TxCount > 0 && profile.FirstSeen != nil {
 		hoursActive := time.Since(*profile.FirstSeen).Hours()
-		if hoursActive < 1 { hoursActive = 1 }
-		
+		if hoursActive < 1 {
+			hoursActive = 1
+		}
+
 		txPerHour := float64(profile.TxCount) / hoursActive
 		if txPerHour > 20.0 {
 			addRisk("FRAUD", "High Velocity Behavior (Potential Bot)", 25.0)
@@ -149,14 +151,14 @@ func Investigate(profile *WalletProfile, txs []Transaction) {
 	// ---------------------------------------------------------
 	// 3. FINALIZE SCORE
 	// ---------------------------------------------------------
-	
+
 	// Normalize
 	fraudScore = clamp(fraudScore, 0, 100)
 	repScore = clamp(repScore, 0, 100)
 	lendScore = clamp(lendScore, 0, 100)
 
 	combinedRisk := (fraudScore * 0.5) + (repScore * 0.3) + (lendScore * 0.2)
-	
+
 	grade := "UNKNOWN"
 	if combinedRisk < 10 {
 		grade = "EXCELLENT (Safe)"
@@ -179,7 +181,11 @@ func Investigate(profile *WalletProfile, txs []Transaction) {
 }
 
 func clamp(val, min, max float64) float64 {
-	if val < min { return min }
-	if val > max { return max }
+	if val < min {
+		return min
+	}
+	if val > max {
+		return max
+	}
 	return val
 }

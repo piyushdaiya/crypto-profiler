@@ -1,48 +1,49 @@
 # ---------------------------------------------------------
-# STAGE 1: The Builder (Builds EVERYTHING)
+# STAGE 1: Builder
 # ---------------------------------------------------------
-FROM golang:1.23-alpine AS builder
+FROM golang:1.26.1-alpine3.23 AS builder
 
-# Install C-compiler tools (Required for the Engine's SQLite)
+# Required for CGO builds (SQLite in profiler engine)
 RUN apk add --no-cache gcc musl-dev
 
 WORKDIR /app
 
-# Copy dependency files
+# Copy dependency files first for better layer caching
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy source code
+# Copy source
 COPY . .
 
-# 1. Build the WATCHLIST ENGINE (Server)
-# Requires CGO_ENABLED=1 because it uses SQLite
-RUN CGO_ENABLED=1 GOOS=linux go build -o engine cmd/engine/main.go
+# 1. Build the Crypto Profiler engine/server
+# Uses CGO because SQLite support requires it
+RUN CGO_ENABLED=1 GOOS=linux go build -o profiler ./cmd/profiler
 
-# 2. Build the VALIDATOR (Client)
-# Uses CGO_ENABLED=0 for a static, lightweight binary
-RUN CGO_ENABLED=0 GOOS=linux go build -o validator main.go
+# 2. Build the validator/client
+# Keep this only if you still want a separate validator binary
+RUN CGO_ENABLED=0 GOOS=linux go build -o validator ./main.go
 
 # ---------------------------------------------------------
-# STAGE 2: The Runtime (Universal Image)
+# STAGE 2: Runtime
 # ---------------------------------------------------------
-FROM alpine:latest
+FROM alpine:3.23
 
-# Install certificates for HTTPS requests
+# Install certs for outbound HTTPS/API calls
 RUN apk add --no-cache ca-certificates
 
 WORKDIR /root/
 
-# Copy BOTH binaries from the builder
-COPY --from=builder /app/engine ./engine
+# Copy binaries
+COPY --from=builder /app/profiler ./profiler
 COPY --from=builder /app/validator ./validator
 
-# Create a simple entrypoint script to route commands
-# If the user types "server", we run the engine.
-# Otherwise, we pass the arguments to the validator.
+# Entrypoint routing:
+# - "server" runs the profiler engine
+# - anything else is passed to the validator
 RUN echo '#!/bin/sh' > /entrypoint.sh && \
     echo 'if [ "$1" = "server" ]; then' >> /entrypoint.sh && \
-    echo '    exec ./engine' >> /entrypoint.sh && \
+    echo '    shift' >> /entrypoint.sh && \
+    echo '    exec ./profiler "$@"' >> /entrypoint.sh && \
     echo 'else' >> /entrypoint.sh && \
     echo '    exec ./validator "$@"' >> /entrypoint.sh && \
     echo 'fi' >> /entrypoint.sh && \

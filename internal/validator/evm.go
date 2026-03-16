@@ -26,7 +26,7 @@ func (e *EVMStrategy) IsValidSyntax(address string) bool {
 
 func (e *EVMStrategy) FetchState(ctx context.Context, address string, apiKey string) (*WalletProfile, error) {
 	cleanAddr := strings.TrimSpace(address)
-	
+
 	profile := &WalletProfile{
 		Address: cleanAddr,
 		Network: "EVM",
@@ -40,19 +40,19 @@ func (e *EVMStrategy) FetchState(ctx context.Context, address string, apiKey str
 
 	client := &http.Client{Timeout: 15 * time.Second}
 	baseURL := "https://api.etherscan.io/v2/api"
-	chainID := "1" 
+	chainID := "1"
 
 	// ---------------------------------------------------------
 	// CALL 1: Get Balance
 	// ---------------------------------------------------------
 	balURL := fmt.Sprintf("%s?chainid=%s&module=account&action=balance&address=%s&tag=latest&apikey=%s", baseURL, chainID, cleanAddr, apiKey)
-	
+
 	var balResp struct {
 		Status  string `json:"status"`
 		Message string `json:"message"`
 		Result  string `json:"result"`
 	}
-	
+
 	if err := getJSON(ctx, client, balURL, &balResp); err != nil {
 		profile.ValidationDetails = fmt.Sprintf("Network Error (Balance): %v", err)
 		return profile, nil
@@ -67,7 +67,7 @@ func (e *EVMStrategy) FetchState(ctx context.Context, address string, apiKey str
 	wei.SetString(balResp.Result)
 	ethValue := new(big.Float).Quo(wei, big.NewFloat(1e18))
 	profile.Balance = fmt.Sprintf("%.4f ETH", ethValue)
-	
+
 	if balResp.Result != "0" {
 		profile.IsActive = true
 	}
@@ -78,8 +78,8 @@ func (e *EVMStrategy) FetchState(ctx context.Context, address string, apiKey str
 	txURL := fmt.Sprintf("%s?chainid=%s&module=account&action=txlist&address=%s&startblock=0&endblock=99999999&sort=asc&apikey=%s", baseURL, chainID, cleanAddr, apiKey)
 
 	var txResp struct {
-		Status  string `json:"status"`
-		Message string `json:"message"`
+		Status  string          `json:"status"`
+		Message string          `json:"message"`
 		Result  json.RawMessage `json:"result"`
 	}
 
@@ -112,7 +112,7 @@ func (e *EVMStrategy) FetchState(ctx context.Context, address string, apiKey str
 		Value     string `json:"value"`
 		Hash      string `json:"hash"`
 	}
-	
+
 	if err := json.Unmarshal(txResp.Result, &rawTxs); err != nil {
 		profile.ValidationDetails += " | Error parsing tx list"
 		return profile, nil
@@ -147,7 +147,7 @@ func (e *EVMStrategy) FetchState(ctx context.Context, address string, apiKey str
 	// CALL 3: THE INVESTIGATOR
 	// ---------------------------------------------------------
 	// UPDATED: Now calls Investigate with only 2 arguments.
-	// The HTTP client inside Investigate handles the engine connection.
+	// The HTTP client inside Investigate handles the profiler connection.
 	Investigate(profile, investigationTxs)
 
 	return profile, nil

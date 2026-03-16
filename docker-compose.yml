@@ -6,7 +6,7 @@ services:
   # -------------------------------------------------------
   engine:
     image: crypto-profiler:latest
-    container_name: crypto-profiler-engine-1
+    container_name: crypto-profiler-profiler-1
     command: ["server"]
     volumes:
       - crypto-profiler_ofac-data:/data
@@ -32,7 +32,7 @@ services:
       - engine
     environment:
       # Connects using the specific container name on the default network
-      - WATCHLIST_ENGINE_URL=http://crypto-profiler-engine-1:8080
+      - WATCHLIST_ENGINE_URL=http://crypto-profiler-profiler-1:8080
       - ETHERSCAN_API_KEY=${ETHERSCAN_API_KEY}
       - COINSTATS_API_KEY=${COINSTATS_API_KEY}
 

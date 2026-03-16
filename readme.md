@@ -1,249 +1,191 @@
-# Crypto Profiler & Risk Investigator
 
-An advanced, privacy-focused crypto wallet risk scoring engine. It combines **deterministic analysis** (OFAC sanctions, government watchlists) with **heuristic behavioral analysis** (velocity, mixer interaction, age) to generate a multi-dimensional risk score.
+# Crypto Profiler
 
-## 🏗 Architecture
+[![Status](https://img.shields.io/badge/status-active%20mvp-blue)](#roadmap)
+[![Language](https://img.shields.io/badge/language-Go-00ADD8)](#tech-stack)
+[![Docker](https://img.shields.io/badge/runtime-Docker-2496ED)](#quick-start)
+[![Focus](https://img.shields.io/badge/focus-AML%20%7C%20Fraud%20%7C%20Crypto%20Risk-red)](#overview)
+[![Architecture](https://img.shields.io/badge/architecture-Explainable%20Risk%20Scoring-orange)](#architecture)
 
-The system follows a microservices architecture split into two containers:
+**Wallet Risk & Exposure Intelligence for AML, Fraud, Sanctions, and Crypto Surveillance**
 
-1. **Watchlist Engine (Server):**
+Crypto Profiler is a Go-based platform for profiling cryptocurrency wallets using deterministic checks, graph-based exposure analysis, and behavioral heuristics.
 
-   * Runs 24/7 in the background.
-   * Automatically downloads and parses the **OFAC SDN List** (Sanctions).
-   * Stores ~500+ sanctioned crypto addresses (BTC, ETH, XMR, etc.) in a local SQLite database.
-   * Exposes a high-speed internal HTTP API for checking addresses.
-2. **Validator (Client):**
+It is designed for financial institutions, compliance teams, investigators, RegTech product teams, and solutions architects who need a practical way to perform **Know Your Wallet (KYW)** and crypto-risk analysis with explainable results.
 
-   * CLI tool that accepts a wallet address.
-   * Fetches on-chain data (Etherscan, CoinStats).
-   * Queries the **Watchlist Engine** to check for federal sanctions.
-   * Runs behavioral heuristics (Mixers, Botting, Velocity).
-   * Outputs a JSON risk profile.
+---
 
-## 🚀 Quick Start (Docker Compose)
+## Overview
 
-The easiest way to run the full stack is with Docker Compose. This ensures the Engine and Validator are on the same network.
+Blockchain data is transparent, but identifying meaningful risk is not.
 
-### 1. Prerequisites
+A wallet can appear benign at first glance while still being:
+- directly linked to a sanctioned or risky entity
+- only 1–2 hops away from a mixer, exploiter, or laundering route
+- behaving like a pass-through mule or cash-out wallet
+- showing patterns consistent with layering, smurfing, dusting, or rapid depletion after dormancy
 
-* Docker & Docker Compose installed.
-* API Keys for **Etherscan** and **CoinStats** (add them to a `.env` file).
+Crypto Profiler helps transform raw wallet activity into an explainable risk assessment by combining:
+- **wallet validation**
+- **watchlist and risky-entity screening**
+- **direct and indirect exposure analysis**
+- **behavioral pattern detection**
+- **weighted explainable scoring**
+- **investigator-friendly outputs**
 
-### 2. Setup `.env`
+---
 
-Create a file named `.env` in the root directory:
+## Why this project exists
 
-```bash
-ETHERSCAN_API_KEY=your_etherscan_key_here
-COINSTATS_API_KEY=your_coinstats_key_here
+Crypto-risk and financial-crime teams need more than a simple blacklist check.
 
-```
+They need tools that can answer questions such as:
+- Is this wallet valid and active?
+- Is it linked to known risky entities?
+- How close is it to a mixer, scam, exploit, or sanctioned actor?
+- Does its behavior resemble money laundering, structuring, or rapid cash-out activity?
+- Why did the system assign this risk score?
 
-### 3. Build & Start the Engine
+Crypto Profiler is being built to answer those questions in a portfolio-grade, explainable, and extensible way.
 
-This starts the Watchlist Engine in the background. It will immediately begin downloading the OFAC list (~100MB).
+---
 
-```bash
-docker compose up -d --build
+## Core capabilities
 
-```
+### 1. Wallet validation
+- chain-aware address validation
+- checksum verification where applicable
+- normalized wallet representation
 
-*Wait ~30 seconds for the engine to initialize and download the initial database.*
+### 2. Risk screening
+- exact-match screening against labeled wallets and risky entities
+- support for sanctions/watchlist integration
+- internal label support for exchanges, mixers, scams, exploit wallets, and trusted entities
 
-## Real World Test Scenarios
+### 3. Exposure analysis
+- direct counterparty checks
+- 1-hop and 2-hop proximity analysis
+- weighted exposure scoring
+- transaction graph traversal for fund-flow reasoning
 
-Below are actual results from the investigator running against various networks and risk profiles.
+### 4. Behavioral detection
+Initial and planned heuristics include:
+- peeling-chain style layering
+- smurfing / structured transfers
+- hop-to-mixer proximity
+- dusting and sweep patterns
+- high-velocity burst activity
+- pass-through / rapid outflow behavior
 
-### 1. 🚨 Critical Risk: OFAC Sanctioned Bitcoin Address
+### 5. Explainable scoring
+- weighted score from 0–100
+- severity bands: Low / Medium / High
+- triggered rules and evidence
+- rationale string for analyst review
 
-This address is on the OFAC SDN blacklist. The engine detects this immediately via the Watchlist Engine.
+### 6. Investigator-ready output
+- structured JSON reports
+- CLI-readable summaries
+- case-study friendly sample outputs
+- architecture designed for future analyst workflows
 
-**Command:**
+---
 
-```bash
-docker compose exec validator ./validator bc1qcp6fr7gtyukympl6unr7uv78h3vprycwj455zx
+## Architecture
 
-```
+> **Architecture image placeholder**
+>
+> Add an architecture diagram here later, for example:
+>
+> `docs/images/crypto-profiler-architecture.png`
 
-**Output:**
+### High-level flow
+
+1. Accept wallet address and chain context
+2. Validate and normalize the address
+3. Retrieve transaction and label context
+4. Build wallet exposure graph
+5. Apply deterministic and heuristic rules
+6. Compute weighted explainable risk score
+7. Generate JSON and analyst-friendly output
+
+### Design principles
+
+- **Go-first implementation**
+- **Explainable scoring over black-box decisions**
+- **Deterministic-first risk detection**
+- **Graph-aware exposure analysis**
+- **Modular rule engine**
+- **Docker-friendly local execution**
+- **Designed to integrate with a future shared watchlist engine**
+
+---
+
+## v0.1 MVP scope
+
+The first public milestone is intentionally focused.
+
+### In scope
+- Bitcoin and Ethereum / EVM-first wallet model
+- wallet validation and normalization
+- exact-match risky wallet/entity checks
+- direct and limited hop-based exposure analysis
+- a small set of high-value behavioral heuristics
+- explainable scoring with reason codes
+- JSON and CLI outputs
+- reproducible demo data and case-study examples
+
+### Out of scope for v0.1
+- full-chain ingestion
+- production UI dashboard
+- mempool surveillance
+- ML-first scoring
+- fuzzy entity resolution / name matching
+- full cross-chain attribution
+- complete market-manipulation surveillance engine
+- full case management workflows
+
+---
+
+## Example use cases
+
+Crypto Profiler is being designed for scenarios such as:
+
+- screening a wallet before a transfer or onboarding decision
+- triaging a wallet linked to suspicious inbound funds
+- tracing whether a wallet is 1–2 hops from a mixer or exploit wallet
+- identifying laundering-style behaviors such as peeling chains or rapid cash-out
+- generating structured risk evidence for analyst review
+- demonstrating wallet intelligence architecture in regulated environments
+
+---
+
+## Sample output
 
 ```json
 {
-  "address": "bc1qcp6fr7gtyukympl6unr7uv78h3vprycwj455zx",
-  "network": "BITCOIN",
-  "is_valid": true,
-  "validation_details": "Active Account (History Found) | Last Active: 2023-07-16",
-  "is_active": true,
-  "balance": "0.00000000 BTC",
-  "tx_count": 2,
-  "first_seen": "2023-04-07T07:28:31Z",
-  "last_seen": "2023-07-16T18:19:48Z",
-  "risk_score": 100,
-  "risk_grade": "CRITICAL (Sanctioned)",
-  "risk_breakdown": {
-    "fraud_risk": 100,
-    "reputation_risk": 100,
-    "lending_risk": 100
-  },
-  "risk_reasons": [
+  "wallet": "0x1234...abcd",
+  "chain": "ethereum",
+  "risk_score": 82,
+  "severity": "high",
+  "risk_categories": [
+    "sanctions_risk",
+    "money_laundering_risk"
+  ],
+  "triggered_rules": [
+    "direct_risky_counterparty",
+    "hop_to_mixer_proximity",
+    "high_velocity_burst"
+  ],
+  "evidence": [
     {
-      "category": "FRAUD",
-      "description": "CRITICAL: OFAC Sanctioned Address (XBT)",
-      "offset": 100
+      "type": "counterparty_exposure",
+      "detail": "1-hop exposure to known mixer-associated wallet"
     },
     {
-      "category": "REPUTATION",
-      "description": "Government Blacklisted Entity",
-      "offset": 100
-    },
-    {
-      "category": "LENDING",
-      "description": "Prohibited: Federal Sanctions",
-      "offset": 100
+      "type": "behavioral_pattern",
+      "detail": "47 outgoing transactions observed within 52 minutes after prolonged dormancy"
     }
-  ]
+  ],
+  "rationale": "Score 82: direct risky counterparty exposure, 1-hop mixer proximity, and abnormal burst activity detected."
 }
-
-```
-
-### 2. ✅ Safe: Inactive Solana Address
-
-A valid but empty wallet with no history.
-
-**Command:**
-
-```bash
-docker compose exec validator ./validator 8i8UWJ1wfnU811iRtUgtn7idUpPttDM1ATt1bmHok4sP
-
-```
-
-**Output:**
-
-```json
-{
-  "address": "8i8UWJ1wfnU811iRtUgtn7idUpPttDM1ATt1bmHok4sP",
-  "network": "SOLANA",
-  "is_valid": true,
-  "validation_details": "Inactive Account (No Tx History)",
-  "is_active": false,
-  "balance": "0.000000000 SOL",
-  "tx_count": 0,
-  "risk_score": 0,
-  "risk_grade": "EXCELLENT (Safe)",
-  "risk_breakdown": {
-    "fraud_risk": 0,
-    "reputation_risk": 0,
-    "lending_risk": 0
-  },
-  "risk_reasons": null
-}
-
-```
-
-### 3. ✅ Excellent: Established EVM Address
-
-An active Ethereum wallet with a long history (>1 Year), earning a reputation bonus.
-
-**Command:**
-
-```bash
-docker compose exec validator ./validator 0x7dA0aEf1B75035cbf364a690411BCCa7E7859dF8
-
-```
-
-**Output:**
-
-```json
-{
-  "address": "0x7dA0aEf1B75035cbf364a690411BCCa7E7859dF8",
-  "network": "EVM",
-  "is_valid": true,
-  "validation_details": "Active | First Seen: 2023-10-27",
-  "is_active": true,
-  "balance": "0.5156 ETH",
-  "tx_count": 10000,
-  "first_seen": "2023-10-27T09:44:23Z",
-  "last_seen": "2024-08-18T09:23:11Z",
-  "risk_score": 0,
-  "risk_grade": "EXCELLENT (Safe)",
-  "risk_breakdown": {
-    "fraud_risk": 0,
-    "reputation_risk": 0,
-    "lending_risk": 0
-  },
-  "risk_reasons": [
-    {
-      "category": "REPUTATION",
-      "description": "Established History (>1 Year)",
-      "offset": -10
-    }
-  ]
-}
-
-```
-
-## 📋 Usage Examples
-
-Run the validator against any wallet address (ETH, BTC, SOL).
-
-```bash
-# Check an Ethereum Address
-docker compose exec validator ./validator 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
-
-# Check a Bitcoin Address
-docker compose exec validator ./validator 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
-
-```
-
-## 🔍 The Investigator Logic
-
-The risk score (0-100) is calculated based on three weighted categories.
-
-### 1. Categories
-
-
-| Category       | Weight | Description                                                  |
-| -------------- | ------ | ------------------------------------------------------------ |
-| **FRAUD**      | 50%    | Criminal activity, Mixers (Tornado Cash), Scams, Botting.    |
-| **REPUTATION** | 30%    | Account age, Connection to KYC Exchanges (Coinbase/Binance). |
-| **LENDING**    | 20%    | Creditworthiness, Balance retention, History length.         |
-
-### 2. Risk Factors & Offsets
-
-The engine uses "Explainable AI" logic. Every score change is logged with a reason.
-
-
-| Detection Type        | Impact             | Example Reason                                |
-| --------------------- | ------------------ | --------------------------------------------- |
-| **OFAC Sanction**     | **CRITICAL**       | `CRITICAL: Wallet is on OFAC SDN List (XBT)`  |
-| **Mixer Interaction** | +55.0 (Fraud)      | `Direct Interaction with Tornado Cash Router` |
-| **High Velocity**     | +25.0 (Fraud)      | `High Velocity Behavior (>20 Tx/Hour)`        |
-| **Fresh Wallet**      | +35.0 (Fraud)      | `Freshly Created Wallet (<24h)`               |
-| **KYC Exchange**      | -15.0 (Reputation) | `Verified Exchange Link (Likely KYC)`         |
-| **Long History**      | -10.0 (Lending)    | `Established History (>1 Year)`               |
-
-### 3. Grading Scale
-
-* **0 - 10:** EXCELLENT (Safe)
-* **10 - 35:** LOW (Neutral)
-* **35 - 60:** WARNING (Elevated)
-* **60 - 100:** FAILING (High Risk)
-
-## 🧪 Testing & Verification
-
-### Verify the Engine is Running
-
-Check the logs to ensure the OFAC database was built successfully.
-
-```bash
-docker logs -f crypto-profiler-engine-1
-
-```
-
-*Expected Output:*
-
-> `✅ [SYNC] Done. Scanned 18557 parties. Loaded 543 sanctioned addresses.`
-
-```
-
-```

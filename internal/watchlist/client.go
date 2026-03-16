@@ -3,12 +3,13 @@ package watchlist
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"time"
 )
 
-// Response from the Watchlist Engine Service
 type EngineResponse struct {
 	Sanctioned bool   `json:"sanctioned"`
 	Currency   string `json:"currency"`
@@ -20,23 +21,26 @@ type EngineResponse struct {
 // ---------------------------------------------------------
 
 func CheckWatchlist(address string) (*EngineResponse, error) {
-	// Get Engine URL from Env (defaults to local for dev, or docker service name)
 	engineURL := os.Getenv("WATCHLIST_ENGINE_URL")
 	if engineURL == "" {
 		engineURL = "http://localhost:8080"
 	}
 
-	// Short timeout - we don't want validation to hang if profiler is down
 	client := &http.Client{Timeout: 2 * time.Second}
-	url := fmt.Sprintf("%s/check?address=%s", engineURL, address)
+	checkURL := fmt.Sprintf("%s/check?address=%s", engineURL, url.QueryEscape(address))
 
-	resp, err := client.Get(url)
+	resp, err := client.Get(checkURL)
 	if err != nil {
 		return nil, fmt.Errorf("connection refused")
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
 
-	if resp.StatusCode != 200 {
+		}
+	}(resp.Body)
+
+	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("server error %d", resp.StatusCode)
 	}
 

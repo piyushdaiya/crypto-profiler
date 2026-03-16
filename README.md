@@ -121,6 +121,21 @@ Initial and planned heuristics include:
 
 ---
 
+## Security
+
+Crypto Profiler includes an initial security baseline covering:
+
+- secure watchlist client behavior
+- malformed input handling
+- sanctions short-circuit decisioning
+- OWASP Phase 1 security-focused tests
+
+See:
+
+- [`SECURITY.md`](SECURITY.md)
+- [`docs/security/owasp-test-matrix.md`](docs/security/owasp-test-matrix.md)
+
+---
 ## v0.1 MVP scope
 
 The first public milestone is intentionally focused.

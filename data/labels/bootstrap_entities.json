@@ -1,0 +1,12 @@
+{
+  "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b": {
+    "address": "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b",
+    "name": "Tornado Cash Router",
+    "category": "MIXER",
+    "severity": "HIGH",
+    "confidence": "HIGH",
+    "source": "bootstrap_entities",
+    "trusted": false,
+    "notes": "Known mixer-related routing contract"
+  }
+}

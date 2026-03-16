@@ -212,3 +212,17 @@ This case demonstrates an important design principle in the scoring engine:
 See the full write-up here:
 
 [`docs/case-studies/established-wallet-mixer-no-reinforcing-signals.md`](docs/case-studies/established-wallet-mixer-no-reinforcing-signals.md)
+
+## Case Study: Direct Sanctioned Wallet
+
+Crypto Profiler uses the watchlist engine to detect a direct sanctions match and immediately short-circuits to a critical outcome.
+
+This case demonstrates the deterministic end of the scoring model:
+- maximum risk score
+- critical grade
+- mandatory review recommendation
+- sanctions-first decisioning over heuristic scoring
+
+See the full write-up here:
+
+[`docs/case-studies/direct-sanctioned-wallet.md`](docs/case-studies/direct-sanctioned-wallet.md)

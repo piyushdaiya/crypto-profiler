@@ -87,7 +87,7 @@ func Investigate(profile *model.WalletProfile, txs []model.Transaction) {
 			otherParty = strings.ToLower(tx.From)
 		}
 
-		label, ok := knownEntities[otherParty]
+		label, ok := LookupEntityLabel(otherParty)
 		if !ok {
 			continue
 		}

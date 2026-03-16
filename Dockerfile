@@ -20,8 +20,7 @@ COPY . .
 RUN CGO_ENABLED=1 GOOS=linux go build -o profiler ./cmd/profiler
 
 # 2. Build the validator/client
-# Keep this only if you still want a separate validator binary
-RUN CGO_ENABLED=0 GOOS=linux go build -o validator ./main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o validator ./cmd/validator
 
 # ---------------------------------------------------------
 # STAGE 2: Runtime
@@ -36,6 +35,9 @@ WORKDIR /root/
 # Copy binaries
 COPY --from=builder /app/profiler ./profiler
 COPY --from=builder /app/validator ./validator
+
+# Copy bootstrap labels
+COPY --from=builder /app/data ./data
 
 # Entrypoint routing:
 # - "server" runs the profiler engine

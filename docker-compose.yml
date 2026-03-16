@@ -5,18 +5,20 @@ services:
   profiler:
     image: crypto-profiler:latest
     container_name: crypto-profiler-profiler-1
-    command: ["server"]
+    command: [ "server" ]
     volumes:
       - crypto-profiler_ofac-data:/data
     environment:
       - DB_PATH=/data/watchlist.db
+      - BOOTSTRAP_LABELS_PATH=/root/data/labels/bootstrap_entities.json
     ports:
       - "8080:8080"
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/health"]
+      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:8080/health" ]
       interval: 10s
       timeout: 5s
       retries: 5
+
 
   # -------------------------------------------------------
   # SERVICE 2: Validator CLI
@@ -24,14 +26,14 @@ services:
   validator:
     image: crypto-profiler:latest
     container_name: crypto-profiler-validator-1
-    entrypoint: ["tail", "-f", "/dev/null"]
+    entrypoint: [ "tail", "-f", "/dev/null" ]
     depends_on:
       - profiler
     environment:
       - WATCHLIST_ENGINE_URL=http://crypto-profiler-profiler-1:8080
       - ETHERSCAN_API_KEY=${ETHERSCAN_API_KEY}
       - COINSTATS_API_KEY=${COINSTATS_API_KEY}
-
+      - BOOTSTRAP_LABELS_PATH=/root/data/labels/bootstrap_entities.json
 volumes:
   crypto-profiler_ofac-data:
     name: crypto-profiler_ofac-data

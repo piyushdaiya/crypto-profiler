@@ -189,3 +189,26 @@ Crypto Profiler is being designed for scenarios such as:
   ],
   "rationale": "Score 82: direct risky counterparty exposure, 1-hop mixer proximity, and abnormal burst activity detected."
 }
+```
+## Case Study: Established Wallet with Mixer Interaction
+
+Crypto Profiler detected a direct interaction with a mixer-related entity, but did **not** over-penalize the wallet because there were no reinforcing suspicious signals such as fresh-wallet behavior, high-velocity bursts, or rapid pass-through activity.
+
+This case demonstrates an important design principle in the scoring engine:
+
+> Single-signal exposure should remain visible as evidence, while stronger conclusions should come from multi-signal correlation.
+
+**Why it matters**
+- reduces false positives
+- improves analyst trust
+- preserves explainability
+- better reflects real compliance and investigative workflows
+
+**Result**
+- mixer interaction remained visible
+- contextual mitigation was applied
+- final score stayed low because suspicious context was absent
+
+See the full write-up here:
+
+[`docs/case-studies/established-wallet-mixer-no-reinforcing-signals.md`](docs/case-studies/established-wallet-mixer-no-reinforcing-signals.md)

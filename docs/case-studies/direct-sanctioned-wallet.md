@@ -2,11 +2,9 @@
 
 ## Summary
 
-This case demonstrates the clearest high-risk outcome in Crypto Profiler:
+This case demonstrates the deterministic high-risk path in Crypto Profiler.
 
-> A direct sanctions match should result in immediate escalation, maximum risk scoring, and mandatory review.
-
-Unlike contextual mixer or heuristic-only cases, this scenario is deterministic. The wallet is identified as a sanctioned entity through the watchlist engine, and Crypto Profiler short-circuits to a critical result.
+A Bitcoin wallet is identified as a sanctioned address through the watchlist engine, and Crypto Profiler immediately short-circuits to a critical result. Unlike heuristic-only scenarios, this is a direct policy-relevant outcome with maximum risk and mandatory review.
 
 ---
 
@@ -21,38 +19,52 @@ Validate that Crypto Profiler can:
 
 ---
 
-## Expected Behavior
+## Test Wallet
 
-When the wallet is confirmed as sanctioned:
-
-- `risk_score` is set to `100`
-- `risk_grade` is set to `CRITICAL (Sanctioned)`
-- `review_recommended` is set to `true`
-- the profiler returns a sanctions-specific reason
-- lower-priority scoring logic is skipped
+- **Address:** `bc1qcp6fr7gtyukympl6unr7uv78h3vprycwj455zx`
+- **Network:** `BITCOIN`
 
 ---
 
-## Why This Matters
+## Wallet Profile Snapshot
 
-A direct sanctions hit is not just another risk signal. It is a policy-critical event.
-
-Crypto Profiler intentionally treats this as a deterministic control outcome rather than a weighted heuristic. This improves:
-
-- compliance defensibility
-- reviewer confidence
-- explainability
-- operational consistency
+- **Valid wallet:** Yes
+- **Network:** BITCOIN
+- **Active:** Yes
+- **Balance:** 0.00000000 BTC
+- **Transaction count:** 2
+- **First seen:** 2023-04-07T07:28:31Z
+- **Last seen:** 2023-07-16T18:19:48Z
 
 ---
 
-## Expected Output Shape
+## Triggered Outcome
+
+Crypto Profiler received a direct sanctions hit from the watchlist engine and intentionally short-circuited to a critical result.
+
+### Expected behavior
+- `risk_score = 100`
+- `risk_grade = "CRITICAL (Sanctioned)"`
+- `review_recommended = true`
+- all risk breakdown categories set to `100`
+- sanctions-specific reason returned
+- heuristic scoring skipped
+
+---
+
+## Final Output
 
 ```json
 {
-  "address": "SANCTIONED_WALLET_ADDRESS",
-  "network": "EVM",
+  "address": "bc1qcp6fr7gtyukympl6unr7uv78h3vprycwj455zx",
+  "network": "BITCOIN",
   "is_valid": true,
+  "validation_details": "Active Account (History Found) | Last Active: 2023-07-16",
+  "is_active": true,
+  "balance": "0.00000000 BTC",
+  "tx_count": 2,
+  "first_seen": "2023-04-07T07:28:31Z",
+  "last_seen": "2023-07-16T18:19:48Z",
   "risk_score": 100,
   "risk_grade": "CRITICAL (Sanctioned)",
   "review_recommended": true,
@@ -65,11 +77,11 @@ Crypto Profiler intentionally treats this as a deterministic control outcome rat
     {
       "code": "direct_sanctions_match",
       "category": "FRAUD",
-      "description": "CRITICAL: OFAC sanctioned address (ETH)",
+      "description": "CRITICAL: OFAC sanctioned address (XBT)",
       "offset": 100,
       "source": "watchlist_engine",
       "related_entity": "OFAC",
-      "related_address": "SANCTIONED_WALLET_ADDRESS",
+      "related_address": "bc1qcp6fr7gtyukympl6unr7uv78h3vprycwj455zx",
       "severity": "CRITICAL",
       "confidence": "HIGH",
       "evidence_count": 1
@@ -82,25 +94,48 @@ Crypto Profiler intentionally treats this as a deterministic control outcome rat
 
 ## Interpretation
 
-This result represents the **clearly high risk** end of the scoring spectrum.
+This result represents the **clearly high risk** end of the Crypto Profiler scoring model.
 
-It contrasts with cases where:
-- a signal is present but context mitigates the outcome
-- multiple weak signals require correlation before escalation
-- trusted or exchange interactions remain low risk
+Unlike contextual or heuristic cases, this scenario is deterministic:
+- the address is directly identified as sanctioned
+- the watchlist engine provides the decisive signal
+- Crypto Profiler escalates immediately without depending on additional behavioral evidence
 
-This case confirms that Crypto Profiler can distinguish between:
+This is the correct behavior for sanctions-first compliance workflows.
+
+---
+
+## Why This Matters
+
+A direct sanctions match is not just another score input. It is a control-critical event that should drive immediate escalation.
+
+This case demonstrates that Crypto Profiler can distinguish between:
 
 - **observed risk**
 - **reviewable risk**
 - **clearly high risk**
 
+and apply the appropriate response for each.
+
 ---
 
 ## Product Design Insight
 
-This case validates another core design principle:
+This case validates a core architectural principle:
 
 > Deterministic sanctions outcomes should short-circuit heuristic scoring.
 
-That keeps the system aligned with real compliance workflows and avoids ambiguity when the required action is already clear.
+That improves:
+- compliance defensibility
+- reviewer trust
+- explainability
+- operational consistency
+
+---
+
+## Classification
+
+- **Case type:** Deterministic sanctions hit
+- **Primary category:** Sanctions / watchlist screening
+- **Risk outcome:** Clearly high risk
+- **Portfolio value:** Demonstrates watchlist-engine integration, explainable short-circuit logic, and compliance-grade decisioning

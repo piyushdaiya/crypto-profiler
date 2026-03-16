@@ -226,3 +226,65 @@ This case demonstrates the deterministic end of the scoring model:
 See the full write-up here:
 
 [`docs/case-studies/direct-sanctioned-wallet.md`](docs/case-studies/direct-sanctioned-wallet.md)
+
+## Watchlist Engine Verification
+
+After starting the stack, verify that the watchlist engine initialized successfully and completed its sanctions sync.
+
+### Start the stack
+
+```bash
+docker compose up -d --build
+```
+
+### Follow engine logs
+
+```bash
+docker compose logs -f engine
+```
+
+### Expected behavior
+
+The engine should:
+
+- start successfully
+- expose the HTTP service on port `8080`
+- initialize the sync loop
+- detect updates to the sanctions source
+- download and parse the OFAC feed
+- rebuild the SQLite-backed sanctions database
+- serve `/check` requests successfully
+
+Example log flow:
+
+```text
+🔹 [ENGINE] Starting Watchlist Engine...
+✅ [ENGINE] Database Available & Listening on :8080
+🔹 [ENGINE] Initializing Sync Loop...
+⬇️  [SYNC] Update Detected. Starting OFAC Download...
+🔹 [SYNC] Parsing XML Stream...
+✅ [SYNC] Done. Scanned <count> parties. Loaded <count> sanctioned addresses.
+✅ [SYNC] Database Update Complete.
+```
+
+> Note: scanned-party and sanctioned-address counts may change over time as upstream sanctions data changes.
+
+### Functional validation
+
+Run a known sanctioned address through the validator:
+
+```bash
+docker compose exec validator ./validator bc1qcp6fr7gtyukympl6unr7uv78h3vprycwj455zx
+```
+
+Expected outcome:
+
+- `risk_score = 100`
+- `risk_grade = "CRITICAL (Sanctioned)"`
+- `review_recommended = true`
+
+This confirms that:
+
+1. the validator is running
+2. the watchlist engine is reachable
+3. the sanctions lookup path is working end to end

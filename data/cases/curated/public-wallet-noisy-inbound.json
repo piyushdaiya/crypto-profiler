@@ -1,0 +1,747 @@
+{
+  "case_id": "public-wallet-noisy-inbound",
+  "title": "Public Wallet with Noisy Inbound Activity",
+  "description": "Established public wallet with heavy inbound activity, many counterparties, and no direct high-risk label in the extracted window.",
+  "risk_posture": "OBSERVED",
+  "address": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+  "chain": "EVM",
+  "generated_at": "2026-03-17T14:25:42.203251Z",
+  "summary": {
+    "first_seen": "2025-02-27T00:01:35Z",
+    "last_seen": "2025-03-05T23:53:35Z",
+    "inbound_count": 1790,
+    "outbound_count": 5,
+    "unique_counterparties": 1070,
+    "native_transfer_count": 1650,
+    "erc20_transfer_count": 145
+  },
+  "top_counterparties": [
+    {
+      "address": "0x0000000000000000000000000000000000000000",
+      "interactions": 67,
+      "inbound_count": 67,
+      "outbound_count": 0
+    },
+    {
+      "address": "0xf5ef119e5558575666ceb26159a353c3a01fe4a1",
+      "interactions": 66,
+      "inbound_count": 66,
+      "outbound_count": 0
+    },
+    {
+      "address": "0xaa2303308150f61d941dd0cb53b6b6de6b732383",
+      "interactions": 33,
+      "inbound_count": 33,
+      "outbound_count": 0
+    },
+    {
+      "address": "0x5be6fd9e3bf470b548e5e530b3a4a0b93e9c74b9",
+      "interactions": 14,
+      "inbound_count": 14,
+      "outbound_count": 0
+    },
+    {
+      "address": "0x580f50eb17e26e8654f74b7cab8946786b03a3e6",
+      "interactions": 11,
+      "inbound_count": 11,
+      "outbound_count": 0
+    },
+    {
+      "address": "0xc92a4cefc4dd3251cff8724d10f230323ff8f598",
+      "interactions": 11,
+      "inbound_count": 11,
+      "outbound_count": 0
+    },
+    {
+      "address": "0x767fe89301d37847078a30886c873d6be9457ad1",
+      "interactions": 10,
+      "inbound_count": 10,
+      "outbound_count": 0
+    },
+    {
+      "address": "0xbe1057a0ec888e5f89aaa6c2a29068c3f31a8084",
+      "interactions": 10,
+      "inbound_count": 10,
+      "outbound_count": 0
+    },
+    {
+      "address": "0x0e9723fd17d6469c0d16abc797ed0637222ae006",
+      "interactions": 8,
+      "inbound_count": 8,
+      "outbound_count": 0
+    },
+    {
+      "address": "0x0bb7a0194d4bd767ea78aa5b6c0ba1ca1dd7fff0",
+      "interactions": 7,
+      "inbound_count": 7,
+      "outbound_count": 0
+    },
+    {
+      "address": "0x3ba4dc59bccbfecf59253776b13eda35471ca9b6",
+      "interactions": 7,
+      "inbound_count": 7,
+      "outbound_count": 0
+    },
+    {
+      "address": "0x860470733c544d62d1f38d45c8761860a09ba9ac",
+      "interactions": 7,
+      "inbound_count": 7,
+      "outbound_count": 0
+    },
+    {
+      "address": "0x0f14ee272d47798474c0ed589bd4b5adff68f8a5",
+      "interactions": 6,
+      "inbound_count": 6,
+      "outbound_count": 0
+    },
+    {
+      "address": "0x161a83f70000fa507c7ae707f6da6a444c486d60",
+      "interactions": 6,
+      "inbound_count": 6,
+      "outbound_count": 0
+    },
+    {
+      "address": "0x18bed7dd61e3515be8f2b004d8f3cab2786e8782",
+      "interactions": 6,
+      "inbound_count": 6,
+      "outbound_count": 0
+    },
+    {
+      "address": "0x1e7ffc1fd58d41c66307e03fa24afa5423a3149b",
+      "interactions": 6,
+      "inbound_count": 6,
+      "outbound_count": 0
+    },
+    {
+      "address": "0x25439bae8fa029e9e3160a53d3ac2ae3b6a3f0da",
+      "interactions": 6,
+      "inbound_count": 6,
+      "outbound_count": 0
+    },
+    {
+      "address": "0x468a482abbf621ad39ffbdcbff93e97386ba4a83",
+      "interactions": 6,
+      "inbound_count": 6,
+      "outbound_count": 0
+    },
+    {
+      "address": "0x6de7597bf1e1c0b3bbf8b4d66790721c5a83d2f8",
+      "interactions": 6,
+      "inbound_count": 6,
+      "outbound_count": 0
+    },
+    {
+      "address": "0xc09990ef25c32a96db5a6572e90457e2dc6d2843",
+      "interactions": 6,
+      "inbound_count": 6,
+      "outbound_count": 0
+    }
+  ],
+  "sample_transfers": [
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "b152dcff04a91e3c433cc280dfaa03d9d77eed9979502fd5944382c660f14a65",
+      "block_id": 21933956,
+      "timestamp": "2025-02-27T00:01:35Z",
+      "from": "0x860470733c544d62d1f38d45c8761860a09ba9ac",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "ERC20",
+      "tx_hash": "f51710314303a46c971c69209dc6d205a90b33b048d3364786fe1e684681092b",
+      "block_id": 21933959,
+      "timestamp": "2025-02-27T00:02:11Z",
+      "from": "0xaa2303308150f61d941dd0cb53b6b6de6b732383",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "699371872",
+      "asset_address": "0x58d4e17051e11e7f2e8f9eab97be720fec0f01f4",
+      "asset_name": "Joanna",
+      "asset_symbol": "JOANNA"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "b0f083215f10ca08c709302c5fcf8ae78a82b99199969fe6778cefbf4421dfa6",
+      "block_id": 21933975,
+      "timestamp": "2025-02-27T00:05:35Z",
+      "from": "0x2fd5c62ac055d5bdff55e63b8d153581dabe5172",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "f75094f6eaafcebf5a04265bfca03ebe4cea0767b796661f31c896fcf177de1c",
+      "block_id": 21934025,
+      "timestamp": "2025-02-27T00:15:35Z",
+      "from": "0x5bd21d173ec7c00e6a123cee48729369ef417109",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "e6eaf3dd4944cf7b20f918ba0e90fbbb99bd39af36604b585260993ecd117a84",
+      "block_id": 21934033,
+      "timestamp": "2025-02-27T00:17:11Z",
+      "from": "0x5bd21d173ec7c00e6a123cee48729369ef417109",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "9e0dbca204d44df349fe6a2def8dc1312e4e24eaed7106bbd678eec72122c9d5",
+      "block_id": 21934059,
+      "timestamp": "2025-02-27T00:22:23Z",
+      "from": "0x7bf732761d8d6791f47f799a29ce5ae9a39fc4e3",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "ERC20",
+      "tx_hash": "89687c7150c36636cd6c2d3f1bad0463d8449a496e4023d906f2e71d31487954",
+      "block_id": 21934123,
+      "timestamp": "2025-02-27T00:35:11Z",
+      "from": "0xaa2303308150f61d941dd0cb53b6b6de6b732383",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "1000000000000000",
+      "asset_address": "0x58d4e17051e11e7f2e8f9eab97be720fec0f01f4",
+      "asset_name": "Joanna",
+      "asset_symbol": "JOANNA"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "96692cb93605777268879c95892475901c857eaeed92c52354d6f4187f9849d7",
+      "block_id": 21934132,
+      "timestamp": "2025-02-27T00:36:59Z",
+      "from": "0xeeb7b15efdecc95fc355ab667f018312fa4da581",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "10000000000000",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "a2635e6ea25b1e30ec460c83ecd1452aeea656826e08afc6701e105edf28ca4c",
+      "block_id": 21934133,
+      "timestamp": "2025-02-27T00:37:11Z",
+      "from": "0x6105b0aae7c6f3512fe7ab96255915c94953ab3a",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "1d66e12f8418bd53fca75bdf79386549618b3d6c0470a1062e9171a3bbc3f428",
+      "block_id": 21934165,
+      "timestamp": "2025-02-27T00:43:35Z",
+      "from": "0x6105b0aae7c6f3512fe7ab96255915c94953ab3a",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "21845d8882ebd468ef44e1d70a2e634e25b1638b9e61c540a7e0eb8dea43df38",
+      "block_id": 21934193,
+      "timestamp": "2025-02-27T00:49:11Z",
+      "from": "0xf2dd35c96e16db8192bac1ac5c690de079316cad",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "1b4d571e4853d7c6812fce8fad303e337a9fe63f496d1337254b5da5cbc02d0e",
+      "block_id": 21934266,
+      "timestamp": "2025-02-27T01:03:47Z",
+      "from": "0x0390e75c736693fb65a49a011ebe96cf97d3b4d4",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "04a4213b24f9f59f203fb1c3809a4e7019de01209c3011ccab32250509c31e51",
+      "block_id": 21934489,
+      "timestamp": "2025-02-27T01:48:47Z",
+      "from": "0x53dea2a6a13dffbc7397ec5d92483bbd37d3c9ad",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "f30b50b2510614c184d0d6eddb15a33220ef34dde499e72c8c5f1c69276ab5d6",
+      "block_id": 21934491,
+      "timestamp": "2025-02-27T01:49:11Z",
+      "from": "0x53dea2a6a13dffbc7397ec5d92483bbd37d3c9ad",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "e24063bcc492b95f7fa29d0c8a1efc74e5668641afa9f14fea6172540f586f3b",
+      "block_id": 21934642,
+      "timestamp": "2025-02-27T02:19:35Z",
+      "from": "0x370eab23f43b49af7f8e71661aea85f3a5c3353e",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "e1c463343ac377a76c017861b70c3b07a440a02ef75bb053c7cf59be3bca8dfe",
+      "block_id": 21934643,
+      "timestamp": "2025-02-27T02:19:47Z",
+      "from": "0x63ca25c2554b915cfe0e2e46d7d5f66851d48964",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "bb71d6a3efbdedb94d97e050758e31494cf24e7e9d39bf79a58f2957dc54166f",
+      "block_id": 21934660,
+      "timestamp": "2025-02-27T02:23:11Z",
+      "from": "0x9bd5f9c8034c13693bd528666bc05e937c70682f",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "7ee74ff0ddba5e9bd8e6cdf477e50694f0d02787fbfe7d54ffe5110bbb19391d",
+      "block_id": 21934661,
+      "timestamp": "2025-02-27T02:23:23Z",
+      "from": "0x00c50f11dd7d94a17a7c5aae89a1db262da01edc",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "819ef45862fa850539a07a322298a8ac402646de669ac03f7dc4697c9aa9b2e2",
+      "block_id": 21934664,
+      "timestamp": "2025-02-27T02:23:59Z",
+      "from": "0x2b80a175c64a037c1db0828f5fe679283e07e5ec",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "000155d58757ddda0dc41b8dc02f2b57d47eb2fe66b9f31d5979e86889296227",
+      "block_id": 21934664,
+      "timestamp": "2025-02-27T02:23:59Z",
+      "from": "0x090681a63256625878ae3df22433d7ee69678e4b",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "cc173e981ba78c6e7f18561aec8a00ee62a0d7ecbb37a7db05fad9d733e9250d",
+      "block_id": 21934664,
+      "timestamp": "2025-02-27T02:23:59Z",
+      "from": "0xd4919b762587d72cfbcc32bb27a81f586987e9b9",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "7be721e5e5c5ffe714471fc40e36e09f442b01324e3dd7a7044d26b3376b6ae7",
+      "block_id": 21934664,
+      "timestamp": "2025-02-27T02:23:59Z",
+      "from": "0x606625c544bb84c46f78bf9ac17d407ee3da3047",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "c3232e3d4ab304fe9307051d3a538909303f69e9cbe776a3445540f3a64db95a",
+      "block_id": 21934668,
+      "timestamp": "2025-02-27T02:24:47Z",
+      "from": "0x63a36b13e7b246b5f47e2de446129bd0a8a0eb12",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "62139afce34acfa5acf9d74039c2a2aa679aca40c6b4696136e800853da37b00",
+      "block_id": 21934693,
+      "timestamp": "2025-02-27T02:29:47Z",
+      "from": "0xfc0d5d4f94c1b2a66bb8cbbd4e28487fe7847abd",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "43a4095b0748d7bf9f2b9194709602b1311ecfce2c1a522aca2a16e091d946b6",
+      "block_id": 21934693,
+      "timestamp": "2025-02-27T02:29:47Z",
+      "from": "0xb2793bde4e0e78ca9faad23de3b13dbf82737b66",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "80e19be8b91320964c18ff6f3d474d6324c5b2cc823fd065c56074f7567f53f2",
+      "block_id": 21983409,
+      "timestamp": "2025-03-05T21:35:35Z",
+      "from": "0x18bed7dd61e3515be8f2b004d8f3cab2786e8782",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "950a00cfc3d3e1100693f67a8f6ff9dddb9e7d7eb15029425abf0394d3a0f094",
+      "block_id": 21983410,
+      "timestamp": "2025-03-05T21:35:47Z",
+      "from": "0x18bed7dd61e3515be8f2b004d8f3cab2786e8782",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "86598a5213812889eaf279d33d8698a6c66f8864f3c1940b38d570d10bb4a70e",
+      "block_id": 21983415,
+      "timestamp": "2025-03-05T21:36:47Z",
+      "from": "0x18bed7dd61e3515be8f2b004d8f3cab2786e8782",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "949a3053d33d6e44f3043b31604614cd5a6501f92193726c062c0e4123a9e095",
+      "block_id": 21983418,
+      "timestamp": "2025-03-05T21:37:23Z",
+      "from": "0x18bed7dd61e3515be8f2b004d8f3cab2786e8782",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "3985b39ead50975cec0b26e8965ee28ad2addc8af9e8a762ca4d170a6ca7592b",
+      "block_id": 21983474,
+      "timestamp": "2025-03-05T21:48:35Z",
+      "from": "0x7b233a45ce9fb44f5995008482f27911513e2806",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "07bbbf7b06f1d1480da7c0d019a35d4118172d815ad49d80b65b5aa8e31b6cdb",
+      "block_id": 21983497,
+      "timestamp": "2025-03-05T21:53:11Z",
+      "from": "0x05708af0a2b1a3a1dbcb471028664e06ef0e450f",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "09aa537e54a6127b3f208e15c50c815daf32fa4988fbcd0332b5d9e539aef75c",
+      "block_id": 21983531,
+      "timestamp": "2025-03-05T22:00:11Z",
+      "from": "0x2355a75a589314aeb7cc363fa243b6dff5811f57",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "cb68e6f8cba313a026173ce4664051f212da864a04f38b75ebfd0ec1a053f9c6",
+      "block_id": 21983546,
+      "timestamp": "2025-03-05T22:03:23Z",
+      "from": "0x2355a75a589314aeb7cc363fa243b6dff5811f57",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "ERC20",
+      "tx_hash": "964511daf4b5f2548b8e7c239b7f90846d84991f726fe19e188b471ea6b75a60",
+      "block_id": 21983599,
+      "timestamp": "2025-03-05T22:13:59Z",
+      "from": "0x0000000000000000000000000000000000000000",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "8413800000000000000",
+      "asset_address": "0x9cdc144b1017be0812209523895c16c40d3631ee",
+      "asset_name": "Shalom Hamas",
+      "asset_symbol": "SHALOM"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "79de2dada85edeb468f5d0b9d3f58ddc3ee2ac42efdc4116448cb67ffe265d72",
+      "block_id": 21983761,
+      "timestamp": "2025-03-05T22:46:35Z",
+      "from": "0x663efeadf2f2da30795a35af928c4723c45e1dc5",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "ERC20",
+      "tx_hash": "13f17a0a6d6b9a807d0b0dd3053f20794f3f26b1fc41ba71eebf54c910d6b0e2",
+      "block_id": 21983778,
+      "timestamp": "2025-03-05T22:49:59Z",
+      "from": "0x0000000000000000000000000000000000000000",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "20000000000000000",
+      "asset_address": "0x120712afcdc53e406c326c6668a489ad3ec8a064",
+      "asset_name": "Donald\\'s Duck",
+      "asset_symbol": "OvalDuck"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "c693da2a27f7fd849c30fdb22986a1e5e94631c62ce619ff2d48d37f8ac1df2e",
+      "block_id": 21983789,
+      "timestamp": "2025-03-05T22:52:11Z",
+      "from": "0x76cd2bbdaa512b30b1146f237501f41bf8e05efe",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "09e00e7a490ab2f0d6d4e1675a5706bb689b2fb0d8a3cd14c82b66b852ec27be",
+      "block_id": 21983840,
+      "timestamp": "2025-03-05T23:02:23Z",
+      "from": "0xd920c00ba16db797335bde25fb992a71d393ab0e",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "2ba41d6893a871633955cab5f617b7039aeb89bc82ef235d6fe7352697b4cba8",
+      "block_id": 21983873,
+      "timestamp": "2025-03-05T23:08:59Z",
+      "from": "0xe3659812081150802f5da2d3dcaed0cb0ae7192e",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "8547a3ab60b6390beb2da45a873e71a655756127d4973319e00f5c2b870d10a0",
+      "block_id": 21983878,
+      "timestamp": "2025-03-05T23:09:59Z",
+      "from": "0xe3659812081150802f5da2d3dcaed0cb0ae7192e",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "94524d182aae7532aa079bd47b31cb9b86dc6c4506582b4930a6b459c02f4ec5",
+      "block_id": 21983907,
+      "timestamp": "2025-03-05T23:15:47Z",
+      "from": "0xbd1986c76c562f7daf3fa59b7e97669657831be2",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "5893cbc805713a614cb1a7b8796b792a2f37840d6f00c0fdee7b071c26caf257",
+      "block_id": 21983929,
+      "timestamp": "2025-03-05T23:20:11Z",
+      "from": "0x862642957fef3bef7a05245539a050c43e63bcd5",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "04320a6e5374659ae70cb1ee9bff80e43b2ff806413dd8bee69a0e57ba0996b9",
+      "block_id": 21983929,
+      "timestamp": "2025-03-05T23:20:11Z",
+      "from": "0x862642957fef3bef7a05245539a050c43e63bcd5",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "98ac9121ea04d983252a8c45a05a48973cbe6789b5b2e6cce15d56f89d3a3cd8",
+      "block_id": 21983931,
+      "timestamp": "2025-03-05T23:20:35Z",
+      "from": "0x862642957fef3bef7a05245539a050c43e63bcd5",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "db48ab9ba45db9db7da2c372858a073bdff10ebe0948c0ddb367cd4c2221291f",
+      "block_id": 21983958,
+      "timestamp": "2025-03-05T23:25:59Z",
+      "from": "0xbd1986c76c562f7daf3fa59b7e97669657831be2",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "3b0a28c94cc03135598a497cae05258fdf06115125ccdc5c600c9894a18ad80e",
+      "block_id": 21983959,
+      "timestamp": "2025-03-05T23:26:11Z",
+      "from": "0xbd1986c76c562f7daf3fa59b7e97669657831be2",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "bca5ed4e8f7b66fa822d31701969644b99880ac67b04a336fd400256fe279580",
+      "block_id": 21983967,
+      "timestamp": "2025-03-05T23:27:47Z",
+      "from": "0x5d2ea6bd38e1912330bd0067e327a5cb0bf4ba22",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "cec6fb7d194469a7add14687ad30f925ca20df8ee17144d497fad29aa2137a49",
+      "block_id": 21984025,
+      "timestamp": "2025-03-05T23:39:23Z",
+      "from": "0xd648ce7cd5cdd336181e7393ec8d51ed77d8816a",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "f607db1ed231e302ecae4a911bad17e42b31fe00c6185d3cc320ac173dc2d68e",
+      "block_id": 21984027,
+      "timestamp": "2025-03-05T23:39:47Z",
+      "from": "0xd648ce7cd5cdd336181e7393ec8d51ed77d8816a",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    },
+    {
+      "chain": "EVM",
+      "asset_type": "NATIVE",
+      "tx_hash": "02c0e21af1e0ac32fb2d365cbaf9f6e9c68d3ee46d902c645b3a84f1a9541c27",
+      "block_id": 21984096,
+      "timestamp": "2025-03-05T23:53:35Z",
+      "from": "0x04fcf80ec93bb60663aecfcb9895e50b61d79357",
+      "to": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount": "0",
+      "asset_name": "Ethereum",
+      "asset_symbol": "ETH"
+    }
+  ],
+  "source_transfer_count": 1795
+}

@@ -8,5 +8,35 @@
     "source": "bootstrap_entities",
     "trusted": false,
     "notes": "Known mixer-related routing contract"
+  },
+  "0xe592427a0aece92de3edee1f18e0157c05861564": {
+    "address": "0xe592427a0aece92de3edee1f18e0157c05861564",
+    "name": "Uniswap V3 Router",
+    "category": "PROTOCOL",
+    "severity": "LOW",
+    "confidence": "HIGH",
+    "source": "bootstrap_entities",
+    "trusted": true,
+    "notes": "Trusted DeFi protocol router"
+  },
+  "0x7a250d5630b4cf539739df2c5dacb4c659f2488d": {
+    "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+    "name": "Uniswap V2 Router",
+    "category": "PROTOCOL",
+    "severity": "LOW",
+    "confidence": "HIGH",
+    "source": "bootstrap_entities",
+    "trusted": true,
+    "notes": "Trusted DeFi protocol router"
+  },
+  "0xf977814e90da44bfa03b6295a0616a897441acec": {
+    "address": "0xf977814e90da44bfa03b6295a0616a897441acec",
+    "name": "Binance Wallet",
+    "category": "EXCHANGE",
+    "severity": "LOW",
+    "confidence": "HIGH",
+    "source": "bootstrap_entities",
+    "trusted": true,
+    "notes": "Known exchange wallet"
   }
 }

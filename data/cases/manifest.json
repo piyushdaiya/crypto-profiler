@@ -1,0 +1,20 @@
+{
+  "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045": {
+    "case_id": "public-wallet-noisy-inbound",
+    "title": "Public Wallet with Noisy Inbound Activity",
+    "description": "Established public wallet with heavy inbound activity, many counterparties, and no direct high-risk label in the extracted window.",
+    "risk_posture": "OBSERVED"
+  },
+  "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b": {
+    "case_id": "tornado-router-high-risk",
+    "title": "High-Risk Mixer Infrastructure",
+    "description": "Labeled Tornado Cash router with repeated inbound activity in the extracted window.",
+    "risk_posture": "REVIEWABLE_HIGH_RISK"
+  },
+  "0xE592427A0AEce92De3Edee1F18E0157C05861564": {
+    "case_id": "uniswap-v3-router-trusted-protocol",
+    "title": "Trusted Protocol High-Activity Router",
+    "description": "Uniswap V3 router showing large-scale, high-frequency protocol activity.",
+    "risk_posture": "TRUSTED_LOW_RISK"
+  }
+}

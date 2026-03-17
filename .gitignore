@@ -1,2 +1,5 @@
 .env
-/sampledata
+.DS_Store
+data/.DS_Store
+data/transactions/
+data/cases/extracted/*.json

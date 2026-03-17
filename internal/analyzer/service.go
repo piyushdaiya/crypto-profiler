@@ -58,6 +58,57 @@ func Investigate(profile *model.WalletProfile, txs []model.Transaction) {
 	}
 
 	// ---------------------------------------------------------
+	// 1B. DIRECT LABEL ON PROFILED ADDRESS
+	// ---------------------------------------------------------
+	if label, ok := LookupEntityLabel(profile.Address); ok {
+		switch label.Category {
+		case model.LabelCategoryMixer:
+			addHit(
+				&hits,
+				"FRAUD",
+				"profiled_address_high_risk_label",
+				fmt.Sprintf("Profiled address labeled as high-risk entity: %s", label.Name),
+				45.0,
+				&label,
+				1,
+			)
+
+		case model.LabelCategoryExploit, model.LabelCategoryScam:
+			addHit(
+				&hits,
+				"FRAUD",
+				"profiled_address_high_risk_label",
+				fmt.Sprintf("Profiled address labeled as high-risk entity: %s", label.Name),
+				45.0,
+				&label,
+				1,
+			)
+
+		case model.LabelCategoryExchange:
+			addHit(
+				&hits,
+				"REPUTATION",
+				"profiled_address_trusted_label",
+				fmt.Sprintf("Profiled address labeled as known exchange: %s", label.Name),
+				-10.0,
+				&label,
+				1,
+			)
+
+		case model.LabelCategoryTrusted, model.LabelCategoryProtocol:
+			addHit(
+				&hits,
+				"REPUTATION",
+				"profiled_address_trusted_label",
+				fmt.Sprintf("Profiled address labeled as trusted protocol: %s", label.Name),
+				-10.0,
+				&label,
+				1,
+			)
+		}
+	}
+
+	// ---------------------------------------------------------
 	// 2. AGE / HISTORY SIGNALS
 	// ---------------------------------------------------------
 	if profile.FirstSeen != nil {

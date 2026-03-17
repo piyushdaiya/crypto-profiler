@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 
@@ -18,42 +19,57 @@ var (
 func GetKnownEntities() map[string]model.EntityLabel {
 	knownEntitiesOnce.Do(func() {
 		knownEntities = loadKnownEntities()
-		log.Printf("[labels] loaded %d bootstrap entity labels", len(knownEntities))
 	})
 	return knownEntities
 }
 
 func loadKnownEntities() map[string]model.EntityLabel {
-	path := os.Getenv("BOOTSTRAP_LABELS_PATH")
-	if path == "" {
-		path = "/root/data/labels/bootstrap_entities.json"
-	}
+	paths := candidateBootstrapLabelPaths()
 
-	log.Printf("[labels] loading bootstrap labels from %s", path)
-
-	raw, err := os.ReadFile(path)
-	if err != nil {
-		log.Printf("[labels] failed to read bootstrap labels: %v", err)
-		return map[string]model.EntityLabel{}
-	}
-
-	var entities map[string]model.EntityLabel
-	if err := json.Unmarshal(raw, &entities); err != nil {
-		log.Printf("[labels] failed to unmarshal bootstrap labels: %v", err)
-		return map[string]model.EntityLabel{}
-	}
-
-	normalized := make(map[string]model.EntityLabel, len(entities))
-	for address, label := range entities {
-		addr := strings.ToLower(strings.TrimSpace(address))
-		label.Address = strings.ToLower(strings.TrimSpace(label.Address))
-		if label.Address == "" {
-			label.Address = addr
+	var lastErr error
+	for _, path := range paths {
+		raw, err := os.ReadFile(filepath.Clean(path))
+		if err != nil {
+			lastErr = err
+			continue
 		}
-		normalized[addr] = label
+
+		var entities map[string]model.EntityLabel
+		if err := json.Unmarshal(raw, &entities); err != nil {
+			lastErr = err
+			continue
+		}
+
+		normalized := make(map[string]model.EntityLabel, len(entities))
+		for address, label := range entities {
+			addr := strings.ToLower(strings.TrimSpace(address))
+			label.Address = strings.ToLower(strings.TrimSpace(label.Address))
+			if label.Address == "" {
+				label.Address = addr
+			}
+			normalized[addr] = label
+		}
+
+		return normalized
 	}
 
-	return normalized
+	if lastErr != nil {
+		log.Printf("[labels] bootstrap label load failed: %v", lastErr)
+	}
+
+	return map[string]model.EntityLabel{}
+}
+
+func candidateBootstrapLabelPaths() []string {
+	if path := strings.TrimSpace(os.Getenv("BOOTSTRAP_LABELS_PATH")); path != "" {
+		return []string{path}
+	}
+
+	return []string{
+		"./data/labels/bootstrap_entities.json",
+		"data/labels/bootstrap_entities.json",
+		"/root/data/labels/bootstrap_entities.json",
+	}
 }
 
 func LookupEntityLabel(address string) (model.EntityLabel, bool) {

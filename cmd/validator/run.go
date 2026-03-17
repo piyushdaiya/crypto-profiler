@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -11,6 +12,7 @@ import (
 
 	"github.com/piyushdaiya/crypto-profiler/internal/address"
 	"github.com/piyushdaiya/crypto-profiler/internal/analyzer"
+	"github.com/piyushdaiya/crypto-profiler/internal/datasets"
 	"github.com/piyushdaiya/crypto-profiler/internal/model"
 )
 
@@ -23,12 +25,25 @@ func defaultStrategies() []address.ChainStrategy {
 }
 
 func run(args []string, out io.Writer, errOut io.Writer, strategies []address.ChainStrategy) int {
-	if len(args) < 1 {
-		fmt.Fprintln(errOut, "Usage: ./validator <wallet-address>")
+	fs := flag.NewFlagSet("validator", flag.ContinueOnError)
+	fs.SetOutput(errOut)
+
+	datasetPath := fs.String("dataset", "", "Path to curated dataset JSON")
+	if err := fs.Parse(args); err != nil {
 		return 1
 	}
 
-	walletAddress := strings.TrimSpace(args[0])
+	if *datasetPath != "" {
+		return runDatasetMode(*datasetPath, out, errOut)
+	}
+
+	if fs.NArg() < 1 {
+		fmt.Fprintln(errOut, "Usage: ./validator <wallet-address>")
+		fmt.Fprintln(errOut, "   or: ./validator --dataset <curated-case.json>")
+		return 1
+	}
+
+	walletAddress := strings.TrimSpace(fs.Arg(0))
 
 	etherscanKey := os.Getenv("ETHERSCAN_API_KEY")
 	coinstatsKey := os.Getenv("COINSTATS_API_KEY")
@@ -61,7 +76,6 @@ func run(args []string, out io.Writer, errOut io.Writer, strategies []address.Ch
 			fmt.Fprintf(errOut, "⚠️ Error validating: %v\n", err)
 		}
 
-		// Safety net: run analysis if the selected strategy did not do so.
 		if res != nil && res.RiskScore == 0 && len(res.RiskReasons) == 0 {
 			analyzer.Investigate(res, nil)
 		}
@@ -79,6 +93,27 @@ func run(args []string, out io.Writer, errOut io.Writer, strategies []address.Ch
 		}
 	}
 
+	return writeProfile(result, out, errOut)
+}
+
+func runDatasetMode(path string, out io.Writer, errOut io.Writer) int {
+	fmt.Fprintf(errOut, "🔍 Analyzing curated dataset %s...\n", path)
+
+	cc, err := datasets.LoadCuratedCase(path)
+	if err != nil {
+		fmt.Fprintf(errOut, "Error loading dataset: %v\n", err)
+		return 1
+	}
+
+	profile := datasets.BuildWalletProfileFromCuratedCase(cc)
+	txs := datasets.BuildTransactionsFromCuratedCase(cc)
+
+	analyzer.Investigate(profile, txs)
+
+	return writeProfile(profile, out, errOut)
+}
+
+func writeProfile(result *model.WalletProfile, out io.Writer, errOut io.Writer) int {
 	encoder := json.NewEncoder(out)
 	encoder.SetIndent("", "  ")
 	encoder.SetEscapeHTML(false)

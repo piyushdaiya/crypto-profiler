@@ -1,3 +1,27 @@
+/*
+ *
+ *  *  Copyright (c) 2026 Piyush Daiya
+ *  *  *
+ *  *  * Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  *  * of this software and associated documentation files (the "Software"), to deal
+ *  *  * in the Software without restriction, including without limitation the rights
+ *  *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  *  * copies of the Software, and to permit persons to whom the Software is
+ *  *  * furnished to do so, subject to the following conditions:
+ *  *  *
+ *  *  * The above copyright notice and this permission notice shall be included in all
+ *  *  * copies or substantial portions of the Software.
+ *  *  *
+ *  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  *  * SOFTWARE.
+ *
+ */
+
 package main
 
 import (
@@ -110,7 +134,7 @@ func checkAddressHandler(w http.ResponseWriter, r *http.Request) {
 		jsonStr += fmt.Sprintf(`, "currency": "%s", "source": "%s"`, currency, source)
 	}
 	jsonStr += `}`
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(jsonStr))
 }
@@ -167,28 +191,30 @@ type Profile struct {
 	Feature []Feature `xml:"Feature"`
 }
 type Feature struct {
-	FeatureTypeID string           `xml:"FeatureTypeID,attr"` 
+	FeatureTypeID string           `xml:"FeatureTypeID,attr"`
 	Version       []FeatureVersion `xml:"FeatureVersion"`
 }
 type FeatureVersion struct {
 	VersionDetail []VersionDetail `xml:"VersionDetail"`
 }
 type VersionDetail struct {
-	Value string `xml:",chardata"` 
+	Value string `xml:",chardata"`
 }
 
 func downloadAndParseOFAC() error {
 	url := "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml"
 
 	resp, err := http.Get(url)
-	if err != nil { return err }
+	if err != nil {
+		return err
+	}
 	defer resp.Body.Close()
 
 	lastMod := resp.Header.Get("Last-Modified")
 	log.Printf("🔹 [SYNC] Header Last-Modified: %s", lastMod)
 
 	decoder := xml.NewDecoder(resp.Body)
-	
+
 	// PRE-FILL MAP with known IDs provided by user
 	cryptoTypeMap := map[string]string{
 		"344":  "XBT",
@@ -206,13 +232,15 @@ func downloadAndParseOFAC() error {
 		"1008": "BSC",
 		"1167": "SOL",
 		// Additional IDs often found in OFAC data
-		"573":  "XMR",
-		"572":  "LTC",
+		"573": "XMR",
+		"572": "LTC",
 	}
-	
+
 	tx, err := db.Begin()
-	if err != nil { return err }
-	
+	if err != nil {
+		return err
+	}
+
 	stmt, err := tx.Prepare("INSERT OR REPLACE INTO sanctioned_addresses(address, currency, source, updated_at) VALUES(?, ?, 'OFAC', ?)")
 	if err != nil {
 		tx.Rollback()
@@ -228,11 +256,13 @@ func downloadAndParseOFAC() error {
 
 	for {
 		t, _ := decoder.Token()
-		if t == nil { break }
+		if t == nil {
+			break
+		}
 
 		switch se := t.(type) {
 		case xml.StartElement:
-			
+
 			// STEP 1: Catch "FeatureTypeValue" (Dynamic Learning)
 			// We still listen for these to catch any NEW currencies OFAC might add in the future
 			if se.Name.Local == "FeatureTypeValue" {
@@ -258,7 +288,9 @@ func downloadAndParseOFAC() error {
 			// STEP 2: Scan Parties
 			if se.Name.Local == "DistinctParty" {
 				var p DistinctParty
-				if err := decoder.DecodeElement(&p, &se); err != nil { continue }
+				if err := decoder.DecodeElement(&p, &se); err != nil {
+					continue
+				}
 
 				for _, profile := range p.Profile {
 					for _, feature := range profile.Feature {
@@ -287,14 +319,16 @@ func downloadAndParseOFAC() error {
 	}
 
 	_, _ = tx.Exec("INSERT OR REPLACE INTO metadata(key, value) VALUES('last_modified', ?)", lastMod)
-	
-	if err := tx.Commit(); err != nil { return err }
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
 
 	log.Printf("✅ [SYNC] Done. Scanned %d parties. Loaded %d sanctioned addresses.", count, loaded)
-	
+
 	if loaded == 0 {
 		log.Println("⚠️ [SYNC] WARNING: 0 addresses loaded. Double check FeatureType IDs.")
 	}
-	
+
 	return nil
 }

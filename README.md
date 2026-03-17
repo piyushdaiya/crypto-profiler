@@ -1,15 +1,13 @@
-
 # Crypto Profiler
 
+[![CI](https://github.com/piyushdaiya/crypto-profiler/actions/workflows/ci.yml/badge.svg)](https://github.com/piyushdaiya/crypto-profiler/actions/workflows/ci.yml)
+[![Go Version](https://img.shields.io/badge/Go-1.26+-00ADD8)](#tech-stack)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-active%20mvp-blue)](#roadmap)
-[![Language](https://img.shields.io/badge/language-Go-00ADD8)](#tech-stack)
-[![Docker](https://img.shields.io/badge/runtime-Docker-2496ED)](#quick-start)
-[![Focus](https://img.shields.io/badge/focus-AML%20%7C%20Fraud%20%7C%20Crypto%20Risk-red)](#overview)
-[![Architecture](https://img.shields.io/badge/architecture-Explainable%20Risk%20Scoring-orange)](#architecture)
 
 **Wallet Risk & Exposure Intelligence for AML, Fraud, Sanctions, and Crypto Surveillance**
 
-Crypto Profiler is a Go-based platform for profiling cryptocurrency wallets using deterministic checks, graph-based exposure analysis, and behavioral heuristics.
+Crypto Profiler is a Go-based platform for profiling cryptocurrency wallets using deterministic checks, graph-based exposure analysis, behavioral heuristics, and curated blockchain case datasets.
 
 It is designed for financial institutions, compliance teams, investigators, RegTech product teams, and solutions architects who need a practical way to perform **Know Your Wallet (KYW)** and crypto-risk analysis with explainable results.
 
@@ -50,6 +48,19 @@ Crypto Profiler is being built to answer those questions in a portfolio-grade, e
 
 ---
 
+## Day 2 Update
+
+The repository now includes:
+
+- raw Blockchair extraction utilities for Ethereum and ERC-20 transaction datasets
+- curated case generation for portfolio-safe demo artifacts
+- dataset-backed profiling mode for stable, reproducible demos
+- unit tests across analyzer, validator, address validation, and watchlist client
+- OWASP Phase 1 security baseline documentation and security-focused tests
+- GitHub Actions CI for build, test, and Docker smoke validation
+
+---
+
 ## Core capabilities
 
 ### 1. Wallet validation
@@ -79,7 +90,7 @@ Initial and planned heuristics include:
 
 ### 5. Explainable scoring
 - weighted score from 0–100
-- severity bands: Low / Medium / High
+- severity bands and review guidance
 - triggered rules and evidence
 - rationale string for analyst review
 
@@ -136,6 +147,7 @@ See:
 - [`docs/security/owasp-test-matrix.md`](docs/security/owasp-test-matrix.md)
 
 ---
+
 ## v0.1 MVP scope
 
 The first public milestone is intentionally focused.
@@ -162,6 +174,52 @@ The first public milestone is intentionally focused.
 
 ---
 
+## Dataset-Backed Profiling
+
+In addition to live profiling flows, Crypto Profiler supports curated dataset mode for reproducible demos and case studies.
+
+### Example
+
+```bash
+go run ./cmd/validator --dataset ./data/cases/curated/tornado-router-high-risk.json
+go run ./cmd/validator --dataset ./data/cases/curated/uniswap-v3-router-trusted-protocol.json
+go run ./cmd/validator --dataset ./data/cases/curated/public-wallet-noisy-inbound.json
+```
+
+This mode is useful for:
+
+- portfolio demos
+- stable case-study walkthroughs
+- screenshot/video generation
+- testing without live API drift
+
+---
+
+## Data Pipeline
+
+Crypto Profiler includes a lightweight data pipeline for creating portfolio-grade blockchain case artifacts.
+
+### Extraction
+Raw Blockchair Ethereum and ERC-20 transaction files can be scanned to build per-address extracted datasets.
+
+### Curation
+Large extracted datasets can then be reduced into curated case files containing:
+
+- summary statistics
+- top counterparties
+- capped sample transfers
+- case metadata and risk posture
+
+### Current curated cases
+
+- `public-wallet-noisy-inbound`
+- `tornado-router-high-risk`
+- `uniswap-v3-router-trusted-protocol`
+
+These complement the deterministic sanctioned-wallet case already demonstrated via the watchlist engine.
+
+---
+
 ## Example use cases
 
 Crypto Profiler is being designed for scenarios such as:
@@ -179,32 +237,49 @@ Crypto Profiler is being designed for scenarios such as:
 
 ```json
 {
-  "wallet": "0x1234...abcd",
-  "chain": "ethereum",
-  "risk_score": 82,
-  "severity": "high",
-  "risk_categories": [
-    "sanctions_risk",
-    "money_laundering_risk"
-  ],
-  "triggered_rules": [
-    "direct_risky_counterparty",
-    "hop_to_mixer_proximity",
-    "high_velocity_burst"
-  ],
-  "evidence": [
+  "address": "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b",
+  "network": "EVM",
+  "is_valid": true,
+  "validation_details": "Dataset Mode | High-Risk Mixer Infrastructure | Label: HIGH RISK: Tornado Cash (Router) | Risk Posture: REVIEWABLE_HIGH_RISK",
+  "is_active": true,
+  "balance": "",
+  "tx_count": 1132,
+  "first_seen": "2025-02-27T00:13:23Z",
+  "last_seen": "2025-03-05T23:28:23Z",
+  "risk_score": 22.5,
+  "risk_grade": "ELEVATED",
+  "review_recommended": true,
+  "risk_breakdown": {
+    "fraud_risk": 45,
+    "reputation_risk": 0,
+    "lending_risk": 0
+  },
+  "risk_reasons": [
     {
-      "type": "counterparty_exposure",
-      "detail": "1-hop exposure to known mixer-associated wallet"
+      "code": "profiled_address_high_risk_label",
+      "category": "FRAUD",
+      "description": "Profiled address labeled as high-risk entity: Tornado Cash Router",
+      "offset": 45,
+      "source": "bootstrap_entities",
+      "related_entity": "Tornado Cash Router",
+      "related_address": "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "evidence_count": 1
     },
     {
-      "type": "behavioral_pattern",
-      "detail": "47 outgoing transactions observed within 52 minutes after prolonged dormancy"
+      "code": "established_history",
+      "category": "REPUTATION",
+      "description": "Established History (>1 Year)",
+      "offset": -10,
+      "evidence_count": 1
     }
-  ],
-  "rationale": "Score 82: direct risky counterparty exposure, 1-hop mixer proximity, and abnormal burst activity detected."
+  ]
 }
 ```
+
+---
+
 ## Case Study: Established Wallet with Mixer Interaction
 
 Crypto Profiler detected a direct interaction with a mixer-related entity, but did **not** over-penalize the wallet because there were no reinforcing suspicious signals such as fresh-wallet behavior, high-velocity bursts, or rapid pass-through activity.
@@ -228,6 +303,8 @@ See the full write-up here:
 
 [`docs/case-studies/established-wallet-mixer-no-reinforcing-signals.md`](docs/case-studies/established-wallet-mixer-no-reinforcing-signals.md)
 
+---
+
 ## Case Study: Direct Sanctioned Wallet
 
 Crypto Profiler uses the watchlist engine to detect a direct sanctions match and immediately short-circuits to a critical outcome.
@@ -241,6 +318,35 @@ This case demonstrates the deterministic end of the scoring model:
 See the full write-up here:
 
 [`docs/case-studies/direct-sanctioned-wallet.md`](docs/case-studies/direct-sanctioned-wallet.md)
+
+---
+
+## Testing and CI
+
+Crypto Profiler includes unit tests across the core MVP logic:
+
+- address syntax validation for Bitcoin, EVM, and Solana
+- analyzer scoring and combination rules
+- watchlist client success/error handling
+- validator CLI flows
+- curated dataset loading and profiling support
+- OWASP Phase 1 security-focused test coverage for watchlist and validator flows
+
+Run locally:
+
+```bash
+go test ./...
+go build ./...
+```
+
+GitHub Actions CI runs:
+
+- `go build ./...`
+- `go test ./...`
+- Docker image build
+- Docker Compose smoke test
+
+---
 
 ## Watchlist Engine Verification
 
@@ -303,3 +409,19 @@ This confirms that:
 1. the validator is running
 2. the watchlist engine is reachable
 3. the sanctions lookup path is working end to end
+
+---
+
+## Tech stack
+
+- **Go** for core logic and services
+- **Docker** for local execution
+- **Config-driven rules and scoring**
+- **Blockchair-based extraction pipeline** for Ethereum and ERC-20 raw datasets
+- **Curated case artifacts** for stable portfolio and demo flows
+
+---
+
+## License
+
+This project is licensed under the MIT License. See [`LICENSE`](LICENSE).

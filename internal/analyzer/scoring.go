@@ -189,6 +189,7 @@ func shouldRecommendReview(score float64, hits []RuleHit) bool {
 		"direct_high_risk_entity":                        true,
 		"high_velocity_behavior":                         true,
 		"fresh_wallet":                                   true,
+		"repeated_flagged_counterparty_interaction":      true,
 		"combo_mixer_plus_fresh_wallet":                  true,
 		"combo_mixer_plus_high_velocity":                 true,
 		"rapid_passthrough_behavior":                     true,

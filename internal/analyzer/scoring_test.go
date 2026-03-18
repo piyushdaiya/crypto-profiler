@@ -111,6 +111,14 @@ func TestShouldRecommendReview(t *testing.T) {
 			},
 			want: false,
 		},
+		{
+			name:  "repeated flagged counterparty interaction triggers review",
+			score: 8.0,
+			hits: []RuleHit{
+				{Code: "repeated_flagged_counterparty_interaction", Category: "FRAUD"},
+			},
+			want: true,
+		},
 	}
 
 	for _, tt := range tests {

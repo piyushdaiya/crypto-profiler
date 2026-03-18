@@ -157,9 +157,13 @@ func Investigate(profile *model.WalletProfile, txs []model.Transaction) {
 	for _, tx := range txs {
 		var otherParty string
 		if strings.EqualFold(tx.From, profile.Address) {
-			otherParty = strings.ToLower(tx.To)
+			otherParty = strings.ToLower(strings.TrimSpace(tx.To))
 		} else {
-			otherParty = strings.ToLower(tx.From)
+			otherParty = strings.ToLower(strings.TrimSpace(tx.From))
+		}
+
+		if otherParty == "" || strings.EqualFold(otherParty, profile.Address) {
+			continue
 		}
 
 		label, ok := LookupEntityLabel(otherParty)
@@ -248,6 +252,12 @@ func Investigate(profile *model.WalletProfile, txs []model.Transaction) {
 			addHit(&hits, "FRAUD", "high_velocity_behavior", "High Velocity Behavior (Potential Bot)", 25.0, nil, 1)
 		}
 	}
+
+	// ---------------------------------------------------------
+	// 4B. REPEATED INTERACTION WITH FLAGGED COUNTERPARTIES
+	// ---------------------------------------------------------
+	applyRepeatedFlaggedCounterpartyHeuristic(profile, txs, &hits)
+
 	// ---------------------------------------------------------
 	// 5. NOISY INBOUND / DUSTING-LIKE OBSERVATION
 	// ---------------------------------------------------------
@@ -310,6 +320,84 @@ func Investigate(profile *model.WalletProfile, txs []model.Transaction) {
 	}
 	profile.RiskReasons = reasons
 }
+
+func applyRepeatedFlaggedCounterpartyHeuristic(profile *model.WalletProfile, txs []model.Transaction, hits *[]RuleHit) {
+	if profile == nil || len(txs) == 0 {
+		return
+	}
+
+	address := strings.ToLower(strings.TrimSpace(profile.Address))
+	if address == "" {
+		return
+	}
+
+	type interactionSummary struct {
+		Label        model.EntityLabel
+		Count        int
+		UniqueTxHash map[string]struct{}
+	}
+
+	seen := map[string]*interactionSummary{}
+
+	for _, tx := range txs {
+		from := strings.ToLower(strings.TrimSpace(tx.From))
+		to := strings.ToLower(strings.TrimSpace(tx.To))
+
+		var counterparty string
+		switch {
+		case from == address && to != "" && to != address:
+			counterparty = to
+		case to == address && from != "" && from != address:
+			counterparty = from
+		default:
+			continue
+		}
+
+		label, ok := LookupEntityLabel(counterparty)
+		if !ok || !isFlaggedCounterpartyCategory(label.Category) {
+			continue
+		}
+
+		entry, exists := seen[counterparty]
+		if !exists {
+			entry = &interactionSummary{
+				Label:        label,
+				UniqueTxHash: map[string]struct{}{},
+			}
+			seen[counterparty] = entry
+		}
+
+		txHash := strings.TrimSpace(tx.Hash)
+		if txHash == "" {
+			txHash = fmt.Sprintf("%s|%s|%d", tx.From, tx.To, tx.TimeStamp)
+		}
+		if _, already := entry.UniqueTxHash[txHash]; already {
+			continue
+		}
+
+		entry.UniqueTxHash[txHash] = struct{}{}
+		entry.Count++
+	}
+
+	for _, entry := range seen {
+		if entry.Count < 3 {
+			continue
+		}
+
+		offset := repeatedFlaggedInteractionOffset(entry.Label.Category, entry.Count)
+
+		addHit(
+			hits,
+			"FRAUD",
+			"repeated_flagged_counterparty_interaction",
+			fmt.Sprintf("Repeated interaction with flagged counterparty: %s (%d interactions)", entry.Label.Name, entry.Count),
+			offset,
+			&entry.Label,
+			entry.Count,
+		)
+	}
+}
+
 func applyNoisyInboundHeuristics(profile *model.WalletProfile, txs []model.Transaction, hits *[]RuleHit) {
 	if profile == nil || len(txs) == 0 {
 		return
@@ -391,13 +479,46 @@ func applyNoisyInboundHeuristics(profile *model.WalletProfile, txs []model.Trans
 	}
 }
 
+func isFlaggedCounterpartyCategory(category model.LabelCategory) bool {
+	switch category {
+	case model.LabelCategoryMixer,
+		model.LabelCategoryExploit,
+		model.LabelCategoryScam,
+		model.LabelCategorySanctions:
+		return true
+	default:
+		return false
+	}
+}
+
+func repeatedFlaggedInteractionOffset(category model.LabelCategory, count int) float64 {
+	base := 8.0
+
+	switch category {
+	case model.LabelCategorySanctions:
+		base = 15.0
+	case model.LabelCategoryMixer:
+		base = 10.0
+	case model.LabelCategoryExploit, model.LabelCategoryScam:
+		base = 12.0
+	}
+
+	switch {
+	case count >= 10:
+		return base + 8.0
+	case count >= 5:
+		return base + 4.0
+	default:
+		return base
+	}
+}
+
 func isZeroLikeValue(raw string) bool {
 	s := strings.TrimSpace(raw)
 	if s == "" {
 		return false
 	}
 
-	// Integer style: "0", "0000"
 	allZero := true
 	for _, ch := range s {
 		if ch == '.' {

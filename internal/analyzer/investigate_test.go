@@ -377,3 +377,56 @@ func TestInvestigate_PublicWalletNoisyInboundObserved(t *testing.T) {
 		t.Fatalf("expected zero_value_inbound_pattern reason")
 	}
 }
+func TestInvestigate_RepeatedFlaggedCounterpartyInteractionEscalates(t *testing.T) {
+	resetKnownEntitiesCacheForTest(t)
+
+	server := newWatchlistServer(t, watchlistResponse{
+		Sanctioned: false,
+		Currency:   "ETH",
+		Source:     "OFAC",
+	})
+	defer server.Close()
+
+	setEnvForTest(t, "WATCHLIST_ENGINE_URL", server.URL)
+	setEnvForTest(t, "BOOTSTRAP_LABELS_PATH", writeBootstrapLabelsForTest(t))
+
+	firstSeen := time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC)
+	lastSeen := time.Date(2025, 3, 5, 23, 53, 35, 0, time.UTC)
+
+	profile := &model.WalletProfile{
+		Address:   "0x1111111111111111111111111111111111111111",
+		Network:   "EVM",
+		IsValid:   true,
+		IsActive:  true,
+		TxCount:   12,
+		FirstSeen: &firstSeen,
+		LastSeen:  &lastSeen,
+	}
+
+	txs := []model.Transaction{
+		{From: profile.Address, To: "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b", Value: "100", Hash: "tx01"},
+		{From: "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b", To: profile.Address, Value: "50", Hash: "tx02"},
+		{From: profile.Address, To: "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b", Value: "75", Hash: "tx03"},
+		{From: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", To: profile.Address, Value: "10", Hash: "tx04"},
+	}
+
+	Investigate(profile, txs)
+
+	var repeated bool
+	for _, reason := range profile.RiskReasons {
+		if reason.Code == "repeated_flagged_counterparty_interaction" {
+			repeated = true
+			if reason.EvidenceCount != 3 {
+				t.Fatalf("expected evidence_count=3, got %d", reason.EvidenceCount)
+			}
+		}
+	}
+
+	if !repeated {
+		t.Fatalf("expected repeated_flagged_counterparty_interaction reason")
+	}
+
+	if profile.RiskScore <= 0 {
+		t.Fatalf("expected risk score > 0, got %v", profile.RiskScore)
+	}
+}

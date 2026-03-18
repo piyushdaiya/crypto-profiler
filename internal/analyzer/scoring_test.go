@@ -101,6 +101,16 @@ func TestShouldRecommendReview(t *testing.T) {
 			},
 			want: true,
 		},
+		{
+			name:  "noisy inbound observation does not trigger review",
+			score: 2.5,
+			hits: []RuleHit{
+				{Code: "noisy_inbound_activity", Category: "FRAUD"},
+				{Code: "high_counterparty_fan_in", Category: "FRAUD"},
+				{Code: "zero_value_inbound_pattern", Category: "FRAUD"},
+			},
+			want: false,
+		},
 	}
 
 	for _, tt := range tests {

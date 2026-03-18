@@ -282,3 +282,98 @@ func TestInvestigate_FreshWalletMixerAndBurstEscalates(t *testing.T) {
 		t.Fatalf("expected combo_mixer_plus_high_velocity reason")
 	}
 }
+
+func TestInvestigate_PublicWalletNoisyInboundObserved(t *testing.T) {
+	resetKnownEntitiesCacheForTest(t)
+
+	server := newWatchlistServer(t, watchlistResponse{
+		Sanctioned: false,
+		Currency:   "ETH",
+		Source:     "OFAC",
+	})
+	defer server.Close()
+
+	setEnvForTest(t, "WATCHLIST_ENGINE_URL", server.URL)
+	setEnvForTest(t, "BOOTSTRAP_LABELS_PATH", writeBootstrapLabelsForTest(t))
+
+	firstSeen := time.Date(2015, 9, 28, 8, 24, 43, 0, time.UTC)
+	lastSeen := time.Date(2025, 3, 5, 23, 53, 35, 0, time.UTC)
+
+	profile := &model.WalletProfile{
+		Address:   "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+		Network:   "EVM",
+		IsValid:   true,
+		IsActive:  true,
+		TxCount:   1795,
+		FirstSeen: &firstSeen,
+		LastSeen:  &lastSeen,
+	}
+
+	txs := []model.Transaction{
+		{From: "0x1000000000000000000000000000000000000001", To: profile.Address, Value: "0", Hash: "tx01"},
+		{From: "0x1000000000000000000000000000000000000002", To: profile.Address, Value: "0", Hash: "tx02"},
+		{From: "0x1000000000000000000000000000000000000003", To: profile.Address, Value: "0", Hash: "tx03"},
+		{From: "0x1000000000000000000000000000000000000004", To: profile.Address, Value: "0", Hash: "tx04"},
+		{From: "0x1000000000000000000000000000000000000005", To: profile.Address, Value: "0", Hash: "tx05"},
+		{From: "0x1000000000000000000000000000000000000006", To: profile.Address, Value: "0", Hash: "tx06"},
+		{From: "0x1000000000000000000000000000000000000007", To: profile.Address, Value: "0", Hash: "tx07"},
+		{From: "0x1000000000000000000000000000000000000008", To: profile.Address, Value: "0", Hash: "tx08"},
+		{From: "0x1000000000000000000000000000000000000009", To: profile.Address, Value: "0", Hash: "tx09"},
+		{From: "0x1000000000000000000000000000000000000010", To: profile.Address, Value: "0", Hash: "tx10"},
+		{From: "0x1000000000000000000000000000000000000011", To: profile.Address, Value: "0", Hash: "tx11"},
+		{From: "0x1000000000000000000000000000000000000012", To: profile.Address, Value: "0", Hash: "tx12"},
+		{From: "0x1000000000000000000000000000000000000013", To: profile.Address, Value: "0", Hash: "tx13"},
+		{From: "0x1000000000000000000000000000000000000014", To: profile.Address, Value: "0", Hash: "tx14"},
+		{From: "0x1000000000000000000000000000000000000015", To: profile.Address, Value: "0", Hash: "tx15"},
+		{From: "0x1000000000000000000000000000000000000016", To: profile.Address, Value: "0", Hash: "tx16"},
+		{From: "0x1000000000000000000000000000000000000017", To: profile.Address, Value: "0", Hash: "tx17"},
+		{From: "0x1000000000000000000000000000000000000018", To: profile.Address, Value: "0", Hash: "tx18"},
+		{From: "0x1000000000000000000000000000000000000019", To: profile.Address, Value: "0", Hash: "tx19"},
+		{From: "0x1000000000000000000000000000000000000020", To: profile.Address, Value: "0", Hash: "tx20"},
+		{From: "0x1000000000000000000000000000000000000021", To: profile.Address, Value: "10000000000000", Hash: "tx21"},
+		{From: "0x1000000000000000000000000000000000000022", To: profile.Address, Value: "0", Hash: "tx22"},
+		{From: "0x1000000000000000000000000000000000000023", To: profile.Address, Value: "0", Hash: "tx23"},
+		{From: "0x1000000000000000000000000000000000000024", To: profile.Address, Value: "0", Hash: "tx24"},
+		{From: "0x1000000000000000000000000000000000000025", To: profile.Address, Value: "0", Hash: "tx25"},
+		{From: "0x1000000000000000000000000000000000000026", To: profile.Address, Value: "0", Hash: "tx26"},
+		{From: "0x1000000000000000000000000000000000000027", To: profile.Address, Value: "0", Hash: "tx27"},
+		{From: "0x1000000000000000000000000000000000000028", To: profile.Address, Value: "0", Hash: "tx28"},
+		{From: "0x1000000000000000000000000000000000000029", To: profile.Address, Value: "0", Hash: "tx29"},
+		{From: "0x1000000000000000000000000000000000000030", To: profile.Address, Value: "0", Hash: "tx30"},
+	}
+
+	Investigate(profile, txs)
+
+	if profile.RiskGrade != "MINIMAL (Observed)" {
+		t.Fatalf("expected MINIMAL (Observed), got %q", profile.RiskGrade)
+	}
+
+	if profile.ReviewRecommended {
+		t.Fatalf("expected review_recommended=false for noisy inbound observation")
+	}
+
+	var foundNoisyInbound bool
+	var foundFanIn bool
+	var foundZeroValue bool
+
+	for _, reason := range profile.RiskReasons {
+		switch reason.Code {
+		case "noisy_inbound_activity":
+			foundNoisyInbound = true
+		case "high_counterparty_fan_in":
+			foundFanIn = true
+		case "zero_value_inbound_pattern":
+			foundZeroValue = true
+		}
+	}
+
+	if !foundNoisyInbound {
+		t.Fatalf("expected noisy_inbound_activity reason")
+	}
+	if !foundFanIn {
+		t.Fatalf("expected high_counterparty_fan_in reason")
+	}
+	if !foundZeroValue {
+		t.Fatalf("expected zero_value_inbound_pattern reason")
+	}
+}

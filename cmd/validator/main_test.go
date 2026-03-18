@@ -150,7 +150,28 @@ func TestRun_InvalidAddressFallsBackToUnknown(t *testing.T) {
 
 func TestRun_DatasetModeLoadsCuratedCase(t *testing.T) {
 	dir := t.TempDir()
-	path := dir + "/case.json"
+
+	casePath := dir + "/case.json"
+	labelsPath := dir + "/bootstrap_entities.json"
+
+	labelsRaw := `{
+	  "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b": {
+	    "address": "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b",
+	    "name": "Tornado Cash Router",
+	    "category": "MIXER",
+	    "severity": "HIGH",
+	    "confidence": "HIGH",
+	    "source": "bootstrap_entities",
+	    "trusted": false,
+	    "notes": "Known mixer-related routing contract"
+	  }
+	}`
+
+	if err := os.WriteFile(labelsPath, []byte(labelsRaw), 0o644); err != nil {
+		t.Fatalf("failed to write bootstrap labels: %v", err)
+	}
+
+	setEnvForTest(t, "BOOTSTRAP_LABELS_PATH", labelsPath)
 
 	raw := `{
 	  "case_id": "tornado-router-high-risk",
@@ -188,14 +209,14 @@ func TestRun_DatasetModeLoadsCuratedCase(t *testing.T) {
 	  "source_transfer_count": 1132
 	}`
 
-	if err := os.WriteFile(path, []byte(raw), 0o644); err != nil {
+	if err := os.WriteFile(casePath, []byte(raw), 0o644); err != nil {
 		t.Fatalf("failed to write curated case: %v", err)
 	}
 
 	var out bytes.Buffer
 	var errOut bytes.Buffer
 
-	code := run([]string{"--dataset", path}, &out, &errOut, nil)
+	code := run([]string{"--dataset", casePath}, &out, &errOut, nil)
 	if code != 0 {
 		t.Fatalf("expected exit code 0, got %d; stderr=%s", code, errOut.String())
 	}
@@ -212,4 +233,25 @@ func TestRun_DatasetModeLoadsCuratedCase(t *testing.T) {
 	if got.Network != "EVM" {
 		t.Fatalf("expected EVM network, got %q", got.Network)
 	}
+}
+
+func setEnvForTest(t *testing.T, key, value string) {
+	t.Helper()
+
+	original, existed := os.LookupEnv(key)
+	if err := os.Setenv(key, value); err != nil {
+		t.Fatalf("failed to set env %s: %v", key, err)
+	}
+
+	t.Cleanup(func() {
+		var err error
+		if existed {
+			err = os.Setenv(key, original)
+		} else {
+			err = os.Unsetenv(key)
+		}
+		if err != nil {
+			t.Fatalf("failed to restore env %s: %v", key, err)
+		}
+	})
 }

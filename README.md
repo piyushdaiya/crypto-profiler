@@ -48,16 +48,19 @@ Crypto Profiler is being built to answer those questions in a portfolio-grade, e
 
 ---
 
-## Day 2 Update
+## Day 3 Update
 
-The repository now includes:
+The repository now also includes:
 
-- raw Blockchair extraction utilities for Ethereum and ERC-20 transaction datasets
-- curated case generation for portfolio-safe demo artifacts
-- dataset-backed profiling mode for stable, reproducible demos
-- unit tests across analyzer, validator, address validation, and watchlist client
-- OWASP Phase 1 security baseline documentation and security-focused tests
-- GitHub Actions CI for build, test, and Docker smoke validation
+- a **noisy inbound / dusting-like observation heuristic**
+- a **high counterparty fan-in observation heuristic**
+- additional analyzer test coverage for observed noisy-inbound behavior
+- dataset-backed case scoring improvements for:
+    - public wallet with noisy inbound activity
+    - high-risk mixer infrastructure
+    - trusted protocol high-activity router
+- a dedicated architecture document:
+    - [`ARCHITECTURE.md`](ARCHITECTURE.md)
 
 ---
 
@@ -87,6 +90,9 @@ Initial and planned heuristics include:
 - dusting and sweep patterns
 - high-velocity burst activity
 - pass-through / rapid outflow behavior
+- noisy inbound / dusting-like observation
+- high counterparty fan-in observation
+- zero-value inbound pattern detection
 
 ### 5. Explainable scoring
 - weighted score from 0–100
@@ -129,6 +135,21 @@ Initial and planned heuristics include:
 - **Modular rule engine**
 - **Docker-friendly local execution**
 - **Designed to integrate with a future shared watchlist engine**
+
+### Detailed architecture
+
+For the full architecture breakdown covering:
+- ingestion layer
+- normalization layer
+- entity/watchlist layer
+- graph/exposure engine
+- scoring engine
+- explanation layer
+- API/UI layer
+
+See:
+
+- [`ARCHITECTURE.md`](ARCHITECTURE.md)
 
 ---
 
@@ -278,6 +299,20 @@ Crypto Profiler is being designed for scenarios such as:
 }
 ```
 
+### Observed noisy-inbound behavior example
+
+The public-wallet curated case can now surface low-severity observed reasons such as:
+- `noisy_inbound_activity`
+- `high_counterparty_fan_in`
+- `zero_value_inbound_pattern`
+
+This helps distinguish:
+- **observed unusual activity**
+  from
+- **reviewable risk**
+  from
+- **deterministic critical risk**
+
 ---
 
 ## Case Study: Established Wallet with Mixer Interaction
@@ -330,6 +365,7 @@ Crypto Profiler includes unit tests across the core MVP logic:
 - watchlist client success/error handling
 - validator CLI flows
 - curated dataset loading and profiling support
+- noisy inbound heuristic coverage
 - OWASP Phase 1 security-focused test coverage for watchlist and validator flows
 
 Run locally:

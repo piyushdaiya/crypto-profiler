@@ -248,9 +248,19 @@ func Investigate(profile *model.WalletProfile, txs []model.Transaction) {
 			addHit(&hits, "FRAUD", "high_velocity_behavior", "High Velocity Behavior (Potential Bot)", 25.0, nil, 1)
 		}
 	}
+	// ---------------------------------------------------------
+	// 5. NOISY INBOUND / DUSTING-LIKE OBSERVATION
+	// ---------------------------------------------------------
+	// This is intentionally low-severity and should not automatically
+	// recommend review. It is meant to surface "observed" behavior
+	// such as spammy inbound transfers, many counterparties, and
+	// dusting-like patterns on public wallets.
+	if _, hasProfileLabel := LookupEntityLabel(profile.Address); !hasProfileLabel {
+		applyNoisyInboundHeuristics(profile, txs, &hits)
+	}
 
 	// ---------------------------------------------------------
-	// 5. PLACEHOLDER FOR FUTURE PATTERNS
+	// 6. PLACEHOLDER FOR FUTURE PATTERNS
 	// ---------------------------------------------------------
 	// Future examples:
 	// - rapid_passthrough_behavior
@@ -260,12 +270,12 @@ func Investigate(profile *model.WalletProfile, txs []model.Transaction) {
 	// - suspicious_inbound_outbound_ratio
 
 	// ---------------------------------------------------------
-	// 6. APPLY COMBINATION RULES
+	// 7. APPLY COMBINATION RULES
 	// ---------------------------------------------------------
 	hits = append(hits, applyCombinationRules(hits)...)
 
 	// ---------------------------------------------------------
-	// 7. CONVERT HITS TO SCORES + REASONS
+	// 8. CONVERT HITS TO SCORES + REASONS
 	// ---------------------------------------------------------
 	for _, hit := range hits {
 		switch hit.Category {
@@ -281,7 +291,7 @@ func Investigate(profile *model.WalletProfile, txs []model.Transaction) {
 	}
 
 	// ---------------------------------------------------------
-	// 8. FINALIZE SCORE
+	// 9. FINALIZE SCORE
 	// ---------------------------------------------------------
 	fraudScore = clamp(fraudScore, 0, 100)
 	repScore = clamp(repScore, 0, 100)
@@ -299,4 +309,105 @@ func Investigate(profile *model.WalletProfile, txs []model.Transaction) {
 		Lending:    math.Round(lendScore*100) / 100,
 	}
 	profile.RiskReasons = reasons
+}
+func applyNoisyInboundHeuristics(profile *model.WalletProfile, txs []model.Transaction, hits *[]RuleHit) {
+	if profile == nil || len(txs) == 0 {
+		return
+	}
+
+	address := strings.ToLower(strings.TrimSpace(profile.Address))
+	if address == "" {
+		return
+	}
+
+	inboundCount := 0
+	outboundCount := 0
+	zeroValueInboundCount := 0
+	uniqueInboundSenders := map[string]struct{}{}
+
+	for _, tx := range txs {
+		from := strings.ToLower(strings.TrimSpace(tx.From))
+		to := strings.ToLower(strings.TrimSpace(tx.To))
+
+		switch {
+		case to == address && from != "" && from != address:
+			inboundCount++
+			uniqueInboundSenders[from] = struct{}{}
+			if isZeroLikeValue(tx.Value) {
+				zeroValueInboundCount++
+			}
+
+		case from == address && to != "" && to != address:
+			outboundCount++
+		}
+	}
+
+	totalDirectional := inboundCount + outboundCount
+	if totalDirectional == 0 {
+		return
+	}
+
+	inboundRatio := float64(inboundCount) / float64(totalDirectional)
+	uniqueFanIn := len(uniqueInboundSenders)
+
+	// Low-severity "observed" signal:
+	// mostly inbound activity with many unique counterparties.
+	if inboundCount >= 20 && inboundRatio >= 0.90 && uniqueFanIn >= 15 {
+		addHit(
+			hits,
+			"FRAUD",
+			"noisy_inbound_activity",
+			"High-volume mostly-inbound activity with many unique senders",
+			2.0,
+			nil,
+			uniqueFanIn,
+		)
+	}
+
+	// Additional mild signal for very high fan-in.
+	if uniqueFanIn >= 25 {
+		addHit(
+			hits,
+			"FRAUD",
+			"high_counterparty_fan_in",
+			"High counterparty fan-in observed across sampled transfers",
+			2.0,
+			nil,
+			uniqueFanIn,
+		)
+	}
+
+	// Dusting-like observation: many inbound zero-value transfers.
+	if zeroValueInboundCount >= 10 && inboundRatio >= 0.80 {
+		addHit(
+			hits,
+			"FRAUD",
+			"zero_value_inbound_pattern",
+			"Frequent zero-value inbound transfers suggest dusting/spam-like activity",
+			1.0,
+			nil,
+			zeroValueInboundCount,
+		)
+	}
+}
+
+func isZeroLikeValue(raw string) bool {
+	s := strings.TrimSpace(raw)
+	if s == "" {
+		return false
+	}
+
+	// Integer style: "0", "0000"
+	allZero := true
+	for _, ch := range s {
+		if ch == '.' {
+			continue
+		}
+		if ch != '0' {
+			allZero = false
+			break
+		}
+	}
+
+	return allZero
 }

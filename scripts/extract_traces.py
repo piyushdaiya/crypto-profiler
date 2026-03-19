@@ -1,14 +1,37 @@
 #!/usr/bin/env python3
+"""
+Extract address-scoped EVM trace datasets from exported Parquet shards.
+
+This script:
+- scans a directory or glob of Ethereum trace Parquet files
+- filters rows where sender or recipient matches tracked addresses
+- writes per-address compressed NDJSON raw trace subsets
+- writes per-address summary JSON artifacts
+
+Typical usage:
+  python3 scripts/extract_traces.py \
+    --parquet "/Volumes/Extreme SSD/thinkpad-backup/media-Data/eth-data-tmp" \
+    --addresses ./data/candidates/evm_addresses.txt \
+    --out ./data/cases/extracted-traces \
+    --sample 200 \
+    --top 20
+
+Dependencies:
+  python3 -m pip install pyarrow
+"""
+
+from __future__ import annotations
+
 import argparse
 import datetime as dt
+import glob
 import gzip
 import json
 import os
 import sys
-from collections import defaultdict
 from dataclasses import dataclass, field
 from decimal import Decimal, InvalidOperation
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Set
 
 import pyarrow.dataset as ds
 
@@ -38,7 +61,7 @@ def is_positive_decimal(value: Optional[str]) -> bool:
         return False
 
 
-def isoformat_or_none(value):
+def isoformat_or_none(value) -> Optional[str]:
     if value is None:
         return None
     if isinstance(value, dt.datetime):
@@ -49,7 +72,7 @@ def isoformat_or_none(value):
 
 
 def json_trace_row(row: dict) -> dict:
-    out = {
+    return {
         "block_id": int(row["block_id"]) if row.get("block_id") is not None else None,
         "time": isoformat_or_none(row.get("time")),
         "transaction_hash": row.get("transaction_hash"),
@@ -68,7 +91,6 @@ def json_trace_row(row: dict) -> dict:
         "failed": bool(row["failed"]) if row.get("failed") is not None else False,
         "fail_reason": row.get("fail_reason") or "",
     }
-    return out
 
 
 @dataclass
@@ -87,7 +109,9 @@ class TraceDatasetBuilder:
     out_dir: str
     sample_limit: int
     top_limit: int
-    generated_at: str = field(default_factory=lambda: dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z"))
+    generated_at: str = field(
+        default_factory=lambda: dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
+    )
     first_seen: Optional[str] = None
     last_seen: Optional[str] = None
     inbound_trace_count: int = 0
@@ -97,20 +121,20 @@ class TraceDatasetBuilder:
     value_transfer_trace_count: int = 0
     max_depth: int = 0
     source_trace_count: int = 0
-    unique_counterparties: set = field(default_factory=set)
+    unique_counterparties: Set[str] = field(default_factory=set)
     counterparties: Dict[str, CounterpartySummary] = field(default_factory=dict)
     sample_traces: List[dict] = field(default_factory=list)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         os.makedirs(self.out_dir, exist_ok=True)
         self.raw_filename = f"{self.address[2:]}.traces.ndjson.gz"
         self.raw_path = os.path.join(self.out_dir, self.raw_filename)
         self._fh = gzip.open(self.raw_path, "wt", encoding="utf-8")
 
-    def close(self):
+    def close(self) -> None:
         self._fh.close()
 
-    def add(self, trace: dict, direction: str):
+    def add(self, trace: dict, direction: str) -> None:
         self.source_trace_count += 1
 
         trace_time = trace.get("time")
@@ -199,8 +223,8 @@ class TraceDatasetBuilder:
 
 
 def load_addresses(path: str) -> List[str]:
-    addresses = []
-    seen = set()
+    addresses: List[str] = []
+    seen: Set[str] = set()
     with open(path, "r", encoding="utf-8") as fh:
         for line in fh:
             line = line.strip()
@@ -214,7 +238,15 @@ def load_addresses(path: str) -> List[str]:
     return addresses
 
 
-def main():
+def resolve_parquet_files(parquet_arg: str) -> List[str]:
+    if os.path.isdir(parquet_arg):
+        files = sorted(glob.glob(os.path.join(parquet_arg, "*.parquet")))
+    else:
+        files = sorted(glob.glob(parquet_arg))
+    return [f for f in files if os.path.isfile(f)]
+
+
+def main() -> int:
     parser = argparse.ArgumentParser(description="Extract address-scoped EVM trace datasets from Parquet export")
     parser.add_argument("--parquet", required=True, help="Directory or glob for exported trace parquet files")
     parser.add_argument("--addresses", required=True, help="Text file with one EVM address per line")
@@ -226,15 +258,16 @@ def main():
     addresses = load_addresses(args.addresses)
     if not addresses:
         print("error: no valid addresses loaded", file=sys.stderr)
-        sys.exit(1)
+        return 1
 
-    if os.path.isdir(args.parquet):
-        parquet_source = os.path.join(args.parquet, "*.parquet")
-    else:
-        parquet_source = args.parquet
+    parquet_files = resolve_parquet_files(args.parquet)
+    if not parquet_files:
+        print(f"error: no parquet files found for {args.parquet}", file=sys.stderr)
+        return 1
+
+    print(f"found {len(parquet_files)} parquet files", file=sys.stderr)
 
     os.makedirs(args.out, exist_ok=True)
-
     builders = {addr: TraceDatasetBuilder(addr, args.out, args.sample, args.top) for addr in addresses}
 
     columns = [
@@ -257,7 +290,7 @@ def main():
         "fail_reason",
     ]
 
-    dataset = ds.dataset(parquet_source, format="parquet")
+    dataset = ds.dataset(parquet_files, format="parquet")
     filter_expr = ds.field("sender").isin(addresses) | ds.field("recipient").isin(addresses)
     scanner = dataset.scanner(columns=columns, filter=filter_expr, batch_size=50000, use_threads=True)
 
@@ -266,6 +299,7 @@ def main():
         for batch in scanner.to_batches():
             pyd = batch.to_pydict()
             size = len(next(iter(pyd.values()))) if pyd else 0
+
             for i in range(size):
                 raw_row = {k: pyd[k][i] for k in columns}
                 trace = json_trace_row(raw_row)
@@ -299,6 +333,8 @@ def main():
             f"(source_traces={builder.source_trace_count}, counterparties={len(builder.unique_counterparties)}, failed={builder.failed_trace_count})"
         )
 
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

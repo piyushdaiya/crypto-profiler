@@ -23,7 +23,7 @@
  */
 
 EXPORT DATA OPTIONS(
-  uri='gs://your_bucket/crypto-profiler/eth_traces_20250316_20250617_*.parquet',
+  uri='gs://YOUR_BUCKET/crypto-profiler/eth_traces_20250316_20250617_*.parquet',
   format='PARQUET',
   overwrite=true
 ) AS

@@ -293,6 +293,8 @@ Concentration can be benign or risky depending on the service type, but it often
 - measures concentration to the top labeled service counterparty
 - distinguishes high-risk service concentration from trusted or exchange concentration
 - applies fraud or reputation impact depending on service type
+- trace-aware summaries are now merged into curated cases and surfaced in dataset mode, although live concentration scoring is still transaction-driven
+
 
 ### Implemented reason codes
 - `high_risk_service_concentration`
@@ -593,6 +595,7 @@ This catalog is expected to grow with:
 
 - Bitcoin output-aware flow typologies
 - Ethereum trace-aware internal-flow typologies
+- trace-aware dataset enrichment for curated case reasoning
 - stronger 1-hop / 2-hop graph exposure
 - recency-aware scoring
 - value-aware service concentration

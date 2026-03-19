@@ -61,6 +61,11 @@ type CuratedCase struct {
 	TopCounterparties   []CounterpartySummary `json:"top_counterparties"`
 	SampleTransfers     []Transfer            `json:"sample_transfers"`
 	SourceTransferCount int                   `json:"source_transfer_count"`
+
+	TraceSummary           *TraceSummary              `json:"trace_summary,omitempty"`
+	TraceTopCounterparties []TraceCounterpartySummary `json:"trace_top_counterparties,omitempty"`
+	TraceSourceCount       int                        `json:"trace_source_count,omitempty"`
+	TraceRawFile           string                     `json:"trace_raw_file,omitempty"`
 }
 
 type counterpartyAgg struct {

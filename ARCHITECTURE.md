@@ -323,6 +323,7 @@ This layer sits between raw source data and analyst-facing examples.
 ### Current commands
 - `cmd/extractcases`
 - `cmd/curatecases`
+- `cmd/enrichcases`
 
 ### Current Python helper
 - `scripts/extract_traces.py`
@@ -335,6 +336,8 @@ This layer sits between raw source data and analyst-facing examples.
     - capped sample data
     - risk posture metadata
 - create address-scoped trace summaries from large Parquet trace exports
+- merge address-scoped trace summaries into curated case artifacts
+- surface trace-aware context in dataset-backed validator flows
 
 ### Why this layer matters
 This layer gives the project:
@@ -437,6 +440,13 @@ This means the MVP now has both:
 3. traces are filtered to tracked addresses
 4. address-scoped trace summaries and compressed raw subsets are written
 5. extracted trace artifacts support later case and heuristic enrichment
+
+## D. Trace-enriched curated case flow
+1. curated case JSON is generated from transaction datasets
+2. address-scoped trace summary is loaded
+3. `cmd/enrichcases` merges trace context into the curated artifact
+4. validator dataset mode loads the enriched case
+5. output includes trace-aware explanation context
 
 ---
 

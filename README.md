@@ -60,6 +60,9 @@ The repository now also includes:
   - concentration to exchanges
   - concentration to trusted protocols
 - real protocol-aware test fixtures including the Uniswap V3 Router
+- `cmd/enrichcases` for merging address-scoped trace summaries into curated case artifacts
+- validator dataset mode now surfaces trace-aware context from enriched curated cases
+
 
 This closes a major MVP data gap: the project now has practical support for **EVM internal-call / traces-aware analysis**, not just top-level EVM and ERC-20 transaction data.
 
@@ -145,6 +148,7 @@ The project now includes explicit data-model documentation for the current MVP s
 - [`docs/BITCOIN-DATA-MODEL.md`](docs/BITCOIN-DATA-MODEL.md)
 - [`docs/ERC20-DATA-MODEL.md`](docs/ERC20-DATA-MODEL.md)
 - [`docs/TYPOLOGIES.md`](docs/TYPOLOGIES.md)
+- [`docs/ETHEREUM-DATA-MODEL.md`](docs/ETHEREUM-DATA-MODEL.md)
 
 These documents define:
 - the canonical MVP data window
@@ -244,6 +248,24 @@ A separate EVM trace extractor can scan exported Ethereum traces Parquet files a
 - sampled trace rows
 - compressed raw trace subsets per address
 
+### Trace-aware curated enrichment
+
+Curated case artifacts can be enriched with address-scoped trace summaries:
+
+```bash
+go run ./cmd/enrichcases \
+  --in ./data/cases/curated \
+  --trace ./data/cases/extracted-traces \
+  --out ./data/cases/curated-enriched
+```
+
+This allows dataset-backed validator runs to surface:
+- internal trace counts
+- failed internal call counts
+- max trace depth
+- broader internal counterparty surface
+
+
 ### Current curated cases
 
 - `public-wallet-noisy-inbound`
@@ -251,6 +273,8 @@ A separate EVM trace extractor can scan exported Ethereum traces Parquet files a
 - `uniswap-v3-router-trusted-protocol`
 
 These complement the deterministic sanctioned-wallet case already demonstrated via the watchlist engine.
+
+
 
 ---
 

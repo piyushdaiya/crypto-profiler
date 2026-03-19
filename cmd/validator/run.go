@@ -133,6 +133,7 @@ func runDatasetMode(path string, out io.Writer, errOut io.Writer) int {
 	txs := datasets.BuildTransactionsFromCuratedCase(cc)
 
 	analyzer.Investigate(profile, txs)
+	applyCuratedTraceContext(profile, cc)
 
 	return writeProfile(profile, out, errOut)
 }

@@ -7,7 +7,7 @@
 
 **Wallet Risk & Exposure Intelligence for AML, Fraud, Sanctions, and Crypto Surveillance**
 
-Crypto Profiler is a Go-based platform for profiling cryptocurrency wallets using deterministic checks, graph-based exposure analysis, behavioral heuristics, and curated blockchain case datasets.
+Crypto Profiler is a Go-based platform for profiling cryptocurrency wallets using deterministic checks, graph-based exposure analysis, behavioral heuristics, curated blockchain case datasets, and address-scoped EVM trace analysis.
 
 It is designed for financial institutions, compliance teams, investigators, RegTech product teams, and solutions architects who need a practical way to perform **Know Your Wallet (KYW)** and crypto-risk analysis with explainable results.
 
@@ -48,19 +48,20 @@ Crypto Profiler is being built to answer those questions in a portfolio-grade, e
 
 ---
 
-## Day 3 Update
+## Day 5 Update
 
 The repository now also includes:
 
-- a **noisy inbound / dusting-like observation heuristic**
-- a **high counterparty fan-in observation heuristic**
-- additional analyzer test coverage for observed noisy-inbound behavior
-- dataset-backed case scoring improvements for:
-    - public wallet with noisy inbound activity
-    - high-risk mixer infrastructure
-    - trusted protocol high-activity router
-- a dedicated architecture document:
-    - [`ARCHITECTURE.md`](ARCHITECTURE.md)
+- a 90-day Ethereum traces export pipeline using BigQuery / Cloud Storage
+- an address-scoped EVM trace extractor for curated wallet and router analysis
+- extracted trace datasets for real high-risk, public-wallet, and trusted-protocol examples
+- a new **service concentration heuristic** that distinguishes:
+  - concentration to high-risk services
+  - concentration to exchanges
+  - concentration to trusted protocols
+- real protocol-aware test fixtures including the Uniswap V3 Router
+
+This closes a major MVP data gap: the project now has practical support for **EVM internal-call / traces-aware analysis**, not just top-level EVM and ERC-20 transaction data.
 
 ---
 
@@ -78,9 +79,10 @@ The repository now also includes:
 
 ### 3. Exposure analysis
 - direct counterparty checks
-- 1-hop and 2-hop proximity analysis
+- repeated flagged-counterparty interaction detection
 - weighted exposure scoring
-- transaction graph traversal for fund-flow reasoning
+- transaction and trace-aware reasoning foundation
+- architecture prepared for future 1-hop and 2-hop graph traversal
 
 ### 4. Behavioral detection
 Initial and planned heuristics include:
@@ -90,9 +92,7 @@ Initial and planned heuristics include:
 - dusting and sweep patterns
 - high-velocity burst activity
 - pass-through / rapid outflow behavior
-- noisy inbound / dusting-like observation
-- high counterparty fan-in observation
-- zero-value inbound pattern detection
+- service concentration to trusted or high-risk infrastructure
 
 ### 5. Explainable scoring
 - weighted score from 0–100
@@ -104,24 +104,23 @@ Initial and planned heuristics include:
 - structured JSON reports
 - CLI-readable summaries
 - case-study friendly sample outputs
-- architecture designed for future analyst workflows
+- dataset-backed demo mode
+- trace-aware extracted artifacts for future case enrichment
 
 ---
 
 ## Architecture
 
-> **Architecture image placeholder**
->
-> Add an architecture diagram here later, for example:
->
-> `docs/images/crypto-profiler-architecture.png`
+See the full architecture document here:
+
+[`ARCHITECTURE.md`](ARCHITECTURE.md)
 
 ### High-level flow
 
 1. Accept wallet address and chain context
 2. Validate and normalize the address
-3. Retrieve transaction and label context
-4. Build wallet exposure graph
+3. Retrieve transaction, trace, and label context
+4. Build exposure and counterparty summaries
 5. Apply deterministic and heuristic rules
 6. Compute weighted explainable risk score
 7. Generate JSON and analyst-friendly output
@@ -134,22 +133,24 @@ Initial and planned heuristics include:
 - **Graph-aware exposure analysis**
 - **Modular rule engine**
 - **Docker-friendly local execution**
+- **Trace-aware EVM expansion path**
 - **Designed to integrate with a future shared watchlist engine**
 
-### Detailed architecture
+---
 
-For the full architecture breakdown covering:
-- ingestion layer
-- normalization layer
-- entity/watchlist layer
-- graph/exposure engine
-- scoring engine
-- explanation layer
-- API/UI layer
+## Data Model Documents
 
-See:
+The project now includes explicit data-model documentation for the current MVP sources:
 
-- [`ARCHITECTURE.md`](ARCHITECTURE.md)
+- [`docs/BITCOIN-DATA-MODEL.md`](docs/BITCOIN-DATA-MODEL.md)
+- [`docs/ERC20-DATA-MODEL.md`](docs/ERC20-DATA-MODEL.md)
+- [`docs/TYPOLOGIES.md`](docs/TYPOLOGIES.md)
+
+These documents define:
+- the canonical MVP data window
+- how raw source files are interpreted
+- what behavior the current engine can support
+- what remains planned for later phases
 
 ---
 
@@ -182,9 +183,10 @@ The first public milestone is intentionally focused.
 - explainable scoring with reason codes
 - JSON and CLI outputs
 - reproducible demo data and case-study examples
+- address-scoped EVM traces extraction for internal-call context
 
 ### Out of scope for v0.1
-- full-chain ingestion
+- full-chain ingestion into a persistent warehouse
 - production UI dashboard
 - mempool surveillance
 - ML-first scoring
@@ -231,6 +233,17 @@ Large extracted datasets can then be reduced into curated case files containing:
 - capped sample transfers
 - case metadata and risk posture
 
+### EVM traces extraction
+A separate EVM trace extractor can scan exported Ethereum traces Parquet files and build per-address trace summaries containing:
+
+- inbound / outbound / self trace counts
+- failed trace counts
+- value-bearing internal call counts
+- max trace depth
+- top trace counterparties
+- sampled trace rows
+- compressed raw trace subsets per address
+
 ### Current curated cases
 
 - `public-wallet-noisy-inbound`
@@ -249,6 +262,8 @@ Crypto Profiler is being designed for scenarios such as:
 - triaging a wallet linked to suspicious inbound funds
 - tracing whether a wallet is 1–2 hops from a mixer or exploit wallet
 - identifying laundering-style behaviors such as peeling chains or rapid cash-out
+- detecting persistent interaction with flagged counterparties
+- distinguishing high-risk concentration from trusted protocol concentration
 - generating structured risk evidence for analyst review
 - demonstrating wallet intelligence architecture in regulated environments
 
@@ -299,20 +314,6 @@ Crypto Profiler is being designed for scenarios such as:
 }
 ```
 
-### Observed noisy-inbound behavior example
-
-The public-wallet curated case can now surface low-severity observed reasons such as:
-- `noisy_inbound_activity`
-- `high_counterparty_fan_in`
-- `zero_value_inbound_pattern`
-
-This helps distinguish:
-- **observed unusual activity**
-  from
-- **reviewable risk**
-  from
-- **deterministic critical risk**
-
 ---
 
 ## Case Study: Established Wallet with Mixer Interaction
@@ -362,10 +363,11 @@ Crypto Profiler includes unit tests across the core MVP logic:
 
 - address syntax validation for Bitcoin, EVM, and Solana
 - analyzer scoring and combination rules
+- repeated flagged-counterparty interaction
+- high-risk and trusted service concentration
 - watchlist client success/error handling
 - validator CLI flows
 - curated dataset loading and profiling support
-- noisy inbound heuristic coverage
 - OWASP Phase 1 security-focused test coverage for watchlist and validator flows
 
 Run locally:
@@ -454,6 +456,9 @@ This confirms that:
 - **Docker** for local execution
 - **Config-driven rules and scoring**
 - **Blockchair-based extraction pipeline** for Ethereum and ERC-20 raw datasets
+- **Bitcoin transactions / inputs / outputs** for UTXO-aware modeling
+- **BigQuery + Cloud Storage** for Ethereum traces export
+- **Python + PyArrow** for address-scoped EVM trace extraction
 - **Curated case artifacts** for stable portfolio and demo flows
 
 ---

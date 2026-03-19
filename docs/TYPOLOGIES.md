@@ -1,5 +1,3 @@
-# TYPOLOGIES.md
-
 # Crypto Profiler Typology Catalog
 
 ## Purpose
@@ -39,8 +37,11 @@ The current repository already demonstrates these typology-aligned behaviors:
 - velocity burst detection
 - noisy inbound / dusting-like observation
 - high counterparty fan-in observation
+- repeated flagged-counterparty interaction
+- service concentration to high-risk or trusted services
 - trusted protocol contextual mitigation
 - dataset-backed profiling using curated case artifacts
+- address-scoped EVM trace extraction for internal-call context
 
 This section is intentionally limited to behaviors that are already visible in the current MVP codebase, tests, or sample outputs.
 
@@ -96,8 +97,6 @@ Direct interaction is usually the strongest non-sanctions signal available in tr
 ### Implemented reason codes
 - `direct_mixer_interaction`
 - `profiled_address_high_risk_label`
-
-### Candidate future reason codes
 - `direct_high_risk_entity`
 
 ### Notes
@@ -131,7 +130,7 @@ Many laundering and obfuscation patterns rely on short graph distance rather tha
 ### Dependencies
 - stronger graph traversal support
 - richer extracted datasets
-- Bitcoin outputs + Ethereum calls for better flow reconstruction
+- Bitcoin outputs + Ethereum calls / traces for better flow reconstruction
 
 ---
 
@@ -180,7 +179,7 @@ Peel chains are a known laundering and structuring pattern used to create distan
 ### Dependencies
 - graph/path traversal
 - temporal ordering across linked wallets
-- improved Bitcoin outputs and Ethereum calls support
+- improved Bitcoin outputs and Ethereum traces support
 
 ---
 
@@ -276,12 +275,13 @@ U-turn behavior can indicate pass-through laundering, routing, rapid cash moveme
 - more advanced temporal linkage logic
 - counterparty correlation
 - graph-aware sequencing
+- trace-aware internal-flow summaries for EVM
 
 ---
 
 ## 9. Concentration Risk to a Single Service
 
-**Status:** Planned
+**Status:** Partially Implemented
 
 ### Description
 A large share of wallet activity is concentrated to a single exchange, mixer, protocol, or other entity.
@@ -289,25 +289,32 @@ A large share of wallet activity is concentrated to a single exchange, mixer, pr
 ### Why it matters
 Concentration can be benign or risky depending on the service type, but it often provides strong contextual information about wallet purpose.
 
-### Planned direction
-- measure concentration ratio to top labeled service
-- classify concentration by service type
-- distinguish trusted concentration from high-risk concentration
+### Current behavior
+- measures concentration to the top labeled service counterparty
+- distinguishes high-risk service concentration from trusted or exchange concentration
+- applies fraud or reputation impact depending on service type
 
-### Candidate future reason codes
-- `single_service_concentration`
-- `exchange_concentration`
+### Implemented reason codes
 - `high_risk_service_concentration`
+- `exchange_concentration`
+- `single_service_concentration`
+
+### Planned future extension
+- value-weighted concentration, not just interaction-count concentration
+- recency-aware service concentration
+- concentration using trace-aware internal-call counterparties
+- concentration by cluster/entity, not only by exact address
 
 ### Dependencies
 - better service/entity labeling
 - counterparty aggregation across extracted datasets
+- later trace-aware or graph-aware weighting improvements
 
 ---
 
 ## 10. Repeated Interaction with Flagged Counterparties
 
-**Status:** Planned
+**Status:** Implemented
 
 ### Description
 A wallet repeatedly interacts with one or more flagged counterparties over time, rather than showing a single isolated exposure.
@@ -315,19 +322,21 @@ A wallet repeatedly interacts with one or more flagged counterparties over time,
 ### Why it matters
 Repeated interaction is often stronger than a one-off contact and can indicate persistent operational linkage.
 
-### Planned direction
-- count repeated interactions to flagged entities
-- weight by frequency, recency, and severity
-- support both direct and future indirect repeated exposure
+### Current behavior
+- counts repeated interactions to flagged entities
+- applies stronger scoring than one-off isolated interaction
+- supports explainable evidence counts in `risk_reasons`
+
+### Implemented reason codes
+- `repeated_flagged_counterparty_interaction`
 
 ### Candidate future reason codes
-- `repeated_flagged_counterparty_interaction`
 - `persistent_high_risk_counterparty_exposure`
 
-### Dependencies
-- richer interaction aggregation
-- label-aware repeated counterparty counting
-- recency-aware scoring
+### Planned future extension
+- recency-aware repeated interaction scoring
+- cross-address cluster/entity repeated interaction
+- trace-aware repeated internal-call interaction patterns
 
 ---
 
@@ -404,8 +413,6 @@ Trusted context helps reduce false positives and gives necessary business contex
 
 ### Implemented reason codes
 - `profiled_address_trusted_label`
-
-### Candidate future reason codes
 - `exchange_interaction`
 - `trusted_or_protocol_interaction`
 
@@ -534,7 +541,7 @@ Not all risk appears as an exact sanctions match. Proximity and repeated associa
 - sanctions / watchlist hit
 - direct high-risk counterparty exposure
 - velocity burst
-- mixer direct exposure
+- repeated flagged-counterparty interaction
 - noisy inbound / dusting-like observation
 - high counterparty fan-in
 - trusted protocol / exchange context
@@ -542,13 +549,12 @@ Not all risk appears as an exact sanctions match. Proximity and repeated associa
 ### Partially Implemented
 - newly created wallet with immediate flow
 - mixer / tumbler exposure broader than direct contact
+- concentration risk to a single service
 
 ### Planned
 - indirect exposure within N hops
 - peel chain behavior
 - round-trip / U-turn behavior
-- concentration risk to a single service
-- repeated interaction with flagged counterparties
 
 ### Placeholder
 - cross-chain / chain-hopping obfuscation
@@ -586,10 +592,10 @@ The typology catalog is guided by the following principles:
 This catalog is expected to grow with:
 
 - Bitcoin output-aware flow typologies
-- Ethereum call-aware internal flow typologies
+- Ethereum trace-aware internal-flow typologies
 - stronger 1-hop / 2-hop graph exposure
 - recency-aware scoring
-- volume-aware service concentration
+- value-aware service concentration
 - cluster/entity-level repeated interaction analysis
 - cross-chain and bridge-aware behavior in later phases
 
@@ -597,9 +603,9 @@ This catalog is expected to grow with:
 
 ## Related Documents
 
-- [`ARCHITECTURE.md`](ARCHITECTURE.md)
-- [`README.md`](README.md)
-- [`docs/case-studies/established-wallet-mixer-no-reinforcing-signals.md`](docs/case-studies/established-wallet-mixer-no-reinforcing-signals.md)
-- [`docs/case-studies/direct-sanctioned-wallet.md`](docs/case-studies/direct-sanctioned-wallet.md)
+- [`ARCHITECTURE.md`](../ARCHITECTURE.md)
+- [`README.md`](../README.md)
+- [`docs/case-studies/established-wallet-mixer-no-reinforcing-signals.md`](case-studies/established-wallet-mixer-no-reinforcing-signals.md)
+- [`docs/case-studies/direct-sanctioned-wallet.md`](case-studies/direct-sanctioned-wallet.md)
 - `docs/case-studies/public-wallet-noisy-inbound.md` *(recommended next addition)*
 - `docs/case-studies/trusted-protocol-high-activity-router.md` *(recommended next addition)*

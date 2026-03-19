@@ -3,3 +3,5 @@
 data/.DS_Store
 data/transactions/
 data/cases/extracted/*.json
+data/cases/extracted-traces/*.traces.ndjson.gz
+data/eth-traces-sample/

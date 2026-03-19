@@ -2,470 +2,486 @@
 
 ## Purpose
 
-Crypto Profiler is a Go-based wallet intelligence platform for AML, fraud, sanctions, and crypto-risk analysis.
+This document explains the current and planned system architecture for Crypto Profiler.
 
-The architecture is designed to support:
+It is written to support:
+- technical review
+- architecture walkthroughs
+- portfolio presentation
+- implementation alignment across the MVP roadmap
 
-- deterministic wallet validation
-- exact-match watchlist screening
-- blockchain activity extraction and normalization
-- graph-aware exposure reasoning
-- explainable scoring
-- investigator-friendly outputs
-- stable dataset-backed demos for portfolio and product storytelling
+Crypto Profiler is intentionally designed as an **explainable wallet-risk platform**, not as a black-box scoring system.
 
-The current MVP is intentionally focused on:
+---
 
-- Bitcoin
-- Ethereum / EVM
-- selected ERC-20 activity
-- curated case datasets
-- JSON and CLI outputs
+## System Goals
+
+Crypto Profiler is designed to answer practical investigator and compliance questions such as:
+
+- Is this wallet valid and active?
+- Is it sanctioned or directly linked to a risky entity?
+- Is it repeatedly interacting with flagged infrastructure?
+- Is most of its activity concentrated in a trusted service or a high-risk service?
+- Does its behavior resemble mixer routing, pass-through movement, dusting, or burst activity?
+- How can the system explain its conclusions in a regulator- or analyst-friendly way?
+
+---
+
+## Architectural Principles
+
+1. **Deterministic-first**
+   Sanctions and exact-match watchlist hits should override weaker heuristic interpretation.
+
+2. **Explainable by construction**
+   Every score adjustment should be tied to visible reason codes and evidence.
+
+3. **Chain-specific ingestion, chain-agnostic scoring**
+   Bitcoin, EVM transactions, ERC-20 events, and EVM traces can have different ingestion paths while feeding a shared scoring model.
+
+4. **Portfolio-grade realism**
+   The system should support realistic case studies, not just toy examples.
+
+5. **Incremental graph expansion**
+   The MVP focuses on direct exposure and targeted summaries, while leaving room for future 1-hop / 2-hop graph traversal.
 
 ---
 
 ## High-Level Architecture
 
 ```text
-                    +----------------------+
-                    |   User / Analyst     |
-                    | CLI / API / Future UI|
-                    +----------+-----------+
-                               |
-                               v
-                    +----------------------+
-                    |   API / Execution     |
-                    | validator / future API|
-                    +----------+-----------+
-                               |
-                +--------------+--------------+
-                |                             |
-                v                             v
-    +------------------------+   +--------------------------+
-    | Live Chain Providers   |   | Curated Dataset Loader   |
-    | Etherscan / CoinStats  |   | Extracted JSON case sets |
-    +-----------+------------+   +------------+-------------+
-                |                             |
-                +--------------+--------------+
-                               |
-                               v
-                    +----------------------+
-                    | Normalization Layer   |
-                    | addresses / transfers |
-                    | token metadata        |
-                    +----------+-----------+
-                               |
-                               v
-                    +----------------------+
-                    | Entity / Watchlist    |
-                    | labels / scams / OFAC |
-                    | watchlist engine      |
-                    +----------+-----------+
-                               |
-                               v
-                    +----------------------+
-                    | Graph / Exposure      |
-                    | counterparties / hops |
-                    | transaction patterns  |
-                    +----------+-----------+
-                               |
-                               v
-                    +----------------------+
-                    | Scoring Engine        |
-                    | deterministic +       |
-                    | heuristic + combo     |
-                    +----------+-----------+
-                               |
-                               v
-                    +----------------------+
-                    | Explanation Layer     |
-                    | reasons / evidence /  |
-                    | review recommendation |
-                    +----------+-----------+
-                               |
-                               v
-                    +----------------------+
-                    | JSON / CLI Output     |
-                    | case-study artifacts  |
-                    +----------------------+
+                        +---------------------------+
+                        |   CLI / Dataset Mode      |
+                        |   cmd/validator           |
+                        +-------------+-------------+
+                                      |
+                                      v
+                        +---------------------------+
+                        |   Validation Layer        |
+                        |   address strategies      |
+                        +-------------+-------------+
+                                      |
+                                      v
+     +----------------+   +---------------------------+   +----------------------+
+     | Watchlist      |-->|  Analyzer / Scoring       |<--|  Bootstrap Labels    |
+     | Engine         |   |  internal/analyzer        |   |  known entities      |
+     +----------------+   +---------------------------+   +----------------------+
+                                      ^
+                                      |
+                  +-------------------+-------------------+
+                  |                   |                   |
+                  |                   |                   |
+                  v                   v                   v
+      +-------------------+  +-------------------+  +----------------------+
+      | Bitcoin datasets  |  | EVM tx / ERC-20   |  | EVM traces datasets   |
+      | tx/input/output   |  | Blockchair        |  | BigQuery export       |
+      +-------------------+  +-------------------+  +----------------------+
+                  |                   |                   |
+                  +-------------------+-------------------+
+                                      |
+                                      v
+                        +---------------------------+
+                        | Extract / Curate Layer    |
+                        | datasets + case artifacts |
+                        +---------------------------+
 ```
 
 ---
 
+## Core Layers
+
 ## 1. Ingestion Layer
 
-The ingestion layer is responsible for acquiring raw blockchain and reference data.
+The ingestion layer is responsible for acquiring raw blockchain and watchlist data.
 
-### Current inputs
+### Current sources
 
-#### Live provider inputs
-- Ethereum / EVM transaction state from provider APIs
-- wallet activity metadata used by the validator in live mode
+#### A. Watchlist / sanctions source
+- watchlist engine
+- OFAC-driven sanctions synchronization
+- exact-match sanctioned address screening
 
-#### Watchlist inputs
-- OFAC / sanctions source data
-- internal bootstrap entity labels
-- legacy labels and scam reference files
+#### B. Bitcoin raw datasets
+- Bitcoin transactions
+- Bitcoin inputs
+- Bitcoin outputs
 
-#### File-based blockchain inputs
-- Blockchair Bitcoin transactions
-- Blockchair Bitcoin inputs
-- Blockchair Bitcoin outputs
-- Blockchair Ethereum transactions
-- Blockchair Ethereum calls
-- Blockchair ERC-20 transactions
-- Blockchair ERC-20 token metadata snapshot
+#### C. EVM raw datasets
+- Ethereum transactions
+- ERC-20 transfers
+- ERC-20 token metadata snapshot
 
-### Current implementation style
-- local file-based ingestion for raw dump processing
-- Dockerized watchlist-engine sync for sanctions data
-- provider-backed live profiling for selected chains
+#### D. EVM traces / internal calls
+- Ethereum traces exported from BigQuery
+- stored as Parquet in Cloud Storage
+- extracted locally into address-scoped trace subsets
 
 ### Design intent
-The ingestion layer should remain replaceable.
-
-Today it is:
-- file-based
-- API-assisted
-- watchlist-engine-backed
-
-Later it can evolve into:
-- scheduled batch ingestion
-- persistent graph storage
-- streaming or incremental updates
+The ingestion layer is intentionally source-flexible:
+- Blockchair works well for raw historical transaction files
+- BigQuery works well for large Ethereum trace slices
+- the watchlist engine provides deterministic sanctions screening
 
 ---
 
 ## 2. Normalization Layer
 
-The normalization layer transforms heterogeneous chain/provider data into common internal shapes.
+The normalization layer converts raw external formats into internal data structures that Crypto Profiler can reason over.
 
 ### Responsibilities
-- lowercase / normalize addresses where appropriate
-- validate chain-specific syntax
-- normalize transfers into common structures
-- attach token metadata where available
-- preserve timestamps, hashes, counterparties, and value fields
-- convert curated datasets into internal wallet-profile inputs
+- normalize wallet addresses
+- normalize chain naming
+- normalize timestamps
+- normalize raw value fields
+- preserve source-specific fields needed for explanation
+- build address-level and counterparty-level summaries
 
-### Current normalized objects
-- `WalletProfile`
-- `Transaction`
-- `Transfer`
-- `AddressDataset`
-- `CuratedCase`
+### Examples
 
-### Why this matters
-Without normalization, explainable scoring becomes inconsistent across:
-- Bitcoin vs EVM
-- live API vs extracted dataset
-- native asset vs ERC-20 transfer flows
+#### Address normalization
+- EVM addresses are lowercased and normalized to `0x...`
+- Bitcoin addresses are treated as address-level entities, not guaranteed wallet clusters
 
-Normalization is the layer that keeps the analyzer independent from raw source quirks.
+#### ERC-20 normalization
+- raw integer token values are preserved
+- token metadata can enrich symbol/name/decimals
+
+#### EVM traces normalization
+- normalize:
+    - sender
+    - recipient
+    - trace path
+    - depth
+    - status / failure
+    - value-bearing internal calls
+- produce address-scoped trace summaries
+
+### Current outputs
+- extracted datasets
+- curated case artifacts
+- internal transaction / trace summaries for analyzer use
 
 ---
 
 ## 3. Entity / Watchlist Layer
 
-The entity layer provides identity and risk context for wallets and counterparties.
-
-### Responsibilities
-- exact-match label lookup
-- sanctions lookup through watchlist engine
-- support for trusted labels
-- support for high-risk labels
-- support for protocol and exchange labels
-- support for scams / legacy labels / future watchlist feeds
+This layer provides the entity intelligence needed for risk interpretation.
 
 ### Current sources
-- bootstrap entity labels JSON
-- legacy labels JSON
-- scams JSON
-- watchlist engine backed by sanctions data
+- watchlist engine for sanctions
+- bootstrap entity labels for:
+    - mixers
+    - scams
+    - exploits
+    - exchanges
+    - trusted protocols
 
-### Current label categories
-- `SANCTIONS`
-- `MIXER`
-- `EXPLOIT`
-- `SCAM`
-- `EXCHANGE`
-- `PROTOCOL`
-- `TRUSTED`
+### Current behavior
+- direct sanctions match short-circuit
+- direct label on profiled wallet
+- direct counterparty label detection
+- trusted context mitigation
+- repeated flagged-counterparty interaction
+- service concentration using labeled counterparties
 
-### Design principle
-This layer should answer:
-- what is this wallet?
-- is it sanctioned?
-- is it trusted?
-- is it known high-risk?
-- what label confidence and severity should be attached?
-
-This is intentionally separate from the scoring engine so that:
-- label coverage can evolve independently
-- additional watchlists can be plugged in later
-- multiple downstream components can reuse the same entity context
+### Why this layer matters
+Raw blockchain movements alone are not enough.  
+This layer provides the meaning required to distinguish:
+- trusted high-volume protocol activity
+- exchange-related behavior
+- mixer exposure
+- scam or exploit linkage
+- sanctions violations
 
 ---
 
-## 4. Graph / Exposure Engine
+## 4. Graph / Exposure Layer
 
-The graph / exposure engine is the reasoning layer that interprets wallet relationships and transaction structure.
+This layer is partially implemented in the MVP and is designed to expand over time.
 
-### Responsibilities
-- direct counterparty analysis
-- 1-hop and 2-hop exposure logic
-- high fan-in / fan-out observations
-- transaction sequence interpretation
-- curated counterparties and interaction summaries
-- future graph traversal across larger datasets
+### Current MVP level
+- direct counterparties
+- repeated flagged interaction
+- top counterparties from extracted datasets
+- address-scoped trace counterparties for EVM internal-call context
 
-### Current state
-The MVP currently supports:
-- direct counterparty reasoning
-- curated top-counterparty summaries
-- transaction-sample inspection
-- labeled interaction detection
+### Planned next level
+- 1-hop exposure
+- 2-hop exposure
+- path retention for explainability
+- cluster/entity-aware repeated interaction
 
-### Planned evolution
-The next steps for this layer include:
-- explicit 1-hop / 2-hop exposure search
-- Bitcoin fund-flow reconstruction from inputs + outputs
-- Ethereum call-aware internal flow reasoning
-- mixer proximity patterns
-- pass-through wallet detection
-- peeling-chain style layering detection
-
-### Why this matters
-Risk is rarely contained in a single wallet field.
-It often emerges from:
-- who a wallet interacts with
-- how often it interacts
-- how value moves across entities
-- how quickly funds arrive and leave
-
-The graph / exposure engine is what turns raw transfers into intelligence.
+### Why traces matter here
+Ethereum top-level transactions alone miss internal contract-mediated movement.  
+The traces layer provides a stronger foundation for:
+- router behavior
+- internal pass-through reasoning
+- round-trip / U-turn groundwork
+- future internal-flow exposure summaries
 
 ---
 
 ## 5. Scoring Engine
 
-The scoring engine converts deterministic hits and heuristic observations into explainable risk.
-
-### Responsibilities
-- evaluate deterministic watchlist outcomes
-- evaluate profile labels
-- evaluate counterparty labels
-- evaluate behavioral heuristics
-- apply combination rules
-- generate category-level and overall score
-- map score to grade and review guidance
+The scoring engine lives in `internal/analyzer`.
 
 ### Current scoring model
-The MVP scoring engine supports:
-- sanctions short-circuit
-- profiled address label detection
-- direct mixer interaction
-- trusted/protocol mitigation
-- established history mitigation
-- fresh wallet escalation
-- high velocity escalation
-- noisy inbound / high fan-in / zero-value inbound observations
-- review recommendation logic
-- combination rules for correlated signals
+- weighted categories:
+    - `FRAUD`
+    - `REPUTATION`
+    - `LENDING`
+- weighted combined risk score
+- review recommendation decision
+- reason-code output
 
-### Output concepts
-- `risk_score`
-- `risk_grade`
-- `review_recommended`
-- `risk_breakdown`
-- `risk_reasons`
+### Current supported signals
+- direct sanctions match
+- profiled high-risk entity label
+- direct mixer interaction
+- direct high-risk entity interaction
+- trusted / exchange interaction
+- established history
+- fresh wallet
+- high-velocity behavior
+- noisy inbound activity
+- zero-value inbound pattern
+- high counterparty fan-in
+- repeated flagged-counterparty interaction
+- high-risk service concentration
+- trusted / protocol concentration
+- exchange concentration
+- combination rules such as:
+    - mixer + fresh wallet
+    - mixer + high velocity
+    - established wallet mitigation
 
 ### Design principle
-A single signal should not always produce a failing outcome.
-
-The engine is intentionally designed around:
-- deterministic controls where required
-- multi-signal correlation for stronger conclusions
-- contextual mitigation to reduce false positives
-- explainability over opaque scoring
+The engine favors:
+- deterministic signals first
+- visible explanation
+- contextual mitigation where appropriate
+- low false-positive behavior for observed-only patterns
 
 ---
 
 ## 6. Explanation Layer
 
-The explanation layer translates engine behavior into analyst-readable evidence.
+This layer converts scoring decisions into reviewable evidence.
 
-### Responsibilities
-- attach reason codes
-- provide human-readable descriptions
-- preserve source metadata
-- preserve related entity and address context
-- preserve severity / confidence where known
-- distinguish between observed, reviewable, and critical cases
+### Output shape
+- risk score
+- risk grade
+- review recommendation
+- risk breakdown by category
+- individual `risk_reasons`
+- evidence counts
+- related entity / address where available
 
-### Current evidence format
-Each reason can include:
-- code
-- category
-- description
-- offset
-- source
-- related entity
-- related address
-- severity
-- confidence
-- evidence count
+### Why it matters
+A wallet-risk engine is only useful if an analyst can understand:
+- what fired
+- why it fired
+- how strong the evidence was
+- whether context reduced or increased confidence
 
-### Why this matters
-Explainability is central to:
-- analyst trust
-- compliance defensibility
-- product credibility
-- portfolio presentation
-
-The explanation layer is what makes the platform interpretable rather than just functional.
+### Current explanation strength
+The project already supports:
+- deterministic sanctions explanations
+- mixer exposure reasoning
+- trusted protocol contextual mitigation
+- repeated interaction evidence
+- concentration reasoning
+- curated case-study storytelling
 
 ---
 
 ## 7. API / UI Layer
 
-The API / UI layer is how users and systems interact with Crypto Profiler.
+### Current MVP form
+- CLI entrypoint via `cmd/validator`
+- dataset-backed validator mode for reproducible demos
+- JSON-first outputs
 
-### Current interfaces
-#### CLI
-- live profiling by wallet address
-- dataset-backed profiling by curated case file
-- JSON output suitable for demos and automation
+### Why this is enough for MVP
+The project is currently optimized for:
+- architecture demonstration
+- portfolio evidence
+- reproducible scoring behavior
+- curated cases and explainable outputs
 
-#### Watchlist engine
-- internal HTTP `/check` path for sanctions lookup
-- Dockerized local service execution
+### Planned future expansion
+- HTTP API
+- dashboard or analyst review UI
+- batch analysis endpoints
+- case management integration
 
-### Future interfaces
-- lightweight HTTP API for validator/profile execution
-- analyst review endpoints
-- future web UI / investigation console
-- export/report workflows
+---
+
+## 8. Extract / Curate Layer
+
+This layer sits between raw source data and analyst-facing examples.
+
+### Current commands
+- `cmd/extractcases`
+- `cmd/curatecases`
+
+### Current Python helper
+- `scripts/extract_traces.py`
+
+### Current responsibilities
+- reduce large raw datasets into per-address extracted artifacts
+- create curated case files with:
+    - summary statistics
+    - top counterparties
+    - capped sample data
+    - risk posture metadata
+- create address-scoped trace summaries from large Parquet trace exports
 
 ### Why this layer matters
-A good intelligence engine needs a usable interaction model.
-
-The current CLI-first approach is intentional:
-- fast to build
-- easy to test
-- easy to demonstrate
-- good for portfolio storytelling
-
-The design leaves room for an eventual service/API/UI without forcing that complexity into the MVP.
+This layer gives the project:
+- stable portfolio artifacts
+- reproducible demo cases
+- realistic data without forcing live API dependence
 
 ---
 
-## 8. Data Modes
+## 9. Storage Model
 
-Crypto Profiler currently supports two important operating modes.
+### In-repo
+The repository should keep:
+- source code
+- docs
+- small curated JSON artifacts
+- small configuration and label files
 
-### Live mode
-Used for:
-- provider-backed wallet profiling
-- current watchlist-engine interaction
-- realistic end-to-end demos
+### Out-of-repo
+Large datasets should stay outside git:
+- raw Blockchair files
+- full Ethereum traces Parquet export
+- large address-scoped compressed trace files
 
-### Dataset-backed mode
-Used for:
-- reproducible portfolio demos
-- stable case-study walkthroughs
-- testing without live API drift
-- curated examples of public, trusted, risky, and sanctioned wallets
-
-This split is important because:
-- live mode proves integration
-- dataset mode proves repeatable product behavior
-
----
-
-## 9. Current Repository Structure
-
-```text
-cmd/
-  profiler/
-  validator/
-  extractcases/
-  curatecases/
-
-internal/
-  address/
-  analyzer/
-  datasets/
-  model/
-  watchlist/
-
-data/
-  candidates/
-  cases/
-    curated/
-    extracted/
-  labels/
-
-docs/
-  case-studies/
-  security/
-```
-
-### Structure intent
-- `address` owns chain validation and fetch strategies
-- `analyzer` owns scoring and reasoning
-- `datasets` owns extraction and curation logic
-- `watchlist` owns watchlist-engine client behavior
-- `model` owns shared internal data structures
+### Recommended storage pattern
+- Cloud Storage or external disk for raw export files
+- local extracted summaries for development
+- curated artifacts in repo for demos and tests
 
 ---
 
-## 10. MVP Hosting Shape
+## Current Data Coverage
 
-The current MVP can be hosted with a lightweight deployment model:
+The current MVP data foundation now includes:
 
-- one small Go service container
-- one watchlist / sanctions service container
-- SQLite-backed local storage
-- optional object/file storage for curated case artifacts
+### Bitcoin
+- transactions
+- inputs
+- outputs
 
-This is intentionally small enough for:
-- local Docker
-- a single low-cost VM
-- small managed container platforms
+### EVM
+- Ethereum transactions
+- ERC-20 transactions
+- ERC-20 token metadata snapshot
+- Ethereum traces export
+- address-scoped extracted trace datasets
 
-The hosted MVP does not require a full microservice environment.
-
----
-
-## 11. Near-Term Roadmap
-
-### Completed
-- wallet validation
-- sanctions short-circuiting
-- label-aware scoring
-- curated dataset generation
-- dataset-backed validator mode
-- unit tests
-- OWASP Phase 1 baseline
-
-### Next
-- Bitcoin outputs integration
-- Ethereum calls integration
-- ERC-20 token metadata enrichment
-- 1-hop / 2-hop exposure logic
-- dusting / noisy inbound refinement
-- improved README and architecture diagrams
-- low-cost hosted MVP deployment
+This means the MVP now has both:
+- top-level EVM activity context
+- internal-call / trace context
 
 ---
 
-## 12. Guiding Principle
+## Current Heuristic Coverage
 
-Crypto Profiler is being built as a practical, explainable crypto-risk platform.
+### Implemented
+- sanctions short-circuit
+- direct high-risk counterparty exposure
+- repeated flagged-counterparty interaction
+- velocity burst
+- noisy inbound / dusting-like observation
+- high counterparty fan-in
+- trusted protocol / exchange context
+- service concentration to high-risk or trusted services
 
-The architecture intentionally favors:
-- clarity over cleverness
-- modularity over premature scale
-- deterministic evidence over black-box claims
-- portfolio-grade storytelling backed by working code and reproducible data
+### Partially Implemented
+- fresh wallet with immediate flow
+- broader mixer/tumbler exposure
+- trace-aware context as a separate extracted layer rather than fully wired into the scoring engine
+
+### Planned
+- 1-hop / 2-hop exposure
+- peel-chain behavior
+- round-trip / U-turn behavior
+- deeper trace-aware EVM behavioral rules
+- value-weighted and cluster-aware concentration
+
+---
+
+## Example End-to-End Flows
+
+## A. Live wallet flow
+1. user supplies wallet address
+2. validator chooses chain strategy
+3. wallet is validated and normalized
+4. watchlist engine checks sanctions
+5. analyzer loads labels and transaction context
+6. scoring rules fire
+7. explainable JSON output is returned
+
+## B. Dataset-backed curated case flow
+1. curated JSON case is loaded
+2. validator runs in dataset mode
+3. analyzer applies scoring using stable case inputs
+4. consistent JSON output is produced for demos and tests
+
+## C. Trace extraction flow
+1. Ethereum traces are exported from BigQuery to Parquet
+2. `scripts/extract_traces.py` scans Parquet files
+3. traces are filtered to tracked addresses
+4. address-scoped trace summaries and compressed raw subsets are written
+5. extracted trace artifacts support later case and heuristic enrichment
+
+---
+
+## Operational Notes
+
+### Why BigQuery was used for traces
+Downloading 90 days of Ethereum calls from flat-file providers was too slow for MVP iteration.  
+BigQuery provided a practical path to export a 90-day raw traces base table.
+
+### Why Python was used for trace extraction
+The trace export is large enough that a small streaming-oriented PyArrow utility is a pragmatic extraction tool.  
+The scoring engine remains Go-first.
+
+### Why the scoring engine is still Go-first
+The analyzer, validator, tests, and core portfolio signal logic all remain in Go.  
+The Python script is an ingestion-side helper, not the product core.
+
+---
+
+## Future Architecture Expansion
+
+### Near-term
+- trace-aware curated case enrichment
+- Bitcoin extracted case generation
+- trace-informed protocol case studies
+- stronger concentration reasoning
+
+### Mid-term
+- graph traversal service
+- hop-based exposure engine
+- value-aware repeated interaction
+- router / internal-flow reasoning in analyzer
+
+### Later
+- HTTP API
+- analyst review UI
+- persistent graph store
+- cluster resolution layer
+- cross-chain and bridge-aware analytics
+
+---
+
+## Related Documents
+
+- [`README.md`](README.md)
+- [`docs/TYPOLOGIES.md`](docs/TYPOLOGIES.md)
+- [`docs/BITCOIN-DATA-MODEL.md`](docs/BITCOIN-DATA-MODEL.md)
+- [`docs/ERC20-DATA-MODEL.md`](docs/ERC20-DATA-MODEL.md)

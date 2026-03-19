@@ -1,0 +1,20 @@
+{
+  "address": "0x71660c40255e4105803491718b7fb31930a21b27",
+  "chain": "EVM",
+  "generated_at": "2026-03-19T12:51:23.490800Z",
+  "summary": {
+    "first_seen": null,
+    "last_seen": null,
+    "inbound_trace_count": 0,
+    "outbound_trace_count": 0,
+    "self_trace_count": 0,
+    "failed_trace_count": 0,
+    "value_transfer_trace_count": 0,
+    "unique_counterparties": 0,
+    "max_depth": 0
+  },
+  "top_counterparties": [],
+  "sample_traces": [],
+  "source_trace_count": 0,
+  "raw_trace_file": "71660c40255e4105803491718b7fb31930a21b27.traces.ndjson.gz"
+}

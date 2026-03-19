@@ -259,6 +259,11 @@ func Investigate(profile *model.WalletProfile, txs []model.Transaction) {
 	applyRepeatedFlaggedCounterpartyHeuristic(profile, txs, &hits)
 
 	// ---------------------------------------------------------
+	// 4C. Concentration Heuristic
+	// ---------------------------------------------------------
+	applyServiceConcentrationHeuristic(profile, txs, &hits)
+
+	// ---------------------------------------------------------
 	// 5. NOISY INBOUND / DUSTING-LIKE OBSERVATION
 	// ---------------------------------------------------------
 	// This is intentionally low-severity and should not automatically
@@ -531,4 +536,124 @@ func isZeroLikeValue(raw string) bool {
 	}
 
 	return allZero
+}
+func applyServiceConcentrationHeuristic(profile *model.WalletProfile, txs []model.Transaction, hits *[]RuleHit) {
+	if profile == nil || len(txs) == 0 {
+		return
+	}
+
+	address := strings.ToLower(strings.TrimSpace(profile.Address))
+	if address == "" {
+		return
+	}
+
+	type serviceInteractionSummary struct {
+		Label model.EntityLabel
+		Count int
+	}
+
+	totalDirectional := 0
+	seen := map[string]*serviceInteractionSummary{}
+
+	for _, tx := range txs {
+		from := strings.ToLower(strings.TrimSpace(tx.From))
+		to := strings.ToLower(strings.TrimSpace(tx.To))
+
+		var counterparty string
+		switch {
+		case from == address && to != "" && to != address:
+			counterparty = to
+		case to == address && from != "" && from != address:
+			counterparty = from
+		default:
+			continue
+		}
+
+		totalDirectional++
+
+		label, ok := LookupEntityLabel(counterparty)
+		if !ok || !isConcentrationServiceCategory(label.Category) {
+			continue
+		}
+
+		entry, exists := seen[counterparty]
+		if !exists {
+			entry = &serviceInteractionSummary{Label: label}
+			seen[counterparty] = entry
+		}
+		entry.Count++
+	}
+
+	if totalDirectional == 0 || len(seen) == 0 {
+		return
+	}
+
+	var top *serviceInteractionSummary
+	for _, entry := range seen {
+		if top == nil || entry.Count > top.Count {
+			top = entry
+		}
+	}
+	if top == nil || top.Count < 4 {
+		return
+	}
+
+	ratio := float64(top.Count) / float64(totalDirectional)
+	percent := ratio * 100.0
+
+	switch top.Label.Category {
+	case model.LabelCategoryMixer, model.LabelCategoryExploit, model.LabelCategoryScam, model.LabelCategorySanctions:
+		if ratio >= 0.40 {
+			addHit(
+				hits,
+				"FRAUD",
+				"high_risk_service_concentration",
+				fmt.Sprintf("High interaction concentration to high-risk service: %s (%.1f%% of observed activity)", top.Label.Name, percent),
+				18.0,
+				&top.Label,
+				top.Count,
+			)
+		}
+
+	case model.LabelCategoryExchange:
+		if ratio >= 0.60 {
+			addHit(
+				hits,
+				"REPUTATION",
+				"exchange_concentration",
+				fmt.Sprintf("High interaction concentration to known exchange: %s (%.1f%% of observed activity)", top.Label.Name, percent),
+				-4.0,
+				&top.Label,
+				top.Count,
+			)
+		}
+
+	case model.LabelCategoryTrusted, model.LabelCategoryProtocol:
+		if ratio >= 0.60 {
+			addHit(
+				hits,
+				"REPUTATION",
+				"single_service_concentration",
+				fmt.Sprintf("High interaction concentration to known protocol/trusted service: %s (%.1f%% of observed activity)", top.Label.Name, percent),
+				-4.0,
+				&top.Label,
+				top.Count,
+			)
+		}
+	}
+}
+
+func isConcentrationServiceCategory(category model.LabelCategory) bool {
+	switch category {
+	case model.LabelCategoryMixer,
+		model.LabelCategoryExploit,
+		model.LabelCategoryScam,
+		model.LabelCategorySanctions,
+		model.LabelCategoryExchange,
+		model.LabelCategoryTrusted,
+		model.LabelCategoryProtocol:
+		return true
+	default:
+		return false
+	}
 }

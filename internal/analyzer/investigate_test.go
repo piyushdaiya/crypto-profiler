@@ -59,6 +59,16 @@ func writeBootstrapLabelsForTest(t *testing.T) string {
 	    "trusted": false,
 	    "notes": "Known mixer-related routing contract"
 	  },
+	  "0xe592427a0aece92de3edee1f18e0157c05861564": {
+	    "address": "0xe592427a0aece92de3edee1f18e0157c05861564",
+	    "name": "Uniswap V3 Router",
+	    "category": "PROTOCOL",
+	    "severity": "LOW",
+	    "confidence": "HIGH",
+	    "source": "bootstrap_entities",
+	    "trusted": true,
+	    "notes": "Known trusted DeFi routing contract"
+	  },
 	  "0x1234567890abcdef1234567890abcdef12345678": {
 	    "address": "0x1234567890abcdef1234567890abcdef12345678",
 	    "name": "Trusted Protocol",
@@ -428,5 +438,116 @@ func TestInvestigate_RepeatedFlaggedCounterpartyInteractionEscalates(t *testing.
 
 	if profile.RiskScore <= 0 {
 		t.Fatalf("expected risk score > 0, got %v", profile.RiskScore)
+	}
+}
+func TestInvestigate_HighRiskServiceConcentrationEscalates(t *testing.T) {
+	resetKnownEntitiesCacheForTest(t)
+
+	server := newWatchlistServer(t, watchlistResponse{
+		Sanctioned: false,
+		Currency:   "ETH",
+		Source:     "OFAC",
+	})
+	defer server.Close()
+
+	setEnvForTest(t, "WATCHLIST_ENGINE_URL", server.URL)
+	setEnvForTest(t, "BOOTSTRAP_LABELS_PATH", writeBootstrapLabelsForTest(t))
+
+	firstSeen := time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC)
+	lastSeen := time.Date(2025, 3, 5, 23, 53, 35, 0, time.UTC)
+
+	profile := &model.WalletProfile{
+		Address:   "0x3333333333333333333333333333333333333333",
+		Network:   "EVM",
+		IsValid:   true,
+		IsActive:  true,
+		TxCount:   8,
+		FirstSeen: &firstSeen,
+		LastSeen:  &lastSeen,
+	}
+
+	txs := []model.Transaction{
+		{From: profile.Address, To: "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b", Hash: "tx01"},
+		{From: profile.Address, To: "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b", Hash: "tx02"},
+		{From: profile.Address, To: "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b", Hash: "tx03"},
+		{From: "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b", To: profile.Address, Hash: "tx04"},
+		{From: profile.Address, To: "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b", Hash: "tx05"},
+		{From: profile.Address, To: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", Hash: "tx06"},
+		{From: "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", To: profile.Address, Hash: "tx07"},
+		{From: profile.Address, To: "0xcccccccccccccccccccccccccccccccccccccccc", Hash: "tx08"},
+	}
+
+	Investigate(profile, txs)
+
+	var found bool
+	for _, reason := range profile.RiskReasons {
+		if reason.Code == "high_risk_service_concentration" {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		t.Fatalf("expected high_risk_service_concentration reason")
+	}
+
+	if !profile.ReviewRecommended {
+		t.Fatalf("expected review recommended")
+	}
+}
+
+func TestInvestigate_TrustedServiceConcentrationIsContextual(t *testing.T) {
+	resetKnownEntitiesCacheForTest(t)
+
+	server := newWatchlistServer(t, watchlistResponse{
+		Sanctioned: false,
+		Currency:   "ETH",
+		Source:     "OFAC",
+	})
+	defer server.Close()
+
+	setEnvForTest(t, "WATCHLIST_ENGINE_URL", server.URL)
+	setEnvForTest(t, "BOOTSTRAP_LABELS_PATH", writeBootstrapLabelsForTest(t))
+
+	firstSeen := time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC)
+	lastSeen := time.Date(2025, 3, 5, 23, 53, 35, 0, time.UTC)
+
+	profile := &model.WalletProfile{
+		Address:   "0x4444444444444444444444444444444444444444",
+		Network:   "EVM",
+		IsValid:   true,
+		IsActive:  true,
+		TxCount:   8,
+		FirstSeen: &firstSeen,
+		LastSeen:  &lastSeen,
+	}
+
+	txs := []model.Transaction{
+		{From: profile.Address, To: "0xe592427a0aece92de3edee1f18e0157c05861564", Hash: "tx01"},
+		{From: profile.Address, To: "0xe592427a0aece92de3edee1f18e0157c05861564", Hash: "tx02"},
+		{From: "0xe592427a0aece92de3edee1f18e0157c05861564", To: profile.Address, Hash: "tx03"},
+		{From: profile.Address, To: "0xe592427a0aece92de3edee1f18e0157c05861564", Hash: "tx04"},
+		{From: profile.Address, To: "0xe592427a0aece92de3edee1f18e0157c05861564", Hash: "tx05"},
+		{From: profile.Address, To: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", Hash: "tx06"},
+		{From: "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", To: profile.Address, Hash: "tx07"},
+		{From: profile.Address, To: "0xcccccccccccccccccccccccccccccccccccccccc", Hash: "tx08"},
+	}
+
+	Investigate(profile, txs)
+
+	var found bool
+	for _, reason := range profile.RiskReasons {
+		if reason.Code == "single_service_concentration" {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		t.Fatalf("expected single_service_concentration reason")
+	}
+
+	if profile.ReviewRecommended {
+		t.Fatalf("did not expect review recommended")
 	}
 }

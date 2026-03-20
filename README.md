@@ -47,25 +47,41 @@ They need tools that can answer questions such as:
 Crypto Profiler is being built to answer those questions in a portfolio-grade, explainable, and extensible way.
 
 ---
+### Day 6 Update
 
-## Day 5 Update
+The repository now includes an initial **Solana Layer 1** dataset built from large-value stablecoin transfer flows.
 
-The repository now also includes:
+This layer currently includes:
 
-- a 90-day Ethereum traces export pipeline using BigQuery / Cloud Storage
-- an address-scoped EVM trace extractor for curated wallet and router analysis
-- extracted trace datasets for real high-risk, public-wallet, and trusted-protocol examples
-- a new **service concentration heuristic** that distinguishes:
-  - concentration to high-risk services
-  - concentration to exchanges
-  - concentration to trusted protocols
-- real protocol-aware test fixtures including the Uniswap V3 Router
-- `cmd/enrichcases` for merging address-scoped trace summaries into curated case artifacts
-- validator dataset mode now surfaces trace-aware context from enriched curated cases
+- local Solana whale stablecoin-flow exports covering `2025-03-16` to `2025-04-14`
+- address-scoped extracted Solana stablecoin summaries
+- first curated Solana case artifacts derived from stablecoin-flow behavior
+- Solana candidate mining from stablecoin counterparties and authority surfaces
 
+### Solana data status
 
-This closes a major MVP data gap: the project now has practical support for **EVM internal-call / traces-aware analysis**, not just top-level EVM and ERC-20 transaction data.
+Solana support is currently **Layer 1 stablecoin-flow based**. 
+Solana Layer 1 is now backed by curated stablecoin-flow case artifacts under `data/cases/curated-solana/`.
 
+This means the first Solana MVP slice focuses on:
+
+- USDC / USDT value movement
+- source / destination / authority roles
+- repeated counterparty interaction
+- concentration and broad-surface flow patterns
+
+A deeper Solana instruction/program layer may be added later as a second-stage enrichment path.
+
+### Curated Solana Cases
+
+The repository now includes first-pass Solana curated cases derived from the Layer 1 stablecoin-flow dataset:
+
+- `data/cases/curated-solana/solana-usdc-distributor-treasury-like.json`
+- `data/cases/curated-solana/solana-stablecoin-authority-operator.json`
+- `data/cases/curated-solana/solana-broad-surface-authority-mixed-stablecoin.json`
+
+These cases currently represent Solana stablecoin-flow behavior, not full instruction-aware protocol semantics.
+They are intended to support case studies, future scoring work, and dataset-backed Solana benchmarking.
 ---
 
 ## Core capabilities
@@ -149,6 +165,9 @@ The project now includes explicit data-model documentation for the current MVP s
 - [`docs/ERC20-DATA-MODEL.md`](docs/ERC20-DATA-MODEL.md)
 - [`docs/TYPOLOGIES.md`](docs/TYPOLOGIES.md)
 - [`docs/ETHEREUM-DATA-MODEL.md`](docs/ETHEREUM-DATA-MODEL.md)
+- [`docs/DATA-SOURCING-POLICY.md`](docs/DATA-SOURCING-POLICY.md)
+- [`docs/SOLANA-DATA-MODEL.md`](docs/SOLANA-DATA-MODEL.md)
+- [`docs/DATA-SOURCING-POLICY.md`](docs/DATA-SOURCING-POLICY.md)
 
 These documents define:
 - the canonical MVP data window

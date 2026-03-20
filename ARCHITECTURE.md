@@ -368,6 +368,38 @@ Large datasets should stay outside git:
 - curated artifacts in repo for demos and tests
 
 ---
+## Solana Layer 1
+
+The current Solana architecture is intentionally **stablecoin-flow first**.
+
+### Current Solana Layer 1 inputs
+
+- locally exported whale stablecoin-flow Parquet shards
+- address-scoped extracted Solana stablecoin summaries
+- curated Solana case artifacts built from those extracted summaries
+
+### Current Solana Layer 1 responsibilities
+
+- identify large-value stablecoin transfer activity
+- summarize source / destination / authority roles
+- count repeated counterparty interaction
+- surface broad counterparty and authority-control patterns
+- produce curated Solana benchmark cases for demos and future scoring work
+
+### Current limitation
+
+The current Solana layer is not yet full instruction-aware or program-aware.
+It is a value-flow layer designed to establish an MVP baseline quickly and economically.
+
+### Current end-to-end Solana flow
+
+1. export whale stablecoin flows from historical Solana data
+2. extract address-scoped stablecoin summaries locally
+3. mine candidate wallets from the extracted value-flow layer
+4. curate selected Solana case artifacts
+5. use those artifacts to drive future Solana scoring and case-study work
+
+---
 
 ## Current Data Coverage
 

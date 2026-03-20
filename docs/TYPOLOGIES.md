@@ -46,6 +46,26 @@ The current repository already demonstrates these typology-aligned behaviors:
 This section is intentionally limited to behaviors that are already visible in the current MVP codebase, tests, or sample outputs.
 
 ---
+## Solana Layer 1 coverage note
+
+The current Solana MVP slice is **stablecoin-flow based**.
+
+This means current Solana coverage is strongest for:
+
+- repeated interaction with counterparties
+- concentration to major counterparties
+- authority-driven operational control patterns
+- stablecoin-heavy value movement
+- broad counterparty surface / noisy authority behavior
+
+It is currently weaker for:
+
+- full instruction-aware program behavior
+- protocol-specific routing semantics
+- deeper non-stablecoin Solana activity
+
+
+---
 
 ## 1. Sanctions / Watchlist Hit
 

@@ -123,6 +123,40 @@ func run(args []string, out io.Writer, errOut io.Writer, strategies []address.Ch
 func runDatasetMode(path string, out io.Writer, errOut io.Writer) int {
 	fmt.Fprintf(errOut, "🔍 Analyzing curated dataset %s...\n", path)
 
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		fmt.Fprintf(errOut, "Error loading dataset: %v\n", err)
+		return 1
+	}
+
+	// Robust probe: use a generic raw-message map instead of a typed probe struct.
+	var probe map[string]json.RawMessage
+	if err := json.Unmarshal(raw, &probe); err != nil {
+		fmt.Fprintf(errOut, "Error probing dataset: %v\n", err)
+		return 1
+	}
+
+	var chain string
+	if chainRaw, ok := probe["chain"]; ok {
+		_ = json.Unmarshal(chainRaw, &chain)
+	}
+
+	_, hasStablecoinSummary := probe["stablecoin_summary"]
+	
+	// Solana stablecoin curated case path
+	if strings.EqualFold(chain, "SOLANA") && hasStablecoinSummary {
+		cc, err := datasets.LoadSolanaCuratedStablecoinCase(path)
+		if err != nil {
+			fmt.Fprintf(errOut, "Error loading Solana curated dataset: %v\n", err)
+			return 1
+		}
+
+		profile := buildWalletProfileFromSolanaCuratedStablecoinCase(cc)
+		applySolanaCuratedStablecoinContext(profile, cc)
+		return writeProfile(profile, out, errOut)
+	}
+
+	// Default generic curated case path
 	cc, err := datasets.LoadCuratedCase(path)
 	if err != nil {
 		fmt.Fprintf(errOut, "Error loading dataset: %v\n", err)

@@ -1,0 +1,1375 @@
+{
+  "case_id": "solana-broad-surface-authority-mixed-stablecoin",
+  "title": "Solana Broad-Surface Authority with Mixed Stablecoins",
+  "description": "Authority-heavy wallet with a very broad counterparty surface and mixed USDC/USDT activity, suitable for noisy-authority and reviewable broad-surface flow analysis.",
+  "risk_posture": "REVIEWABLE_BROAD_COUNTERPARTY_SURFACE",
+  "label": "SOLANA BROAD AUTHORITY SURFACE (MIXED STABLECOINS)",
+  "address": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+  "chain": "SOLANA",
+  "generated_at": "2026-03-20T21:14:52.289475Z",
+  "source_dataset_type": "stablecoin_whale_flows",
+  "source_row_count": 19008,
+  "stablecoin_summary": {
+    "first_seen": "2025-03-16T00:06:47Z",
+    "last_seen": "2025-04-14T23:59:20Z",
+    "source_transfer_count": 0,
+    "destination_transfer_count": 0,
+    "authority_transfer_count": 19008,
+    "source_value_raw": "0",
+    "destination_value_raw": "0",
+    "authority_value_raw": "4362998696243210.000000000",
+    "unique_counterparties": 5609,
+    "source_counterparties": 0,
+    "destination_counterparties": 0,
+    "authority_counterparties": 5609,
+    "dominant_role": "authority",
+    "dominant_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  },
+  "mint_breakdown": [
+    {
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "count": 10737
+    },
+    {
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "count": 8271
+    }
+  ],
+  "transfer_type_breakdown": [
+    {
+      "transfer_type": "spl-transfer",
+      "count": 19008
+    }
+  ],
+  "top_counterparties": [
+    {
+      "address": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "interactions": 10737,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 10737,
+      "total_value_raw": "2533190770513585.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "2533190770513585.000000000",
+      "top_mints": [
+        {
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "count": 10737
+        }
+      ]
+    },
+    {
+      "address": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "interactions": 8271,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 8271,
+      "total_value_raw": "1829807925729625.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "1829807925729625.000000000",
+      "top_mints": [
+        {
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "count": 8271
+        }
+      ]
+    },
+    {
+      "address": "3DPLvQUeQLmhvc6HNj9bernQoGdjAQmb2LX2SD4E1Mkq",
+      "interactions": 1410,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 1410,
+      "total_value_raw": "323140962000000.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "323140962000000.000000000",
+      "top_mints": [
+        {
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "count": 1410
+        }
+      ]
+    },
+    {
+      "address": "5uQoGFz9jqHV7732pmpt43cTYqvHBHoH5a8ZP4pFmCLu",
+      "interactions": 1005,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 1005,
+      "total_value_raw": "477720348553950.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "477720348553950.000000000",
+      "top_mints": [
+        {
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "count": 1005
+        }
+      ]
+    },
+    {
+      "address": "2QY8VnQfeMUxgxDXvidibTyFaKU4xf1cHdGxmKWfzDgm",
+      "interactions": 718,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 718,
+      "total_value_raw": "276838280000000.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "276838280000000.000000000",
+      "top_mints": [
+        {
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "count": 718
+        }
+      ]
+    },
+    {
+      "address": "3LH1SSimemRPbcCUixhqjUKdgK2EmqKcRENjfGaZtHxT",
+      "interactions": 512,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 512,
+      "total_value_raw": "11276353804988.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "11276353804988.000000000",
+      "top_mints": [
+        {
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "count": 512
+        }
+      ]
+    },
+    {
+      "address": "5AkJw57kNJ4mMoEwiAapF4egVBUTWd3rv8YGjDKSgecV",
+      "interactions": 455,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 455,
+      "total_value_raw": "55565869000000.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "55565869000000.000000000",
+      "top_mints": [
+        {
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "count": 455
+        }
+      ]
+    },
+    {
+      "address": "CdgGwVeCDPuT2RvxZTasWQ2DdWtfq75SHVkAPcj43W8Z",
+      "interactions": 343,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 343,
+      "total_value_raw": "177764593230000.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "177764593230000.000000000",
+      "top_mints": [
+        {
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "count": 343
+        }
+      ]
+    },
+    {
+      "address": "9bUURPfwDStZzXtEGxEarAhwL9q3d57SGWpp7PPoa14",
+      "interactions": 273,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 273,
+      "total_value_raw": "270949468000000.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "270949468000000.000000000",
+      "top_mints": [
+        {
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "count": 273
+        }
+      ]
+    },
+    {
+      "address": "EKVoJvQEwg395JZG55N1uUbn8oN5LEVd3mA29yBRtqkd",
+      "interactions": 271,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 271,
+      "total_value_raw": "160960489035000.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "160960489035000.000000000",
+      "top_mints": [
+        {
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "count": 271
+        }
+      ]
+    },
+    {
+      "address": "DYU4yerNMB48M8vJPGCgdhduosocF6HgYFtHfVrGJ9wt",
+      "interactions": 175,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 175,
+      "total_value_raw": "39567000263200.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "39567000263200.000000000",
+      "top_mints": [
+        {
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "count": 175
+        }
+      ]
+    },
+    {
+      "address": "6d1WoRaGme8rTRBbojVjvNSqVGA76ySFVeCCsz2rEmAL",
+      "interactions": 157,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 157,
+      "total_value_raw": "2354843000000.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "2354843000000.000000000",
+      "top_mints": [
+        {
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "count": 157
+        }
+      ]
+    },
+    {
+      "address": "7KfmAtZTpyVT7wxJcWSGaJdKNxYeJWMrVskVTkHZGzDR",
+      "interactions": 152,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 152,
+      "total_value_raw": "4310957287264.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "4310957287264.000000000",
+      "top_mints": [
+        {
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "count": 152
+        }
+      ]
+    },
+    {
+      "address": "FzZevtosnBFzG9ULpHBauT5ZKHEBqDX4YPu25S3KVzSv",
+      "interactions": 149,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 149,
+      "total_value_raw": "47167095000000.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "47167095000000.000000000",
+      "top_mints": [
+        {
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "count": 149
+        }
+      ]
+    },
+    {
+      "address": "EFRsh1HuRzNcBnpociyBsiqmNJHD6wYtfx5k8dHnh7vz",
+      "interactions": 125,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 125,
+      "total_value_raw": "5648823491877.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "5648823491877.000000000",
+      "top_mints": [
+        {
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "count": 125
+        }
+      ]
+    },
+    {
+      "address": "9r3rrw1bay6c1UMu9GsvHGxVXCC4Fbd4ibFF89eD9dAw",
+      "interactions": 113,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 113,
+      "total_value_raw": "11299818330000.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "11299818330000.000000000",
+      "top_mints": [
+        {
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "count": 113
+        }
+      ]
+    },
+    {
+      "address": "DTkLqw7q4UjcrFRZcwizxtELPEX99ihGB9dzyxXWERYL",
+      "interactions": 86,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 86,
+      "total_value_raw": "15153862000000.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "15153862000000.000000000",
+      "top_mints": [
+        {
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "count": 86
+        }
+      ]
+    },
+    {
+      "address": "HZ6hns8LSgtzTXwtjTAQVADY4KYAenJhqjVM6s3CYNLA",
+      "interactions": 72,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 72,
+      "total_value_raw": "724163000000.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "724163000000.000000000",
+      "top_mints": [
+        {
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "count": 72
+        }
+      ]
+    },
+    {
+      "address": "38cGMcVDeqGCwsVouPeBTS4eTkzfMEVeBz5234UQCsaL",
+      "interactions": 70,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 70,
+      "total_value_raw": "5788892984900.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "5788892984900.000000000",
+      "top_mints": [
+        {
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "count": 70
+        }
+      ]
+    },
+    {
+      "address": "GUJHDkcLWTBMwNHFWsQVbRujdgGmDPPvDsH9jSJDWCCo",
+      "interactions": 70,
+      "inbound_count": 0,
+      "outbound_count": 0,
+      "authority_count": 70,
+      "total_value_raw": "2419838730000.000000000",
+      "inbound_value_raw": "0",
+      "outbound_value_raw": "0",
+      "authority_value_raw": "2419838730000.000000000",
+      "top_mints": [
+        {
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "count": 70
+        }
+      ]
+    }
+  ],
+  "top_authority_pairs": [
+    {
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "3DPLvQUeQLmhvc6HNj9bernQoGdjAQmb2LX2SD4E1Mkq",
+      "interactions": 1410,
+      "total_value_raw": "323140962000000.000000000"
+    },
+    {
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "5uQoGFz9jqHV7732pmpt43cTYqvHBHoH5a8ZP4pFmCLu",
+      "interactions": 1005,
+      "total_value_raw": "477720348553950.000000000"
+    },
+    {
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "2QY8VnQfeMUxgxDXvidibTyFaKU4xf1cHdGxmKWfzDgm",
+      "interactions": 718,
+      "total_value_raw": "276838280000000.000000000"
+    },
+    {
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "3LH1SSimemRPbcCUixhqjUKdgK2EmqKcRENjfGaZtHxT",
+      "interactions": 512,
+      "total_value_raw": "11276353804988.000000000"
+    },
+    {
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "5AkJw57kNJ4mMoEwiAapF4egVBUTWd3rv8YGjDKSgecV",
+      "interactions": 455,
+      "total_value_raw": "55565869000000.000000000"
+    },
+    {
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "CdgGwVeCDPuT2RvxZTasWQ2DdWtfq75SHVkAPcj43W8Z",
+      "interactions": 343,
+      "total_value_raw": "177764593230000.000000000"
+    },
+    {
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "9bUURPfwDStZzXtEGxEarAhwL9q3d57SGWpp7PPoa14",
+      "interactions": 273,
+      "total_value_raw": "270949468000000.000000000"
+    },
+    {
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "EKVoJvQEwg395JZG55N1uUbn8oN5LEVd3mA29yBRtqkd",
+      "interactions": 271,
+      "total_value_raw": "160960489035000.000000000"
+    },
+    {
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "DYU4yerNMB48M8vJPGCgdhduosocF6HgYFtHfVrGJ9wt",
+      "interactions": 175,
+      "total_value_raw": "39567000263200.000000000"
+    },
+    {
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "6d1WoRaGme8rTRBbojVjvNSqVGA76ySFVeCCsz2rEmAL",
+      "interactions": 157,
+      "total_value_raw": "2354843000000.000000000"
+    },
+    {
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "7KfmAtZTpyVT7wxJcWSGaJdKNxYeJWMrVskVTkHZGzDR",
+      "interactions": 152,
+      "total_value_raw": "4310957287264.000000000"
+    },
+    {
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "FzZevtosnBFzG9ULpHBauT5ZKHEBqDX4YPu25S3KVzSv",
+      "interactions": 149,
+      "total_value_raw": "47167095000000.000000000"
+    },
+    {
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "EFRsh1HuRzNcBnpociyBsiqmNJHD6wYtfx5k8dHnh7vz",
+      "interactions": 125,
+      "total_value_raw": "5648823491877.000000000"
+    },
+    {
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "9r3rrw1bay6c1UMu9GsvHGxVXCC4Fbd4ibFF89eD9dAw",
+      "interactions": 113,
+      "total_value_raw": "11299818330000.000000000"
+    },
+    {
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "DTkLqw7q4UjcrFRZcwizxtELPEX99ihGB9dzyxXWERYL",
+      "interactions": 86,
+      "total_value_raw": "15153862000000.000000000"
+    },
+    {
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "HZ6hns8LSgtzTXwtjTAQVADY4KYAenJhqjVM6s3CYNLA",
+      "interactions": 72,
+      "total_value_raw": "724163000000.000000000"
+    },
+    {
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "38cGMcVDeqGCwsVouPeBTS4eTkzfMEVeBz5234UQCsaL",
+      "interactions": 70,
+      "total_value_raw": "5788892984900.000000000"
+    },
+    {
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "GUJHDkcLWTBMwNHFWsQVbRujdgGmDPPvDsH9jSJDWCCo",
+      "interactions": 70,
+      "total_value_raw": "2419838730000.000000000"
+    },
+    {
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "BwPzGBkBHBacVsECKNon97FrSYzjBDJ3ZYcvirWaNvYK",
+      "interactions": 68,
+      "total_value_raw": "25450052000000.000000000"
+    },
+    {
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "54yLxyYT66fGWn5UQMm72tdqrTBziZJHC3bLk6qoyqUS",
+      "interactions": 66,
+      "total_value_raw": "33071927620000.000000000"
+    }
+  ],
+  "sample_transfers": [
+    {
+      "block_timestamp": "2025-03-31T11:58:53Z",
+      "tx_signature": "4m2sDi8Yxv1UNnxH4MNa3Lnyi2DPqEKspcRcgt891DeQkbX8heqJ2Fv8kjv9UMW4GaWTVwVEiengauUHDkbjofpz",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "6d1WoRaGme8rTRBbojVjvNSqVGA76ySFVeCCsz2rEmAL",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "14999000000.000000000",
+      "token_amount_ui": "14999.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T06:55:51Z",
+      "tx_signature": "52ySHUye4QZ735En9kQBuxrNSEE6bCTC2vBdXqjKNvbAgQ2tR4uh1iby7LvFL89P6ssVb8XJSDwVVwRn97kmQTfK",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "96wjT21RKm7iXxXVzt83CCRNjYMKrLh5AHEbv5d3N5MD",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "200000000000.000000000",
+      "token_amount_ui": "200000.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T01:57:44Z",
+      "tx_signature": "3Lncx45a4LMu93ZUsBUb2qopZHZ66Tm4JPyT3xjQYZeWh4e9sykFhwsnt9m256ii9S7rc4DLvnTLiidx8nXeEdPX",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "5AkJw57kNJ4mMoEwiAapF4egVBUTWd3rv8YGjDKSgecV",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "99998000000.000000000",
+      "token_amount_ui": "99998.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T03:25:11Z",
+      "tx_signature": "3Nh2QH7hava9pnQPxkBYeiPPTUoPtDCXF58pK4QBq43nkTYDthwZ1DQWKWTAKJUnej8nK1PR7pb1RUSyN3NdKyzA",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "EhXAAZWRX7s676muTPEnuPV2KTyitvJT8heUTdRFaLJJ",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "10002960400.000000000",
+      "token_amount_ui": "10002.960400000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T14:27:15Z",
+      "tx_signature": "3WZf6fS24j597v79pUKTXikebYQLstvKYrW5mLuZhW8TkEodihbDDmMp37mfqyKh982su6m3L7dNcvPdMzkSUc6L",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "6NveAenVFUjoZjBhgmMTGL7x8DS1r5inCzX4ybnmms5D",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "79999000000.000000000",
+      "token_amount_ui": "79999.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T04:56:49Z",
+      "tx_signature": "n9X6pBSEvQgyUN2oVxCF7HPNRa3dQAVFu8rpqsU368GkpGnBNJMcmzoE4nKnrJhLByCJ69AJ52S2PMKfS759o5i",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "EVRrxiMJwyBAE4nhSLbXwx6Q3DXHLDzy9eGtzXUuKnF8",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "99949000000.000000000",
+      "token_amount_ui": "99949.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T13:23:09Z",
+      "tx_signature": "2FMqE86TtkJLFNo2MKuUv8gBWyWDsUa3J7RkiLw6KX4z92VAmkgnJKXCg3LXsynhJNVo7zZms9qA5WW4a2Q9b3uF",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "9bUURPfwDStZzXtEGxEarAhwL9q3d57SGWpp7PPoa14",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "1051020000000.000000000",
+      "token_amount_ui": "1051020.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T03:08:45Z",
+      "tx_signature": "4fU2UxqZrw6kaUpmKUMBWQGn7PhfjfajX7atfomFa3da3wNfp2UarshGjtFHCnSwn2K48snNZsTS6RHtVtGNUS4t",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "CTNTvCrykjBzfbi6diiSeiRqtwm2nTC94x9jHtfABZcG",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "10000000000.000000000",
+      "token_amount_ui": "10000.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T20:30:05Z",
+      "tx_signature": "5ZdwnVHrw5ZKeuMWW8ESq5wYC5nmdMYYVxMEtEQzWQxXuA2Q4GvR4rCJ7Dg9SDuniQhwCjFspV78C6vd88YNcJ23",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "EFRsh1HuRzNcBnpociyBsiqmNJHD6wYtfx5k8dHnh7vz",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "101374999173.000000000",
+      "token_amount_ui": "101374.999173000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T01:31:03Z",
+      "tx_signature": "3ZeHZr9c7v2wxFKhQSU3KkcVqZsVjKoVNj9Ykuypd4Es9nocwZcXfjC7wSXywVXQxp1ntz8Wfs5c97mHM3evdPVD",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "5fSapK5YFFZVXTpjZRSLKpbuuzPd6cJYhsUbEk7D8ybV",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "199999000000.000000000",
+      "token_amount_ui": "199999.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T00:02:06Z",
+      "tx_signature": "3LR6zD1tVjzFFBQxGNPCCiWDfH6v2T863JUB3G7sGSDS7uQFsvpLuzhC5XmqrP2YsxDRr9t7xsMPDugcJAbCKRcu",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "BNDYvF1c7EouEyaRPeq3kYGSGJ1xDe3ehFmiULBB5DSf",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "34999000000.000000000",
+      "token_amount_ui": "34999.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T16:45:54Z",
+      "tx_signature": "5n2Q9AZNxrVcQeC6q6hi5onFKtTuv2d2Z8BSBJx7SBFLPVM1MvcNaC4NrtdVBd1ZBghyz6vEbNJ1Nk43yKQzKWCz",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "B8HwjZcNQwUjAsEuJXH5jE1f49wiCN8MNvTfXz2UGTA7",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "10213863292.000000000",
+      "token_amount_ui": "10213.863292000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T12:31:59Z",
+      "tx_signature": "3k3K613cyEEsmbTnwvR72W8PtmhJ2KrT2g9aRRWjkVv19RsvnuH5UZCGkST5gLAHaGSbBDMDHoTanPDPpmMo7Kxw",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "2QY8VnQfeMUxgxDXvidibTyFaKU4xf1cHdGxmKWfzDgm",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "239698000000.000000000",
+      "token_amount_ui": "239698.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T11:17:08Z",
+      "tx_signature": "5KgcGgGEoQ38odyM6t11aZgJNY7rCZymt29DLBAn3ZVgoG3EEu66u2cNrFotY3aVEU2ChXwUcDhLTm9WUpN41baw",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "2QY8VnQfeMUxgxDXvidibTyFaKU4xf1cHdGxmKWfzDgm",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "850548000000.000000000",
+      "token_amount_ui": "850548.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T16:30:53Z",
+      "tx_signature": "5YKKycTuSNy2heuM68zBDPuWQPQ2CQx9cW1wMfUcoToqEw6t5Juq1eR8RYnMhWnR5kmJPdETwvyDyhCn9cSke4SW",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "3bL8uxD9wsbGtAro6G56U2FtT21ghE31Tc77pCo3d8rD",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "27999000000.000000000",
+      "token_amount_ui": "27999.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T14:35:37Z",
+      "tx_signature": "26u4yYAPJDXmajvTZ1jz3STfBNpyjMoWGeiKRHUSvymZyAnC44rBEhS8pmrtmYqsKirhXLjdkxk3Bht8SKh1vVyb",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "F8JQBgVeZsMJXEQRw5GRuM5cssuAw8UECThRvvnUibKX",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "25374442445.000000000",
+      "token_amount_ui": "25374.442445000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T05:02:27Z",
+      "tx_signature": "5872TpyrvkrkGfUg9MczjJnxrnJCF4vtaxNknewfpwi7DKCkxSvLokCeWJstihx4mvAbhuLBLkpY5TWzT6XXGD1V",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "6HbdNE7mwNzLPGC6GDPBkc4ng1xVGJEcxdJzL2noyZF9",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "18000000000.000000000",
+      "token_amount_ui": "18000.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T16:24:06Z",
+      "tx_signature": "5SNdxLKwRTTvcdUqUDDnUaBuqDRrrx8eqWTS9UqFxisv4Hd4kWAn9cL3d5ZX6Yd7aUWX5nN66CWcXeiwGGN7w61X",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "BjFJD8iSDodHQkCiSPG17bSLDWk9eUcgxh1KxupykBUd",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "14370000000.000000000",
+      "token_amount_ui": "14370.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T00:23:45Z",
+      "tx_signature": "4jtNNdxAkCMDgRCGsiw8KLbbzmZ6sjLbcgbrSFoeDEK7uKGuDFvRUBC8NQ6TbTUXJN1tBQgnPfyoSz4husNjq7iY",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "7fkjdQd3txDeGRZbnbf1aebGbJnc2i4uU4oVGiz44FJx",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "93849366400.000000000",
+      "token_amount_ui": "93849.366400000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T05:24:28Z",
+      "tx_signature": "3iiGhNhoneLAyMERD7HJyaS8UwztfdMatHr2zSxdpQRDoQSZrHTL4UJBhjGwNXttqkcrjsqoK9QnvEihktbfq6by",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "GjdVWgpi3sfVuXe44hSMH8E9RHdiAD9XP2qeH7h4dds6",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "90008656100.000000000",
+      "token_amount_ui": "90008.656100000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T03:48:04Z",
+      "tx_signature": "rimSdPG7upzpH5yz8CgosX1aFkrWHrqznLdtMxFszFbGxybCgP11ufpLbzQeYpXgyjFdcZbzjgsumpphNhgfmKj",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "8Cmmo7pvL5W84k6Zuq7p5XvFgVMfdkScyh8gczeGu6VB",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "399999000000.000000000",
+      "token_amount_ui": "399999.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T17:44:48Z",
+      "tx_signature": "nd4HiA2U9aQGFUfAyFyNGPpBbPV5TejweFLgY11cYYmVnhp3m68GAeqCwzcTuKFS1uh2LVQw7QmfEGYnvYvpHTb",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "BRCrQmnVSrLTyuR3Wp97526WCK5bgZ939TPZKVt9uX18",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "126725656312.000000000",
+      "token_amount_ui": "126725.656312000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T13:39:33Z",
+      "tx_signature": "5tvreByofL7Qo6BGyR9ZkTEuufcoz2fL9jyvEJRdMJJJ8EK66gqE86HAs5UBAwhhNAY7o5xxWmx9ASj3LZznsJbv",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "GiRme4XAF1EUNiZps78xsaASZPuDBM6QphJ5eQ3274XT",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "31324957007.000000000",
+      "token_amount_ui": "31324.957007000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T20:16:59Z",
+      "tx_signature": "LLHzU9K5VtsJhQMtPVWz2SPAgNUGoLLGwGqFdGMURDwhtbjVxciJJcRE4dhYdfPfKSSndJhCbgD5RiwLcTmcvkP",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "4HczmfWz9coenmkvWUeW21tmGPZsSPJJwYa5CenKqrxn",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "108634000000.000000000",
+      "token_amount_ui": "108634.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T17:37:01Z",
+      "tx_signature": "2hcuN3hL5WzEL6aAmkfLnASgou6YrUaUH3PxbhrkjXR5Jymn3ABNxvDwDdQ93WQBKwravihCwz3Z13W8BAf5aacJ",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "BPDoCZ21YGfLh2dJvXHMUyM6gKcCN5zE7tNA3K9HRcmL",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "5000000000000.000000000",
+      "token_amount_ui": "5000000.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T03:40:48Z",
+      "tx_signature": "FpVYKWZyg2ypuvV5nG1VgtGaAQMvaZn2hKBqaUzmgRA6HjmdBLMV3hqjxRB3bQbrVzUSWU2QQaa2a8mp1UUyPAW",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "GhrJzBbwJudwhzLLBWkmUA1WDjqkazytkW7r2LbSUzAy",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "144405000000.000000000",
+      "token_amount_ui": "144405.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T01:42:07Z",
+      "tx_signature": "5RBBQ7GhVAPkLBU1t4DSsMmAmWs1e2CERfDocV4Kt2YcWEfVFgZAdno629e2cDn1FLhdGkPs12K5YbgxcDrdq4SN",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "E2nvqWkLLch4VjUw2Bsuv3UtXh4fKC1t15QgCGmeP1UX",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "59999000000.000000000",
+      "token_amount_ui": "59999.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T12:56:03Z",
+      "tx_signature": "5bpjZRwTSUyeZUo55a5c7oR8DiHRFKe62f4R6TgMrKSgtQQAUAMbBsSDbjkWjNDdPQtpwtneV7bF8vJpA9DkshgS",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "5AkJw57kNJ4mMoEwiAapF4egVBUTWd3rv8YGjDKSgecV",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "100415000000.000000000",
+      "token_amount_ui": "100415.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T12:59:27Z",
+      "tx_signature": "595FaxEkEhD4t5Ro22xoN94mf4mhLMEmEdqXWmYEY6RCWXccWwsA74mRC3DuHSb4JE2ALDnsJT3Et5KPQfErXkh6",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "G23mK6Xg9uPFquwYpHg1QfTW1Exv33z7JimuytwMJqyi",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "102583000000.000000000",
+      "token_amount_ui": "102583.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T03:44:10Z",
+      "tx_signature": "5HTk65YpN3SaXBMdS5iXgyAw5ozWHbzEs5Bb7E2fVPyZEi43nFzNgn58bhTFskeP7B5iPfUEH8dqjYCGuLiBzax2",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "HDpjf5j6dAfZnraaxTjdMSjhqdJB5EHzGKA5kw2bvYGB",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "1200811000000.000000000",
+      "token_amount_ui": "1200811.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T19:27:04Z",
+      "tx_signature": "2rtS3GhL82S98YZaG79ArVm9XbpLMBg6vpSH2fzTLZ1B9sKBEKRiLH6GV9qfrrwkrnhc4YU9opPe8nDPwgfRrKuL",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "FyP2mtQnBxaBZix5rnn2P8S4dGVGituiAaVHzAVXxR5b",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "84424000000.000000000",
+      "token_amount_ui": "84424.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T12:30:49Z",
+      "tx_signature": "5FkWmNhoBTYJMFRCBW8Gvmhh2RVghwrSbfbB6BgE7ETSk9aKNd5F5DpCva16RxmijgpdArh83GH8WE1VmneHBQgB",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "DXdRog4YQpjC1ZAiGamNmgPvYuKdaKkHmCrNN6Tp6qwT",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "20000000000.000000000",
+      "token_amount_ui": "20000.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T13:53:57Z",
+      "tx_signature": "5nSnsxPcJx1D1tAtDv8ouaCxntHs4NAp7NRuSutsSW9sq3D3yFUBGGwv3QFrs2fhyn6MTBnVzPnZeTMWZQFoEcS4",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "4r6tDXTaYrpnYf7Anio2xzu3jXMDk6419AfK3vbBM9r6",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "1999999000000.000000000",
+      "token_amount_ui": "1999999.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T12:43:25Z",
+      "tx_signature": "5XPCnGuJqQfmEarTjZbxwoC4QwcNAma3U3q1yXDJFLePFZq1MDhoFVnvAHwJruD4sjp1CzBPsCA5kWgy68jK2Jpz",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "3A2BH4jYxZqyQ19MBJ1r2sricKebGKUK6Dg7qT7pAJQk",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "98999333519.000000000",
+      "token_amount_ui": "98999.333519000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T13:56:47Z",
+      "tx_signature": "2h6wvM4tXSBiz5NjGEf95EG4t6q1Dyz2dPV1b1Fie8MPKtkr2aXAxHZu3rATRPCsuqoXA4UNE57Wxf7xvtKaCz8g",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "3shae6ZQNK8aoiHXkU2N7C5tGSeJVk1XMMT9Q16oRkYH",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "87212095752.000000000",
+      "token_amount_ui": "87212.095752000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T21:33:29Z",
+      "tx_signature": "4PFcD4f2g7PMdzGxBqFXEvKKgbZPWST9LEqb2tMFPZ7Nzq9wkA6Q471KHKwfD5SWgPn8HmC4xJjE5vPMb4uh5RB8",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "9bUURPfwDStZzXtEGxEarAhwL9q3d57SGWpp7PPoa14",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "1055336000000.000000000",
+      "token_amount_ui": "1055336.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T02:49:55Z",
+      "tx_signature": "2FfrHGa3oeyxzs8g4zKfWXNYb4JK8rRCpGhYb1FDFTb1ymhKvv97cx96gNC7K9qXvi5LTfHqKWwkd2NPmfMT4pFa",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "6EuHimBjZFbz495nwLMwJwsFcXiXXW2Pv6BjZhpEVqYB",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "100999000000.000000000",
+      "token_amount_ui": "100999.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T14:51:29Z",
+      "tx_signature": "2Tq7FSEvJk8w9dc6LsZZ3LEGgKfPD23yF4yiMHhvYsAkHaFGNtkGLfWxuj6mYjGN7bHD9n5kAU1Dq2uvMAXMZBsB",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "Gfo2wLYmySa9pVF8ZY2ENVXipwjHR2V24YmwccpJwXtV",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "48124445046.000000000",
+      "token_amount_ui": "48124.445046000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T09:42:30Z",
+      "tx_signature": "25V1rtmbwgA1G6HcbEUgP3UUdWpGH5d3htfsnLJCohXSb86PHrQsWPrFtpTkUxMfUChFt13VCRSo2SAt7MYBtLZc",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "2QY8VnQfeMUxgxDXvidibTyFaKU4xf1cHdGxmKWfzDgm",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "933371000000.000000000",
+      "token_amount_ui": "933371.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T17:13:33Z",
+      "tx_signature": "frQDEGP1Wvos44D123hWxYubJ7fRyvrzAx2UwRRSQUgHFB4ChN2FGs27Q4Kszxr4GULYKVrGLCKpLXCMHN4TXVT",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "2QY8VnQfeMUxgxDXvidibTyFaKU4xf1cHdGxmKWfzDgm",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "171915000000.000000000",
+      "token_amount_ui": "171915.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T14:17:12Z",
+      "tx_signature": "5YSjK2znUJvZvef6gkA6JKCyEGKkps8CHM2Li4EATeZFUgtJKtXbCvz3DW6BD4i6GwSf9EcibJZQ2wpDD9AZ36ZZ",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "FyP2mtQnBxaBZix5rnn2P8S4dGVGituiAaVHzAVXxR5b",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "130012000000.000000000",
+      "token_amount_ui": "130012.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T14:59:45Z",
+      "tx_signature": "3jefeouRg6oXb6UrWi1AWwZa9AwM55QdCUzM7UtkGWGzqW2WttnAjwBhMPX8ppEbT2rEeCjwyk7RYjrnZNqZ5sEv",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "FoTtCdRG3TTSTV1urEa9o8bmHt7r1nc3YDUhhr87bGc2",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "10000000000.000000000",
+      "token_amount_ui": "10000.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T15:01:55Z",
+      "tx_signature": "3PkRrjvWkDnRSDNFB1q7WXdgTrTcSMN8hod7T79zetranaghSFyXSpHZK155B9VsYcvEv6GxNKsHegR92MA1Amry",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "BXhZhNzR2nhabg7T2LGa9mqcmjo9KhURTr4nwUrgt2Cs",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "128612000000.000000000",
+      "token_amount_ui": "128612.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T13:04:29Z",
+      "tx_signature": "3h2yh6Q4qMS68hsGL8i3KAD7D5on7afTqGiLLrGsmPSsYg3VyauYoa7EaGEb6pLyVN8VYsct26sfoKbhQjJVjpix",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "5AkJw57kNJ4mMoEwiAapF4egVBUTWd3rv8YGjDKSgecV",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "100193000000.000000000",
+      "token_amount_ui": "100193.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T07:08:06Z",
+      "tx_signature": "65jG53BMez8Nf6LErS2pJ5QtRYxiBSDA9kBZP5Y1EmorzVWrpK3qsgHugByoBQAEkvqkQvhdppT7nz1eVPt1NrRA",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "2a1W3q5eSXMMpwwMiUNpJ9q6eKWrqNLMyzju5qgBro6u",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "30011876000.000000000",
+      "token_amount_ui": "30011.876000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T06:02:30Z",
+      "tx_signature": "4hDdeH9MqPKoCJTHYTEt9rugrdMNNkWiXc3JXAkKzqPXrYPgCF3foAQAy453YnKR7ZthDNQHtTa66rnR8xYsYswj",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "AqyhTjU5fk5hnuGJyoLpMdmMDB2WBf33Qfm52x3Z59Q1",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "10000000000.000000000",
+      "token_amount_ui": "10000.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T14:23:27Z",
+      "tx_signature": "41z2Vua7Vp8TKspTG3Qkx9MT4EFbYD7AV5MxCR1hsci1jMAEKKgfQCgrD62Tmipkf7bEUfPuVeewpVmWdjQDuxCC",
+      "source": "CyBjGpte4Npi5zNkdtWumPxVW4kpMR8BuFSbA587xZES",
+      "destination": "FzZevtosnBFzG9ULpHBauT5ZKHEBqDX4YPu25S3KVzSv",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "117283000000.000000000",
+      "token_amount_ui": "117283.000000000",
+      "decimals": 6,
+      "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T05:10:52Z",
+      "tx_signature": "Xa97t4Cofk5pVzeiQn4MY5A5TW2oWfQ6dW2xhe7z8y89tmwgYrCUkkGVnnngBHPJsMx95w7W4oKwCsUU95zgVwn",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "GjdVWgpi3sfVuXe44hSMH8E9RHdiAD9XP2qeH7h4dds6",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "90011650400.000000000",
+      "token_amount_ui": "90011.650400000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T14:40:05Z",
+      "tx_signature": "2QqEvpdUvecsWbtc56Qm1zAXzQYGQi4mMsQUQjVeqCG2mhgnJXGkU2Z88BwFSnTPzKBaJ2PEWgsoqskKux95GUXP",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "144KtQgS8grKcQ2DjKXqSTDsZp2vBhBiNC35gSSoRYzB",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "53216948303.000000000",
+      "token_amount_ui": "53216.948303000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    },
+    {
+      "block_timestamp": "2025-03-31T10:11:45Z",
+      "tx_signature": "4zKucCH7D5NbESrDaiuuyJ5GnJBYqgnTEZdxoWy3eyYr4TfGQa3nDWioE7buLyfDwK6Y9Lvsrbq1gPvumU1r8Bb8",
+      "source": "FzbcyEZ9m8xjtergWgWDq7mfPoHEbboBF791B6cTpzbq",
+      "destination": "FYQf38M1AwmEKz4UhMgAqkr9NHwqteEzwnVbE4Fnf2Fm",
+      "authority": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "token_amount_raw": "99809000000.000000000",
+      "token_amount_ui": "99809.000000000",
+      "decimals": 6,
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_type": "spl-transfer",
+      "matched_roles": {
+        "source": false,
+        "destination": false,
+        "authority": true
+      }
+    }
+  ],
+  "curation_notes": {
+    "narrative": "This case mixes USDC and USDT while touching an unusually wide authority-linked counterparty set relative to its row count. It is useful for broad-surface review, mixed stablecoin activity, and repeated authority-driven flow analysis.",
+    "solana_layer": "Layer 1 stablecoin-flow dataset",
+    "intended_typologies": [
+      "repeated interaction with counterparties",
+      "service / treasury concentration",
+      "authority-driven operational control",
+      "stablecoin-heavy behavior"
+    ],
+    "limitations": [
+      "Derived from large-value stablecoin transfer rows only",
+      "Does not yet include full Solana instruction/program context",
+      "Not an authoritative label of illicit activity"
+    ]
+  }
+}

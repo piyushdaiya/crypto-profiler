@@ -1,0 +1,15 @@
+# Example Bitcoin candidate addresses
+# These are illustrative reference addresses for reproducible demo workflows.
+# They are behavioral examples only, not authoritative labels.
+
+# broad spend-heavy operational hub example
+bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu
+
+# noisy inbound broad-surface example
+bc1qp8j9sx6609h7llqufurxjgrwsqwt020tqzn0gs
+
+# legacy mixed-flow broad-value example
+1FWQiwK27EnGXb6BiBMRLJvunJQZZPMcGd
+
+# balanced high-volume hub example
+bc1q3k0swnar7s4w3lcp4u3vys826z8vc2f2t87hu5

@@ -129,7 +129,6 @@ func runDatasetMode(path string, out io.Writer, errOut io.Writer) int {
 		return 1
 	}
 
-	// Robust probe: use a generic raw-message map instead of a typed probe struct.
 	var probe map[string]json.RawMessage
 	if err := json.Unmarshal(raw, &probe); err != nil {
 		fmt.Fprintf(errOut, "Error probing dataset: %v\n", err)
@@ -142,8 +141,8 @@ func runDatasetMode(path string, out io.Writer, errOut io.Writer) int {
 	}
 
 	_, hasStablecoinSummary := probe["stablecoin_summary"]
-	
-	// Solana stablecoin curated case path
+	_, hasUTXOSummary := probe["utxo_summary"]
+
 	if strings.EqualFold(chain, "SOLANA") && hasStablecoinSummary {
 		cc, err := datasets.LoadSolanaCuratedStablecoinCase(path)
 		if err != nil {
@@ -156,7 +155,18 @@ func runDatasetMode(path string, out io.Writer, errOut io.Writer) int {
 		return writeProfile(profile, out, errOut)
 	}
 
-	// Default generic curated case path
+	if strings.EqualFold(chain, "BITCOIN") && hasUTXOSummary {
+		cc, err := datasets.LoadBitcoinCuratedLayer1Case(path)
+		if err != nil {
+			fmt.Fprintf(errOut, "Error loading Bitcoin curated dataset: %v\n", err)
+			return 1
+		}
+
+		profile := buildWalletProfileFromBitcoinCuratedLayer1Case(cc)
+		applyBitcoinCuratedLayer1Context(profile, cc)
+		return writeProfile(profile, out, errOut)
+	}
+
 	cc, err := datasets.LoadCuratedCase(path)
 	if err != nil {
 		fmt.Fprintf(errOut, "Error loading dataset: %v\n", err)

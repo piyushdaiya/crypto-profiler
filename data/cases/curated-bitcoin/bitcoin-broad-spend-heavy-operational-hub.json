@@ -1,0 +1,864 @@
+{
+  "case_id": "bitcoin-broad-spend-heavy-operational-hub",
+  "title": "Bitcoin Broad Spend-Heavy Operational Hub",
+  "description": "Broad spend-heavy Bitcoin wallet showing high outbound flow activity, repeated interaction concentration, and service-like operational behavior.",
+  "risk_posture": "REVIEWABLE_OPERATIONAL_CONCENTRATION",
+  "label": "BITCOIN SPEND-HEAVY OPERATIONAL HUB",
+  "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+  "chain": "BITCOIN",
+  "generated_at": "2026-03-23T14:41:42.439498Z",
+  "source_dataset_type": "utxo_flow_layer1",
+  "source_row_count": 1046956,
+  "utxo_summary": {
+    "first_seen": "2025-03-16 00:05:17",
+    "last_seen": "2025-06-16 03:46:58",
+    "inbound_receipt_count": 373838,
+    "outbound_spend_count": 673118,
+    "inbound_value_sats": 539220377,
+    "outbound_value_sats": 574837935,
+    "inbound_value_btc": "5.39220377",
+    "outbound_value_btc": "5.74837935",
+    "unique_counterparties": 1906,
+    "counterparty_resolution_mode": "inbound=tx_input_recipients outbound=tx_output_recipients",
+    "dominant_role": "outbound"
+  },
+  "top_counterparties": [
+    {
+      "address": "bc1qlfvc8l4ueq49nr35tppqakee72wpu8nqclkhct",
+      "interactions": 672177,
+      "inbound_count": 0,
+      "outbound_count": 672177
+    },
+    {
+      "address": "bc1pc0p0rg3qdyzewz6s3f43l8udvdpjnjh5yssdyyn0tjl925ryfxeslvcszp",
+      "interactions": 971,
+      "inbound_count": 971,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1petx24unvm8elfntxadkcedj08etjcjt7avsg47pc2lmv6gv47l8q0eezfp",
+      "interactions": 933,
+      "inbound_count": 933,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1ptnq98mr2d8a8hc2uqtyar8u7d5wkgm232dagmkst9c3zmm6zmrmqf7jkpz",
+      "interactions": 904,
+      "inbound_count": 904,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1p8gs5ngvrq23hrlad49tqrxse6pfwupgt3shvjec60htjpn39d6yqfw6u2a",
+      "interactions": 893,
+      "inbound_count": 893,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1pps3mux24dc7xjh6currwnc73jn9al9kppefccpvgn5rn4k2u775q54pvv2",
+      "interactions": 889,
+      "inbound_count": 889,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1pqn952xxqhl638jnq549e692fdkpvcjdh50xrpw7c0djuqk2wjl3qt6qkqf",
+      "interactions": 885,
+      "inbound_count": 885,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1p9l0en7xmj78l646jc26lf52v7997xgqmpk6lltgssxjfud550k9q2dxj47",
+      "interactions": 884,
+      "inbound_count": 884,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1peshwyfg85qv2mtnxvdwn5yk24xdjcryjzptemxkpgccxl329xqfsgaahh3",
+      "interactions": 876,
+      "inbound_count": 876,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1p8gfava0xpleddgehxg5pm2zn5n5jtnkusyjezfg53nqec23gv8dsa33rw8",
+      "interactions": 873,
+      "inbound_count": 873,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1pllpk4wgwfw5zcrpx5ljempda43yjz843n6q3f6nh5yudchdxl60q4qhaw2",
+      "interactions": 872,
+      "inbound_count": 872,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1pk9nqwjpamlznw4hgu44shssuv5vgftl6l926hstu9ewsyrgpwy0sjxcep6",
+      "interactions": 870,
+      "inbound_count": 870,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1p5z272ph7ym6l5mu72ncatrleyh9jj0jzh8cnvmmxured5nlsv6qqjaxz7q",
+      "interactions": 859,
+      "inbound_count": 859,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1phuyjy8ajtekjmp2snkw7g25g9jhh7hpwy6llsngnms23h7zksezq44vgc2",
+      "interactions": 853,
+      "inbound_count": 853,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1prqrx33n4m0rlpn677svdskfew58eyxlf5acw6k53cmzuyratew5s3v3uyf",
+      "interactions": 852,
+      "inbound_count": 852,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1phere66mc7vensu2ypvf234nwun3n5clvt8nmrpvcnekpyhfwge8s2ce33w",
+      "interactions": 848,
+      "inbound_count": 848,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1pgx4dpkuc3a7wrfsr9ds85rl46tryf6394zuu6955n2zdl8fs90xsw7lmc0",
+      "interactions": 848,
+      "inbound_count": 848,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1pqlgjvhact75cs09vkcurhru06zw80avtcvnq5myrxjx7rve8guesvupdul",
+      "interactions": 843,
+      "inbound_count": 843,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1pdm5any2v2qgg4e5unwlrvrp0lr7dj8wrsvfwxzp73c45kksc3rgqaxsn7g",
+      "interactions": 840,
+      "inbound_count": 840,
+      "outbound_count": 0
+    },
+    {
+      "address": "bc1pz228rcd0ka92l6fcv4crf9rtfsmvetzxj0r653fvwwfhephqnwvslalu76",
+      "interactions": 838,
+      "inbound_count": 838,
+      "outbound_count": 0
+    }
+  ],
+  "sample_events": [
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "1cbf85684fb78221e16351d9d69685a8bbf1e2db4224e3baab0e0689eb4bba24",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "c093f130da59911e2a0e79992a913aac12c513193e6af716e38edc9724c1bb22",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "ebd2d8824517e491c163ab1cdffd1644e0d25e0992bd31d6d536b68b5a2dc99c",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "815b3165edd5866ec72fa4f5e13a7a607f4f4a1c680dabe7dcfb0dc7fafea77e",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "a6808942029fdff8051d2ff1912bb6f0b0d469daf797261d4ed175b9f6e421a1",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "fe0ed1571c557a1cb8505c6954c93e54d42d8fcde83f9fa2c1d1056609c8ce8d",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "1d4b3b1de1ac4337b83fa6e169330998c7b885753effd6a2f3e2d9651176dae0",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "c2726090bf275a811c93c8dd896a0da5584ec4a42dfcf595b2818b2eededb362",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "ec3c5cecd8f1f55f153704c5fde6950e0fbe6ecaeb0f0383de631bf5a8ed8e78",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "eda66dca0537c7ad594eba3d03056933393e18054593435b28303a9b101439b0",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "f3af0709bd65477324bd8c6e207625cdff12a721974e7a18cdc580f1bbd7f4b3",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "07e46d6dcf16e4ae2814535c6a12bfbf3f6f773e3c027b2817b2f86cb8d9fa84",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "34726cfdf6e88e9f51857e2c0c63cef25d37207b3f4f430c2965cc10ddd0ddad",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "8317fcae60786de04dbe51f0b7216fd8eaea76a3c148ac3695d2129ecc030689",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "80a32f829e4a4f1ae3d40e395c1e06e19755e949e82498f7ca6a9f95ec48121a",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "bf5d0f41bec2c0467109231248cfaae69a1505167301b8f24aadcc69f6fe5543",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "773c1598e22f7c05a2d7699a0f6d8464fee02d2e78bb90f63363b8e1fb34e6d2",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "60b6d5cafa7175c83358de29e3695dcd073f9ea52948ec94c7779b252a178426",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "6e9f2472cc8b6eb7dce8cbbfdfe6b977070c9f72c21cf36f03bd808c5cc5fdfd",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "dc9e342ca8e4bb26232342753be2517489fad3956a1512a254a298b96367e3b9",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "13c6dd3acbf498a35d4391a91fca6e1a66de6f33e7515b32faa09a3ccc78c2b8",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "90692f9ff0d5469d800d23045cabc9d7d53260f512b974672abc55ee47a7cd45",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "200a19c31fcb4a0dd231a07ea778a822b234f4896cee72ef029731e3cdbe7caa",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "3974a4e0d28c8085fea4aba64255f2ba9d4047e4e5ff8c72875261db4e3f94d4",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "94577f76d1e39856432bf2ef7e9fbca1a6b0ef373bdeee625f54849738747d01",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "f962d562f4d2a9caa0600f658802e4e6d4fa00793199a4e2f943fd3dd72d4fbd",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "4750f1ea0dca05c6e7a08fc26e810faacc8757875b2a0a67dd48909963341449",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "6eda4a0a14e98e6d4392a29ee868bab9cc089b4e8a45ba3f2a54041f29c2784f",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "eadeebe82ba907480b591421f994a97a200ab8279e2742ee8aa094fcee8c2c95",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "36c31aa9925628c7864e26f0ac798b4ad75e81cf37d702337fa38c85e95bf236",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "9aeca37d554ef218eae98e21fb26b7f09bc11c5030e0b75baf21c963c927ca22",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "2ac88206d8dfdaa1f2794eee79ab935ae627e1811b67b5ccf5e6687ba48e6115",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "eb23c2e2081fa00d3f5c7d5cdaa2e83a75e8fe6cdef36144bc27ab4f95e53ca6",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "0e3c066c0bdcd136bd051de66fadd945949c11ef57cc6649a97130a5619b6c10",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "82c4a782cab400d43818e550c72addf65c1b795871c8a259d2b71f560f0d9ca0",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "2fb053b87e2a0d63e707eaf1b5a15e22386957afa127f8542c685085c48df485",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "bd998d636f50bb3ca3c68c039e3d2f8ca86c89540d89bbf8891e4dc279681da8",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "bc8be3aff7190cfff63bae8a153b0eb0c07c574fa9a2e2ccdfbac0a471f6c523",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "8c4b8f5236e1a7a7a3206e7bf2436a5d31ef5a990fd689d9229c9a65a06ce0cd",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "ddfa49fd6cfe80b6902664059e13942618d7cb5ccf05c5405ae91d69fa52f79a",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "7a3355912fa301fe21fb592e40b5f577eee7cf0b0f85a6ad28390405f31a9689",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "df7be5326c8ef5d9226bc00f31f580c2da771315497c25cdd576216cd769ba5b",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "56d4be282f0e70c2623f7a1cf4bbec8fa9ce114386b7d6dc01911937ae66213f",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "f5ad2f4692a55175c2a1fd65d6d722c7b7fe8f3bbfef3f11df3c5cac4a0c22a2",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "8220567f22e4f87a196159488fb805d4d2770216ffeadf89804af8a7adcd229c",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "cd174d2c88113a23ea7822c840941225c25d3bca288b230cfec027f53576b9dd",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "4c8f4cf33468907a97f132824ada3187837330c68628d50a68fe9daa402708a4",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "2622e428daf70004f9b6bed9956bc997f96632a2c93825e762f0272e1355da8a",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "e14ffa71c338d8639239e897bc03e4fd39594659aec97cceda30da72013ebc57",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    },
+    {
+      "direction": "inbound",
+      "event_time": "2025-03-16 00:05:17",
+      "tx_hash": "bf6c4603abd6d063507d2ba4c72e1db713aecf0aab61bbafb571a1f44a767c03",
+      "linked_tx_hash": null,
+      "value_sats": 294,
+      "value_btc": "0.00000294",
+      "value_usd": "0.248",
+      "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+      "script_type": "witness_v0_scripthash",
+      "counterparties": [
+        "bc1plmzf5x9tlnt8whqflvkw97x2xrf3t0j8zglmau59g4ql0cd7uzvswptwn7"
+      ]
+    }
+  ],
+  "curation_notes": {
+    "narrative": "This case is dominated by outbound spend activity and has a broad but still structured counterparty surface. It is useful as a Bitcoin Layer 1 benchmark for repeated interaction, spend-heavy operational flow, and service-like UTXO routing.",
+    "bitcoin_layer": "Layer 1 UTXO flow dataset",
+    "intended_typologies": [
+      "repeated interaction with counterparties",
+      "service / operational concentration",
+      "noisy inbound broad-surface behavior",
+      "mixed-flow high-value wallet behavior"
+    ],
+    "limitations": [
+      "Derived from Blockchair input/output UTXO rows only",
+      "Counterparties are approximated from transaction input/output recipients",
+      "Not an authoritative label of illicit activity"
+    ]
+  }
+}

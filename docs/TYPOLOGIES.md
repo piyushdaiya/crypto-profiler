@@ -46,6 +46,25 @@ The current repository already demonstrates these typology-aligned behaviors:
 This section is intentionally limited to behaviors that are already visible in the current MVP codebase, tests, or sample outputs.
 
 ---
+## Bitcoin Layer 1 coverage note
+
+The current Bitcoin MVP slice is **UTXO-flow based**.
+
+This means current Bitcoin coverage is strongest for:
+
+- repeated interaction with counterparties
+- spend-heavy operational hub behavior
+- noisy inbound broad-surface behavior
+- mixed-flow broad-value wallet behavior
+- high-volume address-level UTXO movement
+
+It is currently weaker for:
+
+- entity clustering across related addresses
+- change-address attribution
+- full transaction graph reconstruction
+- advanced peel-chain and multi-hop flow semantics
+
 ## Solana Layer 1 coverage note
 
 The current Solana MVP slice is **stablecoin-flow based**.
@@ -64,6 +83,16 @@ It is currently weaker for:
 - protocol-specific routing semantics
 - deeper non-stablecoin Solana activity
 
+## Current multi-chain Layer 1 summary
+
+### Ethereum
+- trace-aware counterparty and protocol interaction coverage
+
+### Solana
+- stablecoin-flow-aware counterparty and authority-role coverage
+
+### Bitcoin
+- UTXO-flow-aware inbound / outbound / repeated-counterparty coverage
 
 ---
 

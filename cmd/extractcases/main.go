@@ -41,7 +41,7 @@ func main() {
 		ethInput      = flag.String("eth", "", "Path to Ethereum TSV/TSV.GZ file or directory")
 		erc20Input    = flag.String("erc20", "", "Path to ERC-20 TSV/TSV.GZ file or directory")
 		labelsPath    = flag.String("labels", "data/labels/legacy_labels.json", "Path to labels JSON")
-		addressesPath = flag.String("addresses", "data/candidates/evm_addresses.txt", "Path to target address list")
+		addressesPath = flag.String("addresses", "data/candidates/evm_addresses.example.txt", "Path to target address list")
 		outDir        = flag.String("out", "data/cases/extracted", "Output directory")
 	)
 	flag.Parse()

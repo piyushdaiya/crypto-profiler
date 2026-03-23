@@ -368,6 +368,77 @@ Large datasets should stay outside git:
 - curated artifacts in repo for demos and tests
 
 ---
+## Bitcoin Layer 1
+
+The current Bitcoin architecture is intentionally **UTXO-flow first**.
+
+### Current Bitcoin Layer 1 inputs
+
+- local Blockchair Bitcoin output shards
+- local Blockchair Bitcoin input shards
+- address-scoped extracted Bitcoin Layer 1 summaries
+- curated Bitcoin case artifacts built from those extracted summaries
+
+### Current Bitcoin Layer 1 responsibilities
+
+- summarize inbound receipt vs outbound spend behavior
+- identify repeated counterparty interaction
+- surface spend-heavy operational hub patterns
+- surface noisy inbound broad-surface patterns
+- produce curated Bitcoin benchmark cases for demos and future scoring work
+
+### Current Bitcoin Layer 1 output types
+
+- raw per-address Bitcoin flow artifacts
+- extracted address-scoped Bitcoin summary JSON files
+- curated Bitcoin Layer 1 case artifacts
+- validator dataset-mode risk explanations for Bitcoin curated cases
+
+### Current limitation
+
+The current Bitcoin layer is not cluster-aware and does not yet perform entity clustering or full transaction graph reconstruction.
+It is a practical MVP baseline built from address-level UTXO flow observations.
+
+### Current end-to-end Bitcoin flow
+
+1. mine candidate Bitcoin addresses from local Blockchair Layer 1 data
+2. extract address-scoped Bitcoin UTXO-flow summaries locally
+3. curate selected Bitcoin benchmark cases
+4. use those artifacts in validator dataset mode
+5. expand later into richer clustering, labeling, and graph-aware analysis
+
+## Solana Layer 1
+
+The current Solana architecture is intentionally **stablecoin-flow first**.
+
+### Current Solana Layer 1 inputs
+
+- locally exported whale stablecoin-flow Parquet shards
+- address-scoped extracted Solana stablecoin summaries
+- curated Solana case artifacts built from those extracted summaries
+
+### Current Solana Layer 1 responsibilities
+
+- identify large-value stablecoin transfer activity
+- summarize source / destination / authority roles
+- count repeated counterparty interaction
+- surface broad counterparty and authority-control patterns
+- produce curated Solana benchmark cases for demos and future scoring work
+
+### Current limitation
+
+The current Solana layer is not yet full instruction-aware or program-aware.
+It is a value-flow layer designed to establish an MVP baseline quickly and economically.
+
+### Current end-to-end Solana flow
+
+1. export whale stablecoin flows from historical Solana data
+2. extract address-scoped stablecoin summaries locally
+3. mine candidate wallets from the extracted value-flow layer
+4. curate selected Solana case artifacts
+5. use those artifacts to drive future Solana scoring and case-study work
+
+---
 ## Solana Layer 1
 
 The current Solana architecture is intentionally **stablecoin-flow first**.
@@ -527,3 +598,4 @@ The Python script is an ingestion-side helper, not the product core.
 - [`docs/TYPOLOGIES.md`](docs/TYPOLOGIES.md)
 - [`docs/BITCOIN-DATA-MODEL.md`](docs/BITCOIN-DATA-MODEL.md)
 - [`docs/ERC20-DATA-MODEL.md`](docs/ERC20-DATA-MODEL.md)
+- [`docs/SOLANA-DATA-MODEL.md`](/docs/SOLANA-DATA-MODEL.md)

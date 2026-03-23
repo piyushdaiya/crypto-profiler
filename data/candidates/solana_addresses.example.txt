@@ -1,0 +1,15 @@
+# Example Solana candidate addresses
+# These are illustrative reference addresses for reproducible demo workflows.
+# They are behavioral examples only, not authoritative labels.
+
+# trusted protocol / routing example
+JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5mE5oZ4zE
+
+# stablecoin distributor / treasury-like example
+Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6
+
+# authority-heavy operator example
+9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo
+
+# broad-surface mixed-stablecoin authority example
+5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9

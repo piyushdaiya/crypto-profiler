@@ -1,0 +1,21 @@
+# NOTE:
+# These are mined from local Blockchair Layer 1 data.
+# They are behavioral candidates only, not authoritative labels.
+
+# balanced high-volume hub
+bc1q3k0swnar7s4w3lcp4u3vys826z8vc2f2t87hu5
+
+# second balanced high-volume hub
+bc1qe7pslj3p0cjr5s0gzy6p03xg9g5ng0mwlyxrcd
+
+# broad high-volume spend-heavy hub
+bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu
+
+# receive-heavy candidate
+bc1qp8j9sx6609h7llqufurxjgrwsqwt020tqzn0gs
+
+# spend-heavy candidate
+bc1qwsyjqfd6akfp3p07y83mnywzaz47dyc30l5r0m
+
+# legacy-format mixed-flow candidate
+1FWQiwK27EnGXb6BiBMRLJvunJQZZPMcGd

@@ -47,41 +47,59 @@ They need tools that can answer questions such as:
 Crypto Profiler is being built to answer those questions in a portfolio-grade, explainable, and extensible way.
 
 ---
-### Day 6 Update
+## Multi-Chain Data Status
 
-The repository now includes an initial **Solana Layer 1** dataset built from large-value stablecoin transfer flows.
+Crypto Profiler now has chain-specific **Layer 1** datasets for both Ethereum and Bitcoin, with Solana support added through stablecoin-flow analysis.
 
-This layer currently includes:
+Validator dataset mode now supports curated Ethereum, Solana, and Bitcoin Layer 1 case artifacts.
 
-- local Solana whale stablecoin-flow exports covering `2025-03-16` to `2025-04-14`
-- address-scoped extracted Solana stablecoin summaries
-- first curated Solana case artifacts derived from stablecoin-flow behavior
-- Solana candidate mining from stablecoin counterparties and authority surfaces
+### Ethereum Layer 1
+Ethereum Layer 1 is currently **trace-aware** and built from address-scoped extracted trace datasets.
 
-### Solana data status
+Current Ethereum Layer 1 coverage includes:
 
-Solana support is currently **Layer 1 stablecoin-flow based**. 
-Solana Layer 1 is now backed by curated stablecoin-flow case artifacts under `data/cases/curated-solana/`.
+- direct and repeated interaction with labeled counterparties
+- stable routing / trusted protocol context
+- concentration and repeated counterparty analysis
+- curated trace-enriched Ethereum cases
 
-This means the first Solana MVP slice focuses on:
+### Solana Layer 1
+Solana Layer 1 is currently **stablecoin-flow based**.
 
-- USDC / USDT value movement
+This layer is built from large-value USDC / USDT transfer exports and currently focuses on:
+
 - source / destination / authority roles
 - repeated counterparty interaction
-- concentration and broad-surface flow patterns
+- broad stablecoin counterparty surface
+- authority-heavy operational behavior
+- curated Solana stablecoin-flow cases
 
-A deeper Solana instruction/program layer may be added later as a second-stage enrichment path.
-
-### Curated Solana Cases
-
-The repository now includes first-pass Solana curated cases derived from the Layer 1 stablecoin-flow dataset:
+Current curated Solana cases live under:
 
 - `data/cases/curated-solana/solana-usdc-distributor-treasury-like.json`
 - `data/cases/curated-solana/solana-stablecoin-authority-operator.json`
 - `data/cases/curated-solana/solana-broad-surface-authority-mixed-stablecoin.json`
 
-These cases currently represent Solana stablecoin-flow behavior, not full instruction-aware protocol semantics.
-They are intended to support case studies, future scoring work, and dataset-backed Solana benchmarking.
+### Bitcoin Layer 1
+Bitcoin Layer 1 is currently **UTXO-flow based**.
+
+This layer is built from local Blockchair input/output datasets and currently focuses on:
+
+- inbound receipt vs outbound spend behavior
+- repeated counterparty interaction
+- operational / service-like spend-heavy behavior
+- noisy inbound broad-surface behavior
+- curated Bitcoin Layer 1 cases
+
+Current curated Bitcoin cases live under:
+
+
+
+- `data/cases/curated-bitcoin/bitcoin-broad-spend-heavy-operational-hub.json`
+- `data/cases/curated-bitcoin/bitcoin-noisy-inbound-broad-surface.json`
+- `data/cases/curated-bitcoin/bitcoin-legacy-mixed-flow-broad-value.json`
+
+ 
 ---
 
 ## Core capabilities

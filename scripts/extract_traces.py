@@ -11,7 +11,7 @@ This script:
 Typical usage:
   python3 scripts/extract_traces.py \
     --parquet "/Volumes/Extreme SSD/thinkpad-backup/media-Data/eth-data-tmp" \
-    --addresses ./data/candidates/evm_addresses.txt \
+    --addresses ./data/candidates/evm_addresses.local.txt \
     --out ./data/cases/extracted-traces \
     --sample 200 \
     --top 20

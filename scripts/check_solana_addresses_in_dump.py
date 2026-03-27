@@ -5,7 +5,7 @@ Check whether tracked Solana addresses appear in the local whale stablecoin dump
 Example:
   python3 scripts/check_solana_addresses_in_dump.py \
     --parquet-dir "/Volumes/Extreme SSD/thinkpad-backup/media-Data/solana-data-tmp" \
-    --addresses data/candidates/solana_addresses_local.txt
+    --addresses data/candidates/solana_addresses.local.txt
 """
 
 from __future__ import annotations

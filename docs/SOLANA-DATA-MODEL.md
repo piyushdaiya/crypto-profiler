@@ -2,640 +2,204 @@
 
 ## Purpose
 
-This document defines the Solana MVP data model for Crypto Profiler.
+This document describes the Solana model that is actually implemented in the repository today.
 
-It explains:
+Wave 1 clarification:
 
-- which Solana datasets are in scope for the MVP
-- how address history, parsed transactions, token accounts, and token balances fit together
-- what Solana behaviors the MVP can support now
-- what remains planned for later phases
-
-This document is intentionally MVP-focused and aligned to the current architecture style used for Bitcoin, Ethereum, and ERC-20.
+- the current Solana Layer 1 is stablecoin-flow based
+- it is delivered through curated dataset mode
+- it is not yet a general RPC-hydrated, instruction-aware Solana profiling engine
 
 ---
 
-## Scope
+## Current Scope
 
-The Solana MVP data model is built from four practical layers:
+The current Solana path is built around large-value USDC/USDT transfer flow summaries.
 
-1. **Address transaction history**
-2. **Parsed transaction details**
-3. **SPL token account inventory**
-4. **Optional enhanced transaction parsing**
+Implemented components:
 
-These layers serve different purposes.
+- candidate mining from local stablecoin-flow Parquet exports
+- address-scoped extracted stablecoin summaries
+- curated Solana Layer 1 case artifacts
+- validator dataset-mode scoring
 
-- address history gives the event timeline
-- parsed transactions give instruction-level and balance-change context
-- token account inventory gives SPL token footprint
-- enhanced parsing improves readability for complex Solana activity
+Current repo paths:
 
-The MVP remains **address-scoped**, not full-chain.
-
----
-
-## Canonical MVP Approach
-
-The Solana MVP should use an **address-first ingestion model**.
-
-### Why address-first
-
-Crypto Profiler is a KYW and exposure-analysis platform, not a chain-wide Solana warehouse.
-
-The fastest path to MVP value is:
-
-1. start with a Solana wallet or program address
-2. fetch recent signatures involving that address
-3. fetch parsed transaction details for those signatures
-4. summarize counterparties, programs, SPL token activity, failures, and recency
-5. produce curated case artifacts and explainable signals
-
-This is the right MVP tradeoff because it supports:
-
-- demos
-- case studies
-- explainable rules
-- lightweight infrastructure
+- `scripts/mine_solana_whale_candidates.py`
+- `scripts/extract_solana_stablecoin.py`
+- `scripts/curate_solana_stablecoin.py`
+- `data/cases/extracted-solana-stablecoin/`
+- `data/cases/curated-solana/`
 
 ---
 
-## Canonical MVP Window
+## Source Model
 
-Unlike the current Bitcoin/Ethereum path, Solana MVP ingestion should be defined by:
+The Solana Layer 1 slice currently depends on historical whale-flow style stablecoin exports collected outside git.
 
-- **address-scoped history depth**
-- not a fixed full-chain date window
+Tracked roles in the current extractor:
 
-### Recommended starting window
+- `source`
+- `destination`
+- `authority`
 
-For the first Solana MVP slice, use:
+Tracked stablecoins in the current extractor:
 
-- up to **90 days** of transaction history per address
-- or the most recent **2,000–10,000 signatures**, whichever is reached first
+- USDC
+- USDT
 
-This gives enough data to support:
+This means the current Solana model is strongest at describing:
 
-- velocity analysis
-- repeated interaction analysis
-- concentration patterns
-- token footprint summaries
-- curated case generation
-
----
-
-## Current Recommended Data Sources
-
-## 1. Address Signature History
-
-### Source
-
-- `getSignaturesForAddress`
-
-### What it provides
-
-- transaction signatures involving the address
-- slot
-- block time
-- success / error summary
-- pagination cursoring via `before` / `until`
-
-### Why it matters
-
-This is the entrypoint for address-scoped Solana history collection.
-
-### MVP use
-
-- establish activity timeline
-- identify the transactions to hydrate next
-- count activity volume
-- track first seen / last seen
-- count failed transactions
+- who is sending large stablecoin transfers
+- who is receiving them
+- which authority is controlling the movement
+- how broad the stablecoin counterparty surface is
 
 ---
 
-## 2. Parsed Transaction Details
+## Extracted Summary Shape
 
-### Source
+The extracted Solana summary contains the fields that the validator actually scores today.
 
-- `getTransaction`
-- preferred encoding: `jsonParsed`
+Core summary fields:
 
-### What it provides
-
-- parsed message and instruction structure
-- account keys
-- fee
-- block time
-- inner instructions
-- token balance changes
-- lamport balance changes
-- status / errors
-
-### Why it matters
-
-This is the main semantic layer for Solana KYW reasoning.
-
-It makes it possible to summarize:
-
-- counterparties
-- token movement
-- program interaction
-- failed instructions
-- balance-change patterns
-
----
-
-## 3. SPL Token Accounts
-
-### Source
-
-- `getTokenAccountsByOwner`
-
-### What it provides
-
-- token accounts owned by an address
-- token mint mapping
-- current balance-bearing token account footprint
-
-### Why it matters
-
-It lets the MVP distinguish:
-
-- native SOL-only wallets
-- token-heavy wallets
-- stablecoin-active wallets
-- token inventory breadth
-
-### Optional supporting calls
-
-- `getTokenAccountBalance`
-- `getAccountInfo`
-
-These are useful when token account context needs to be refreshed or enriched.
-
----
-
-## 4. Optional Enhanced Solana Parsing
-
-### Source
-
-- Helius Enhanced Transactions API
-
-### What it provides
-
-- structured transaction history by address
-- human-readable interpretation of swaps, transfers, NFT activity, and DeFi actions
-- easier parsing for complex Solana workflows
-
-### Why it matters
-
-Raw Solana transactions can be noisy and instruction-heavy.
-
-For the MVP, Helius can reduce implementation complexity when:
-
-- building case studies
-- summarizing token/program activity
-- interpreting DeFi-style transaction flows
-
----
-
-## Core Solana Entities
-
-## A. Address
-
-A Solana base58 public key that may represent:
-
-- user wallet
-- exchange deposit address
-- protocol-controlled address
-- treasury
-- program-owned account
-- token account
-- scam or exploit-linked destination
-
-Crypto Profiler should treat the user-supplied wallet address as the primary profiled object.
-
----
-
-## B. Signature Record
-
-A signature-history row should contain:
-
-- `signature`
-- `slot`
-- `block_time`
-- `err`
-- `memo`
-- `confirmation_status`
-
-This is the lightest historical event frame.
-
----
-
-## C. Parsed Transaction Record
-
-A parsed transaction record should contain:
-
-- `signature`
-- `slot`
-- `block_time`
-- `fee_lamports`
-- `success`
-- `error`
-- `signers`
-- `account_keys`
-- `program_ids`
-- `parsed_instructions`
-- `inner_instructions`
-- `pre_balances`
-- `post_balances`
-- `pre_token_balances`
-- `post_token_balances`
-
-This is the main analysis object for Solana.
-
----
-
-## D. Token Account Record
-
-A token account inventory row should contain:
-
-- `owner`
-- `token_account`
-- `mint`
-- `amount_raw`
-- `amount_ui`
-- `decimals`
-- `token_program`
-
-This gives wallet-level SPL footprint.
-
----
-
-## E. Solana Summary Record
-
-For analyzer use, the MVP should reduce raw Solana history into an address summary with:
-
-- `address`
-- `chain`
 - `first_seen`
 - `last_seen`
-- `signature_count`
-- `failed_signature_count`
-- `success_signature_count`
+- `source_transfer_count`
+- `destination_transfer_count`
+- `authority_transfer_count`
+- `source_value_raw`
+- `destination_value_raw`
+- `authority_value_raw`
 - `unique_counterparties`
+- `source_counterparties`
+- `destination_counterparties`
+- `authority_counterparties`
+- `dominant_role`
+- `dominant_mint`
+
+Supporting case fields:
+
+- `mint_breakdown`
+- `transfer_type_breakdown`
 - `top_counterparties`
-- `top_programs`
-- `native_inbound_count`
-- `native_outbound_count`
-- `spl_transfer_count`
-- `stablecoin_transfer_count`
-- `token_accounts_count`
-- `active_token_mints_count`
-- `sample_transactions`
+- `top_authority_pairs`
+- `sample_transfers`
+
+The corresponding Go types live in `internal/datasets/solana_curated.go`.
 
 ---
 
-## Why Solana Needs Its Own Model
+## Current Implemented Scoring Signals
 
-Solana is not just “another EVM.”
+Validator dataset mode currently scores these Solana patterns:
 
-Important differences:
+### Source-heavy stablecoin distributor
 
-- transactions reference many accounts, not only simple sender/recipient pairs
-- programs drive behavior more explicitly
-- native SOL and SPL token flows coexist in one transaction model
-- token accounts are distinct on-chain objects
-- instruction parsing matters much more for meaningful semantics
+This captures very large outbound stablecoin distribution from a source-dominant address.
 
-Because of this, Solana modeling should be:
+Current reason code:
 
-- account-aware
-- program-aware
-- token-account-aware
-- instruction-aware
+- `solana_source_heavy_stablecoin_distributor`
 
----
+### Authority-heavy stablecoin operator
 
-## Current Solana MVP Behaviors the Model Can Support
+This captures authority-dominant behavior that looks operational and reviewable.
 
-With the schema above, Crypto Profiler can support:
+Current reason code:
 
-### Directly supportable
+- `solana_authority_heavy_stablecoin_operator`
 
-- Solana address validation
-- first seen / last seen activity
-- failed transaction observation
-- repeated interaction with known flagged Solana counterparties
-- concentration to a known service or program
-- token-heavy wallet identification
-- stablecoin-heavy wallet identification
-- broad counterparty surface summaries
-- curated dataset generation for Solana cases
+### Broad stablecoin surface
 
-### Partially supportable
+This captures a large and potentially noisy stablecoin counterparty footprint.
 
-- pass-through behavior
-- newly active wallet with immediate flow
-- service concentration by program or destination
-- repeated flagged destination activity
+Current reason codes:
 
-### Not yet fully supportable
+- `solana_broad_mixed_stablecoin_surface`
+- `solana_broad_stablecoin_counterparty_surface`
 
-- deep graph traversal
-- cluster/entity resolution
-- full DeFi semantic decoding without enhanced parsing
-- chain-hopping / bridge-aware reasoning
-- full wash / circular flow interpretation
+### Mixed stablecoin activity
+
+This captures activity across multiple major stablecoin mints.
+
+Current reason code:
+
+- `solana_mixed_stablecoin_activity`
+
+### Repeated large counterparty interaction
+
+This captures heavy repeated interaction with a dominant counterparty.
+
+Current reason code:
+
+- `solana_repeated_large_counterparty_interaction`
+
+For exact weighting and score composition, see [`docs/SCORING.md`](SCORING.md).
 
 ---
 
-## Recommended Extractor Plan
+## What Solana Layer 1 Means In This Repo
 
-## Phase 1: Address History Collector
+In the current repository, "Solana Layer 1" means:
 
-### Proposed script or command
+- address-scoped stablecoin-flow summaries
+- not full instruction decoding
+- not full program semantics
+- not general wallet-wide Solana history
 
-- `scripts/extract_solana.py`
-  or later
-- `cmd/extractsolana`
+That is a deliberate scope choice for the current MVP.
 
-### Input
+It keeps the Solana implementation:
 
-- `--address`
-- `--rpc-url`
-- `--days 90` or `--max-signatures 5000`
-- optional enhanced parser key
-
-### Steps
-
-1. call `getSignaturesForAddress`
-2. paginate until:
-    - 90-day window reached, or
-    - max signature count reached
-3. persist signatures locally
-
-### Output
-
-- `data/cases/extracted-solana/<address>.signatures.json`
+- practical
+- dataset-backed
+- explainable
+- cheap enough to iterate on
 
 ---
 
-## Phase 2: Parsed Transaction Hydration
+## Validator Dataset Support
 
-For every collected signature:
+Validator dataset mode currently supports curated Solana files such as:
 
-1. call `getTransaction` with parsed encoding
-2. extract:
-    - success / failure
-    - fee
-    - programs
-    - account keys
-    - token balance changes
-    - lamport changes
-    - instruction summary
-3. derive simplified counterparties and program usage
+- `data/cases/curated-solana/solana-usdc-distributor-treasury-like.json`
+- `data/cases/curated-solana/solana-stablecoin-authority-operator.json`
+- `data/cases/curated-solana/solana-broad-surface-authority-mixed-stablecoin.json`
 
-### Output
+Example:
 
-- `data/cases/extracted-solana/<address>.transactions.ndjson.gz`
-- `data/cases/extracted-solana/<address>.json`
-
----
-
-## Phase 3: Token Inventory Enrichment
-
-### Calls
-
-- `getTokenAccountsByOwner`
-- optionally `getTokenAccountBalance`
-- optionally `getAccountInfo`
-
-### Output
-
-- token account count
-- active mint count
-- top token balances
-- stablecoin presence flags
-
-### Merged into summary JSON
-
-The main summary artifact should include both:
-
-- transaction-derived behavior
-- token inventory context
-
----
-
-## Phase 4: Optional Enhanced Parsing Layer
-
-If enabled, use Helius Enhanced Transactions to enrich:
-
-- swap-like activity
-- NFT-related activity
-- DeFi interactions
-- clearer transfer semantics
-
-### Why optional
-
-The MVP should not depend entirely on a paid indexer.
-The enhanced layer should improve:
-
-- readability
-- case study quality
-- protocol interpretation
-
-but not block the baseline Solana ingestion path.
-
----
-
-## Proposed Output Schema
-
-## Raw extracted file
-
-`data/cases/extracted-solana/<address>.transactions.ndjson.gz`
-
-Each line should contain a simplified transaction object:
-
-- `signature`
-- `slot`
-- `block_time`
-- `success`
-- `error`
-- `fee_lamports`
-- `signers`
-- `account_keys`
-- `program_ids`
-- `native_balance_changes`
-- `token_balance_changes`
-- `counterparties`
-- `instruction_count`
-- `inner_instruction_count`
-
----
-
-## Summary file
-
-`data/cases/extracted-solana/<address>.json`
-
-```json
-{
-  "address": "ExampleSolanaAddress111111111111111111111111111111",
-  "chain": "SOLANA",
-  "generated_at": "2026-03-19T00:00:00Z",
-  "summary": {
-    "first_seen": "2026-01-01T00:00:00Z",
-    "last_seen": "2026-03-19T00:00:00Z",
-    "signature_count": 0,
-    "failed_signature_count": 0,
-    "success_signature_count": 0,
-    "unique_counterparties": 0,
-    "native_inbound_count": 0,
-    "native_outbound_count": 0,
-    "spl_transfer_count": 0,
-    "stablecoin_transfer_count": 0,
-    "token_accounts_count": 0,
-    "active_token_mints_count": 0
-  },
-  "top_counterparties": [],
-  "top_programs": [],
-  "top_mints": [],
-  "sample_transactions": [],
-  "source_transaction_count": 0
-}
+```bash
+go run ./cmd/validator --dataset ./data/cases/curated-solana/solana-stablecoin-authority-operator.json
 ```
 
----
-
-## Counterparty Model for Solana
-
-Solana counterparties are trickier than EVM sender/recipient pairs.
-
-The MVP should use a pragmatic approach:
-
-### Counterparty heuristics
-
-- explicit transfer destination when clearly present
-- token account owner when derivable
-- repeated non-self account interaction
-- known labeled destination or program-linked account
-- token-account owner resolution where possible
-
-This will not be perfect, but it is enough for:
-
-- repeated interaction analysis
-- concentration analysis
-- case-study generation
-
----
-
-## Program Interaction Model
-
-Programs matter a lot on Solana.
-
-The extractor should count:
-
-- top program ids interacted with
-- repeated high-frequency program interactions
-- whether activity is dominated by a single protocol/program
-
-This enables future heuristics like:
-
-- concentration to a trusted protocol
-- concentration to a suspicious service
-- repeated interaction with flagged programs
-
----
-
-## Stablecoin and Token Context
-
-The Solana MVP should explicitly track:
-
-- USDC presence
-- stablecoin-heavy transfer activity
-- active token mints
-- SPL token breadth
-
-This matters because many compliance-relevant flows are better understood through:
-
-- token movement
-- not just native SOL movement
-
----
-
-## Current Recommended Repository Layout
-
-```text
-data/
-  candidates/
-    solana_addresses.txt
-  cases/
-    extracted-solana/
-      <address>.transactions.ndjson.gz
-      <address>.json
-    curated-solana/
-      <case>.json
-
-docs/
-  SOLANA-DATA-MODEL.md
-
-scripts/
-  extract_solana.py
-```
-
----
-
-## Validator / Curated Case Integration Plan
-
-Once Solana extracted summaries exist:
-
-1. create Solana curated cases
-2. add Solana dataset-backed validator mode examples
-3. surface:
-    - signature count
-    - failed transaction count
-    - token footprint
-    - top programs
-    - counterparty breadth
-4. later add Solana-specific scoring rules
-
-This mirrors the current Ethereum trace-enriched curated workflow.
+This is the implemented Solana scoring path today.
 
 ---
 
 ## Current Limitations
 
-The Solana MVP model will still have boundaries.
+The current Solana model does not yet support:
 
-### Not yet included
+- general instruction-aware profiling
+- full program-aware behavioral scoring
+- non-stablecoin Layer 1 coverage
+- graph-aware exposure
+- bridge-aware analysis
+- live Solana Layer 1 scoring from extracted local history
 
-- full chain-wide Solana warehouse
-- cluster/entity resolution
-- exhaustive instruction semantic decoding
-- bridge-aware chain-hopping modeling
-- protocol-specific deep parsers for every major Solana protocol
-- full graph-based hop analysis
-
-### Why this is acceptable
-
-The address-scoped MVP is enough to:
-
-- add Solana to the supported chains story
-- create realistic case artifacts
-- support explainable wallet-level reasoning
-- extend later without redoing the architecture
+The live Solana strategy in `internal/address/solana.go` is currently a basic validation and activity lookup path, not the same thing as the stablecoin-flow Layer 1 model.
 
 ---
 
-## Recommended Day 6 / Day 7 Implementation Order
+## Wave 2 and Beyond
 
-1. add `docs/SOLANA-DATA-MODEL.md`
-2. add `data/candidates/solana_addresses.txt`
-3. build `scripts/extract_solana.py`
-4. generate 2–3 address-scoped Solana examples
-5. create first Solana curated case
-6. add Solana-specific heuristics later, after data quality is validated
+Logical follow-on work after Wave 1:
+
+- expand beyond stablecoin-only Solana coverage
+- add richer program-aware and instruction-aware summaries
+- add graph-aware exposure work
+- add more direct integration between extracted Solana summaries and broader scoring logic
 
 ---
 
@@ -644,6 +208,5 @@ The address-scoped MVP is enough to:
 - [`README.md`](../README.md)
 - [`ARCHITECTURE.md`](../ARCHITECTURE.md)
 - [`docs/TYPOLOGIES.md`](TYPOLOGIES.md)
-- [`docs/ETHEREUM-DATA-MODEL.md`](ETHEREUM-DATA-MODEL.md)
-- [`docs/ERC20-DATA-MODEL.md`](ERC20-DATA-MODEL.md)
-- [`docs/BITCOIN-DATA-MODEL.md`](BITCOIN-DATA-MODEL.md)
+- [`docs/SCORING.md`](SCORING.md)
+- [`docs/DATA-SOURCING-POLICY.md`](DATA-SOURCING-POLICY.md)

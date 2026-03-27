@@ -14,6 +14,12 @@ It explains:
 
 This document is intentionally MVP-focused and aligned to the current Crypto Profiler architecture.
 
+Current status note:
+
+- ERC-20 extraction groundwork exists in the repo.
+- ERC-20 Layer 1 curated scoring and validator dataset support are not implemented yet.
+- This document is therefore a design-and-groundwork reference for the next major execution wave.
+
 ---
 
 ## Scope
@@ -473,9 +479,9 @@ Examples:
 
 ### Future docs/case studies
 Examples:
-- `docs/case-studies/public-wallet-noisy-token-inbound.md`
-- `docs/case-studies/stablecoin-heavy-settlement-flow.md`
-- `docs/case-studies/trusted-protocol-high-activity-router.md`
+- future ERC-20 spam / noisy inbound case study
+- future stablecoin-heavy settlement-flow case study
+- future protocol-mediated ERC-20 routing case study
 
 ---
 
@@ -497,7 +503,7 @@ And reason codes should remain explainable, for example:
 - `token_spam_fan_in`
 - `single_token_dominance`
 
-This keeps source-specific extraction separate from chain-agnostic scoring and explanation.
+This keeps source-specific extraction separate from shared scoring conventions and explanation.
 
 ---
 
@@ -560,7 +566,7 @@ The following are intentionally deferred:
 
 ## Related Documents
 
-- [`ARCHITECTURE.md`](ARCHITECTURE.md)
+- [`ARCHITECTURE.md`](../ARCHITECTURE.md)
 - [`docs/TYPOLOGIES.md`](TYPOLOGIES.md)
 - [`docs/BITCOIN-DATA-MODEL.md`](BITCOIN-DATA-MODEL.md)
-- [`README.md`](README.md)
+- [`README.md`](../README.md)

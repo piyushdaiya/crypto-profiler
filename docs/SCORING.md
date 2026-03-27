@@ -1,0 +1,273 @@
+# Crypto Profiler Scoring
+
+## Purpose
+
+This document explains how scoring works in the repository today.
+
+It is intentionally implementation-aware:
+
+- what is actually scored now
+- which rules are only used in curated dataset mode
+- what is still planned for later live or graph-aware work
+
+Wave 1 status:
+
+- Ethereum native transaction scoring is implemented in the shared analyzer.
+- Ethereum trace integration is implemented as dataset enrichment and observational context.
+- Solana stablecoin-flow scoring is implemented in validator dataset mode.
+- Bitcoin UTXO-flow scoring is implemented in validator dataset mode.
+- ERC-20 Layer 1 scoring is not implemented yet.
+
+---
+
+## Core Scoring Philosophy
+
+### Deterministic-first
+
+Sanctions and direct labeled high-risk exposure should dominate weaker heuristics.
+
+### Explainability-first
+
+Every meaningful score change should produce a visible reason code and evidence count when possible.
+
+### Practical MVP weighting
+
+The repo uses category scores and a weighted combined result:
+
+- `FRAUD * 0.5`
+- `REPUTATION * 0.3`
+- `LENDING * 0.2`
+
+Today, Solana and Bitcoin dataset-mode paths only use fraud and reputation, so their combined score is:
+
+- `FRAUD * 0.5 + REPUTATION * 0.3`
+
+### Score bands
+
+Current grade thresholds are shared across the implemented scoring paths:
+
+- `< 5`: `MINIMAL (Observed)`
+- `< 20`: `LOW (Reviewable)`
+- `< 50`: `ELEVATED`
+- `>= 50`: `HIGH RISK`
+
+Sanctions short-circuit to:
+
+- `risk_score = 100`
+- `risk_grade = "CRITICAL (Sanctioned)"`
+
+---
+
+## What Is Implemented Today
+
+| Area | Implemented now | Notes |
+| --- | --- | --- |
+| Shared live analyzer | Yes | Used for EVM live profiling and curated EVM cases. |
+| Ethereum trace-aware context | Yes | Added in dataset mode as observational context, not live scoring. |
+| Solana stablecoin-flow scoring | Yes | Curated dataset mode only. |
+| Bitcoin UTXO-flow scoring | Yes | Curated dataset mode only. |
+| ERC-20 Layer 1 scoring | No | Wave 2 target. |
+| 1-hop / 2-hop exposure scoring | No | Planned. |
+| Graph-aware or cluster-aware scoring | No | Planned. |
+
+---
+
+## Ethereum Native and Trace-Aware Scoring
+
+Ethereum currently uses two layers:
+
+1. the shared analyzer for top-level wallet, label, and transfer behavior
+2. optional trace-aware dataset context for curated EVM cases
+
+### Shared analyzer rule families
+
+| Rule family | Current reason codes | Implementation note |
+| --- | --- | --- |
+| Sanctions | `direct_sanctions_match`, `direct_sanctions_exposure` | Direct match short-circuits; direct exposure is also scored. |
+| Direct high-risk exposure | `profiled_address_high_risk_label`, `direct_mixer_interaction`, `direct_high_risk_entity` | Direct labeled contact is the main non-sanctions escalation path. |
+| Wallet age | `fresh_wallet`, `established_history` | New wallets are escalated; old wallets can be mitigated. |
+| Trusted context | `profiled_address_trusted_label`, `exchange_interaction`, `trusted_or_protocol_interaction` | Trusted or exchange context reduces score but does not override stronger fraud signals. |
+| Activity burst | `high_velocity_behavior` | Tx-rate threshold heuristic. |
+| Repeated high-risk contact | `repeated_flagged_counterparty_interaction` | Category-aware repeated-contact scoring. |
+| Service concentration | `high_risk_service_concentration`, `exchange_concentration`, `single_service_concentration` | Count-based concentration to the top labeled service. |
+| Noisy inbound observations | `noisy_inbound_activity`, `high_counterparty_fan_in`, `zero_value_inbound_pattern` | Low-severity observational rules. |
+| Combination logic | `combo_mixer_plus_fresh_wallet`, `combo_mixer_plus_high_velocity`, `combo_contextual_mitigation_established_wallet` | Multi-signal escalation and contextual mitigation. |
+
+### Practical offsets in the shared analyzer
+
+These are the important current offsets, as implemented:
+
+- `direct_sanctions_match`: `+100` and short-circuit
+- `profiled_address_high_risk_label`: `+45`
+- `direct_high_risk_entity`: `+45`
+- `direct_mixer_interaction`: `+20`
+- `fresh_wallet`: `+35`
+- `high_velocity_behavior`: `+25`
+- `high_risk_service_concentration`: `+18`
+- `established_history`: `-10`
+- `profiled_address_trusted_label`: `-10`
+- `exchange_interaction`: `-5`
+- `trusted_or_protocol_interaction`: `-5`
+- `exchange_concentration`: `-4`
+- `single_service_concentration`: `-4`
+- `noisy_inbound_activity`: `+2`
+- `high_counterparty_fan_in`: `+2`
+- `zero_value_inbound_pattern`: `+1`
+- `combo_mixer_plus_fresh_wallet`: `+20`
+- `combo_mixer_plus_high_velocity`: `+20`
+- `combo_contextual_mitigation_established_wallet`: `-15`
+
+`repeated_flagged_counterparty_interaction` is dynamic:
+
+- base offsets depend on counterparty category
+- repeated interaction count increases the offset further
+
+### Ethereum trace-aware dataset context
+
+Trace integration currently improves explanation, not core risk weighting.
+
+Current trace-context reasons are all `0`-offset observational reasons:
+
+- `dataset_trace_activity_observed`
+- `dataset_trace_failed_calls_observed`
+- `dataset_trace_deep_routing_observed`
+- `dataset_trace_broad_counterparty_surface`
+
+This means curated EVM cases can say:
+
+- internal traces were present
+- failed calls existed
+- routing depth was high
+- internal counterparty surface was broad
+
+without pretending the repo already has mature trace-driven behavioral scoring.
+
+### What is not implemented yet for Ethereum
+
+- ERC-20-specific Layer 1 scoring
+- trace-driven pass-through or U-turn detection
+- value-weighted concentration from traces
+- hop-based exposure
+- graph-aware path scoring
+
+---
+
+## Solana Stablecoin-Flow Scoring
+
+Solana scoring is currently implemented only in validator dataset mode for curated stablecoin-flow cases.
+
+It is built from summary fields in `stablecoin_summary`, `mint_breakdown`, and `top_counterparties`.
+
+### Implemented Solana rule families
+
+| Rule family | Trigger shape | Current reason code | Offset |
+| --- | --- | --- | --- |
+| Source-heavy stablecoin distribution | Dominant role is `source`, with very large outbound count and broad source counterparties | `solana_source_heavy_stablecoin_distributor` | `REPUTATION +12` |
+| Authority-heavy operator behavior | Dominant role is `authority` with very large authority-linked transfer count | `solana_authority_heavy_stablecoin_operator` | `FRAUD +28` |
+| Very broad mixed stablecoin surface | Very broad counterparty surface across multiple mints | `solana_broad_mixed_stablecoin_surface` | `FRAUD +12` |
+| Broad stablecoin counterparty surface | Broad counterparty surface without the stronger mixed-surface case | `solana_broad_stablecoin_counterparty_surface` | `FRAUD +8` |
+| Mixed stablecoin activity | Activity across multiple stablecoin mints | `solana_mixed_stablecoin_activity` | `REPUTATION +4` |
+| Repeated large counterparty interaction | Heavy repeated interaction with the top counterparty | `solana_repeated_large_counterparty_interaction` | `FRAUD +4` |
+
+### Practical interpretation
+
+Today, Solana dataset-mode scoring is trying to answer questions like:
+
+- is this wallet acting like a large stablecoin distributor?
+- is this wallet authority-heavy in a way that looks operational or reviewable?
+- is the stablecoin surface broad enough to warrant attention?
+- is there unusual concentration to a single repeated counterparty?
+
+### What is not implemented yet for Solana
+
+- live scoring from RPC-hydrated Solana history
+- instruction-aware or program-aware scoring
+- non-stablecoin Layer 1 coverage
+- bridge-aware or graph-aware scoring
+
+---
+
+## Bitcoin UTXO-Flow Scoring
+
+Bitcoin scoring is currently implemented only in validator dataset mode for curated UTXO-flow cases.
+
+It is built from `utxo_summary` and `top_counterparties`.
+
+### Implemented Bitcoin rule families
+
+| Rule family | Trigger shape | Current reason code | Offset |
+| --- | --- | --- | --- |
+| Legacy mixed-flow broad-value wallet | Legacy-format address with very large inbound, outbound, and counterparty breadth | `bitcoin_legacy_mixed_flow_broad_value` | `FRAUD +16` |
+| Spend-heavy operational hub | Outbound-dominant wallet with very large spend count and broad surface | `bitcoin_spend_heavy_operational_hub` | `FRAUD +18` |
+| Noisy inbound broad surface | Inbound-dominant wallet with very large inbound count and broad surface | `bitcoin_noisy_inbound_broad_surface` | `FRAUD +14` |
+| Balanced high-volume hub | Large balanced inbound and outbound activity | `bitcoin_balanced_high_volume_hub` | `REPUTATION +8` |
+| Extremely broad surface | Very high unique counterparty count | `bitcoin_extremely_broad_counterparty_surface` | `FRAUD +10` |
+| Broad surface | Broad, but not extreme, unique counterparty count | `bitcoin_broad_counterparty_surface` | `FRAUD +6` |
+| Extreme repeated interaction | Very high interaction count with top counterparty | `bitcoin_extreme_repeated_counterparty_interaction` | `FRAUD +10` |
+| Repeated interaction | Heavy interaction with top counterparty | `bitcoin_repeated_counterparty_interaction` | `FRAUD +4` |
+
+### Practical interpretation
+
+Today, Bitcoin dataset-mode scoring is trying to answer questions like:
+
+- is this address mostly receiving or mostly spending?
+- is the counterparty surface unusually broad?
+- is this more like an operational hub than a normal wallet?
+- is there extreme repeated interaction with one counterparty?
+
+### What is not implemented yet for Bitcoin
+
+- rapid-spend scoring from output lifespan
+- dormant-output reactivation
+- peel-chain logic
+- change-aware or cluster-aware modeling
+- hop-based exposure scoring
+
+---
+
+## Dataset Mode vs Future Live or Graph-Aware Scoring
+
+### Dataset mode today
+
+Dataset mode is intentionally practical and reproducible.
+
+It uses:
+
+- curated JSON artifacts committed in the repo
+- extracted summaries that were already reduced offline
+- fixed case context, not live graph traversal
+
+That makes it good for:
+
+- demos
+- repeatable screenshots
+- case studies
+- scoring-rule development
+
+### What dataset mode does not do
+
+It does not currently:
+
+- recompute chain history live from the full raw source
+- build 1-hop or 2-hop exposure graphs
+- merge cluster identities
+- compute value-aware path risk across protocols
+
+### Future live or graph-aware scoring
+
+The roadmap after Wave 1 is to add:
+
+- ERC-20 Layer 1 scoring
+- graph-aware 1-hop and 2-hop exposure
+- trace-aware pass-through and U-turn logic
+- value-weighted concentration
+- richer Solana and Bitcoin live-flow reasoning
+
+---
+
+## Related Documents
+
+- [`docs/TYPOLOGIES.md`](TYPOLOGIES.md)
+- [`docs/EVM-CALLS-INTEGRATION.md`](EVM-CALLS-INTEGRATION.md)
+- [`docs/SOLANA-DATA-MODEL.md`](SOLANA-DATA-MODEL.md)
+- [`docs/BITCOIN-DATA-MODEL.md`](BITCOIN-DATA-MODEL.md)

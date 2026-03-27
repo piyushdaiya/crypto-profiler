@@ -2,507 +2,211 @@
 
 ## Purpose
 
-This document defines the Bitcoin data model for Crypto Profiler.
+This document describes the Bitcoin model that is actually implemented in the repository today.
 
-It explains:
+Wave 1 clarification:
 
-- which Blockchair Bitcoin datasets are used
-- how those datasets relate to each other
-- how Bitcoin data should be normalized internally
-- what Bitcoin behaviors the MVP can support today
-- what remains out of scope until later phases
-
-This document is intentionally MVP-focused and aligned to the current Crypto Profiler architecture.
+- the current Bitcoin Layer 1 is address-scoped and UTXO-flow based
+- it is delivered through curated dataset mode
+- it is not yet a cluster-aware Bitcoin graph engine
 
 ---
 
-## Scope
+## Current Scope
 
-The Bitcoin model in Crypto Profiler is designed to support:
+The current Bitcoin path is built from local Blockchair input/output data and reduced into address-scoped summaries.
 
-- wallet activity profiling
-- sanctions and labeled-address screening
-- repeated interaction analysis
-- concentration analysis
-- pass-through and rapid-spend observations
-- future 1-hop and 2-hop exposure logic
-- future peel-chain and UTXO behavior analysis
+Implemented components:
 
-This model is **not** intended to be a full Bitcoin graph warehouse or full blockchain indexer.
+- candidate mining from local Bitcoin TSV.gz inputs/outputs
+- address-scoped extracted Bitcoin Layer 1 summaries
+- curated Bitcoin Layer 1 case artifacts
+- validator dataset-mode scoring
 
----
+Current repo paths:
 
-## MVP Data Window
-
-### Canonical MVP window
-
-The current recommended Bitcoin MVP window is:
-
-- **2025-03-16 → 2025-06-17**
-
-### Why this window
-
-This is the clean overlapping window currently supported by:
-
-- Bitcoin transactions
-- Bitcoin inputs
-- Bitcoin outputs
-
-This gives Crypto Profiler a consistent 90+ day Bitcoin slice for:
-
-- transaction summaries
-- UTXO creation
-- UTXO spend linkage
-- behavior and exposure heuristics
+- `scripts/mine_bitcoin_candidates.py`
+- `scripts/extract_bitcoin_layer1.py`
+- `scripts/curate_bitcoin_layer1.py`
+- `data/cases/extracted-bitcoin/`
+- `data/cases/curated-bitcoin/`
 
 ---
 
-## Source Datasets
+## Source Model
 
-Crypto Profiler uses three primary Bitcoin datasets from Blockchair.
+The current Bitcoin extractor uses:
 
-### 1. Bitcoin Transactions
+- output rows where `recipient == tracked address` for inbound receipts
+- input rows where `recipient == tracked address` and a spending transaction exists for outbound spends
 
-This is the transaction-level summary table.
+It also derives approximate counterparty context from linked transaction recipients.
 
-Representative fields:
+This makes the current Bitcoin model strongest at:
 
-- `block_id`
-- `hash`
-- `time`
-- `size`
-- `weight`
-- `version`
-- `lock_time`
-- `is_coinbase`
-- `has_witness`
-- `input_count`
-- `output_count`
-- `input_total`
-- `output_total`
-- `fee`
-- `fee_per_kb`
-- `fee_per_kwu`
-- `cdd_total`
-
-### What it is used for
-
-- tx-level metadata
-- fee analysis
-- fan-in / fan-out summaries
-- transaction density / burst analysis
-- future Bitcoin behavioral rules
+- inbound vs outbound role analysis
+- broad counterparty surface summaries
+- repeated counterparty interaction
+- operational hub-style behavior
 
 ---
 
-### 2. Bitcoin Outputs
+## Current Time Window
 
-This is the UTXO creation table.
+The current implemented extractor and curated fixtures are aligned to the practical Bitcoin window used in the repo:
 
-Representative fields:
+- `2025-03-16` to `2025-06-17`
 
-- `block_id`
-- `transaction_hash`
-- `index`
-- `time`
-- `value`
-- `value_usd`
-- `recipient`
-- `type`
-- `script_hex`
-- `is_from_coinbase`
-- `is_spendable`
-
-### What it is used for
-
-- recipient analysis
-- output concentration
-- identifying created UTXOs
-- output-type context
-- future service concentration modeling
-- future change-like output analysis
+This is the current reference slice for Bitcoin Layer 1 artifacts.
 
 ---
 
-### 3. Bitcoin Inputs
+## Extracted Summary Shape
 
-This is the spent-output linkage table.
+The extracted Bitcoin summary contains the fields that the validator actually scores today.
 
-Representative fields:
+Core summary fields:
 
-- `block_id`
-- `transaction_hash`
-- `index`
-- `time`
-- `value`
-- `value_usd`
-- `recipient`
-- `type`
-- `script_hex`
-- `is_from_coinbase`
-- `is_spendable`
-- `spending_block_id`
-- `spending_transaction_hash`
-- `spending_index`
-- `spending_time`
-- `spending_value_usd`
-- `spending_sequence`
-- `spending_signature_hex`
-- `spending_witness`
-- `lifespan`
-- `cdd`
+- `first_seen`
+- `last_seen`
+- `inbound_receipt_count`
+- `outbound_spend_count`
+- `inbound_value_sats`
+- `outbound_value_sats`
+- `inbound_value_btc`
+- `outbound_value_btc`
+- `unique_counterparties`
+- `counterparty_resolution_mode`
+- `dominant_role`
 
-### What it is used for
+Supporting case fields:
 
-- UTXO spend linkage
-- time-to-spend behavior
-- dormant output reactivation
-- rapid-spend observation
-- future peel-chain and pass-through analysis
+- `top_counterparties`
+- `sample_events`
+
+The corresponding Go types live in `internal/datasets/bitcoin_curated.go`.
 
 ---
 
-## Conceptual Model
+## What Bitcoin Layer 1 Means In This Repo
 
-Bitcoin modeling in Crypto Profiler is based on three levels:
+In the current repository, "Bitcoin Layer 1" means:
 
-### 1. Transaction layer
-This is the summary layer.
+- address-level UTXO receipt and spend behavior
+- broad-surface counterparty summaries
+- not wallet clustering
+- not change detection
+- not full path reconstruction
 
-Questions answered:
-- how large was the transaction?
-- how many inputs and outputs did it contain?
-- what fee did it pay?
-- was it coinbase?
-- how dense / bursty is the wallet’s observed activity?
+That means the model is useful for:
 
-### 2. Output layer
-This is the created-UTXO layer.
+- operational behavior summaries
+- repeat interaction analysis
+- benchmark case creation
+- explainable dataset-mode scoring
 
-Questions answered:
-- which outputs were created?
-- which addresses received value?
-- how much value was assigned to each output?
-- what script type and recipient type were used?
-
-### 3. Spend-linkage layer
-This is the consumed-UTXO layer.
-
-Questions answered:
-- when was the output later spent?
-- how long did it remain unspent?
-- which transaction consumed it?
-- does spending behavior suggest pass-through, dormancy, or layering?
+But it should not be overstated as a full Bitcoin attribution system.
 
 ---
 
-## Join Strategy
+## Current Implemented Scoring Signals
 
-The Bitcoin model depends on joining datasets in a precise way.
+Validator dataset mode currently scores these Bitcoin patterns:
 
-### Primary output identity
+### Spend-heavy operational hub
 
-An output is uniquely identified by:
+Outbound-dominant, high-volume, broad-surface behavior.
 
-- `transaction_hash`
-- `index`
+Current reason code:
 
-This pair is the UTXO identity.
+- `bitcoin_spend_heavy_operational_hub`
 
-### Join rules
+### Noisy inbound broad surface
 
-#### Transactions → Outputs
-Join on:
+Receive-heavy behavior with a very broad counterparty surface.
 
-- `transactions.hash = outputs.transaction_hash`
+Current reason code:
 
-This links tx-level metadata to created outputs.
+- `bitcoin_noisy_inbound_broad_surface`
 
-#### Outputs → Inputs
-Join on:
+### Mixed-flow broad-value legacy wallet
 
-- `outputs.transaction_hash = inputs.transaction_hash`
-- `outputs.index = inputs.index`
+Large inbound and outbound value movement on a legacy-format address with very broad surface area.
 
-This links a created output to its later spend behavior.
+Current reason code:
 
-### Important note
+- `bitcoin_legacy_mixed_flow_broad_value`
 
-In the Blockchair inputs table, the `transaction_hash` and `index` identify the **original output being spent**, not the spending transaction.
+### Balanced high-volume hub
 
-That means the input row is effectively a “spent UTXO record,” which is ideal for lifecycle modeling.
+Large balanced inbound and outbound activity.
 
----
+Current reason code:
 
-## Internal Normalized Model
+- `bitcoin_balanced_high_volume_hub`
 
-Crypto Profiler should normalize Bitcoin data into common internal shapes.
+### Broad surface and repeated counterparty interaction
 
-### BitcoinTransactionSummary
+Current reason codes:
 
-Suggested conceptual fields:
+- `bitcoin_extremely_broad_counterparty_surface`
+- `bitcoin_broad_counterparty_surface`
+- `bitcoin_extreme_repeated_counterparty_interaction`
+- `bitcoin_repeated_counterparty_interaction`
 
-- `TxHash`
-- `BlockID`
-- `Timestamp`
-- `InputCount`
-- `OutputCount`
-- `InputTotalSats`
-- `OutputTotalSats`
-- `FeeSats`
-- `IsCoinbase`
-- `HasWitness`
-- `Weight`
-- `CDDTotal`
-
-### BitcoinOutput
-
-Suggested conceptual fields:
-
-- `TxHash`
-- `OutputIndex`
-- `BlockID`
-- `Timestamp`
-- `ValueSats`
-- `Recipient`
-- `ScriptType`
-- `ScriptHex`
-- `IsCoinbase`
-- `IsSpendable`
-
-### BitcoinSpentOutput
-
-Suggested conceptual fields:
-
-- `SourceTxHash`
-- `SourceOutputIndex`
-- `SourceTimestamp`
-- `ValueSats`
-- `Recipient`
-- `ScriptType`
-- `SpendingTxHash`
-- `SpendingBlockID`
-- `SpendingTimestamp`
-- `LifespanSeconds`
-- `CDD`
-
-### BitcoinAddressActivity
-
-Suggested conceptual fields:
-
-- `Address`
-- `FirstSeen`
-- `LastSeen`
-- `InboundCount`
-- `OutboundCount`
-- `UniqueCounterparties`
-- `TotalReceivedSats`
-- `TotalSentSats`
-- `LinkedOutputs`
-- `LinkedSpends`
+For exact weighting and score composition, see [`docs/SCORING.md`](SCORING.md).
 
 ---
 
-## Address Semantics
+## Validator Dataset Support
 
-Bitcoin differs from account-based chains like Ethereum.
+Validator dataset mode currently supports curated Bitcoin files such as:
 
-### Important constraints
+- `data/cases/curated-bitcoin/bitcoin-broad-spend-heavy-operational-hub.json`
+- `data/cases/curated-bitcoin/bitcoin-noisy-inbound-broad-surface.json`
+- `data/cases/curated-bitcoin/bitcoin-legacy-mixed-flow-broad-value.json`
 
-Bitcoin addresses are not wallet identities.
+Example:
 
-An address may be:
-- reused
-- single-use
-- change
-- part of a cluster not visible from address-only data
+```bash
+go run ./cmd/validator --dataset ./data/cases/curated-bitcoin/bitcoin-broad-spend-heavy-operational-hub.json
+```
 
-### MVP interpretation rule
-
-For MVP, Crypto Profiler will treat Bitcoin recipient addresses as **address-level entities**, not guaranteed wallet-level identities.
-
-That means:
-- exact-match screening is valid
-- concentration analysis is still useful
-- repeated interaction analysis is still useful
-- but deeper wallet clustering should be treated as future work
+This is the implemented Bitcoin Layer 1 scoring path today.
 
 ---
 
-## What the MVP Can Support Today
+## Current Limitations
 
-With transactions + outputs + inputs, the Bitcoin model can support:
+The current Bitcoin model does not yet support:
 
-### Implementable soon
-- labeled address exact-match screening
-- repeated interaction with flagged counterparties
-- concentration to one recipient/service
-- newly active address with immediate flow
-- rapid spend / short-lifespan outputs
-- dormant output reactivation observations
-- simple fan-in / fan-out summaries
+- cluster-aware entity resolution
+- change output attribution
+- peel-chain detection
+- rapid-spend scoring from output lifespan
+- dormant-output reactivation scoring
+- graph-aware hop exposure
 
-### Partially supportable
-- pass-through behavior
-- round-trip candidate logic
-- simple peel-chain candidate detection
-
-### Not yet supportable at production quality
-- full wallet clustering
-- strong change detection
-- large-scale graph expansion
-- confidence-weighted multi-hop attribution
+The live Bitcoin strategy in `internal/address/bitcoin.go` is currently a basic validation and activity lookup path, not the same thing as the curated UTXO-flow Layer 1 model.
 
 ---
 
-## Recommended Bitcoin Heuristics
+## Practical Interpretation
 
-The following Bitcoin heuristics are good candidates for the next implementation phases.
+The current Bitcoin implementation is best described as:
 
-### 1. Repeated flagged recipient interaction
-A profile repeatedly creates or spends outputs linked to flagged addresses.
+- a realistic address-level UTXO behavior layer
+- strong enough for curated benchmark cases
+- intentionally limited before graph-aware expansion
 
-### 2. Concentration to a single recipient/service
-A large portion of observed value goes to one address or one labeled service.
-
-### 3. Newly active address with immediate spend
-Outputs are created and spent rapidly soon after first observation.
-
-### 4. Short-lifespan spend pattern
-Outputs are repeatedly spent within a very small time window.
-
-### 5. Dormant reactivation
-Aged outputs are suddenly spent after a long inactive period.
-
-### 6. Peel-chain candidate behavior
-Repeated partial forwarding or structured output splitting appears across linked spends.
-
----
-
-## Data Quality and Modeling Notes
-
-### 1. Output identity is reliable
-The `transaction_hash + index` pair is a strong primary key for UTXO-level modeling.
-
-### 2. USD values are auxiliary
-`value_usd` and `spending_value_usd` are useful for explanation and demos, but Crypto Profiler should treat satoshi values as the primary data source.
-
-### 3. Coinbase outputs need special handling
-Coinbase-related outputs should not be interpreted the same way as normal transactional behavior.
-
-### 4. Null / nonstandard script handling
-Script types should be preserved, but the MVP should avoid overfitting behavior to rare output types too early.
-
-### 5. Address reuse assumptions must be cautious
-Repeated appearance of the same address is useful operationally, but should not automatically imply one real-world entity cluster.
-
----
-
-## Recommended Extraction Strategy
-
-For the MVP, the Bitcoin extraction path should:
-
-1. limit itself to the canonical window:
-    - `2025-03-16 → 2025-06-17`
-
-2. load:
-    - transactions
-    - outputs
-    - inputs
-
-3. normalize:
-    - transaction summaries
-    - created outputs
-    - spend linkages
-
-4. construct:
-    - address-level summaries
-    - top counterparties
-    - spend timing observations
-    - service concentration candidates
-
-5. emit:
-    - extracted Bitcoin case datasets
-    - curated Bitcoin case artifacts
-    - explanation-ready summaries
-
----
-
-## Suggested Repo Outputs
-
-### Raw extracted layer
-Examples:
-- `data/cases/extracted-btc/<address>.json`
-
-### Curated layer
-Examples:
-- `data/cases/curated/<case-id>.json`
-
-### Future docs/case studies
-Examples:
-- `docs/case-studies/bitcoin-rapid-spend-observation.md`
-- `docs/case-studies/bitcoin-service-concentration.md`
-
----
-
-## Relationship to Scoring Engine
-
-The Bitcoin data model is designed to feed the same scoring engine concepts already used by EVM cases.
-
-That means Bitcoin-derived reasons should eventually map into familiar categories like:
-
-- `FRAUD`
-- `REPUTATION`
-- `LENDING`
-
-And reason codes should remain explainable, for example:
-
-- `repeated_flagged_counterparty_interaction`
-- `single_service_concentration`
-- `rapid_spend_pattern`
-- `dormant_output_reactivation`
-- `new_address_immediate_flow`
-
-This keeps chain-specific ingestion separate from chain-agnostic scoring and explanation.
-
----
-
-## Out of Scope for the MVP
-
-The following are intentionally deferred:
-
-- full wallet clustering
-- industrial-scale UTXO graph analytics
-- transaction graph persistence in a dedicated database
-- advanced coin control / change detection
-- entity resolution beyond exact-match labels
-- automated cross-chain Bitcoin bridge attribution
-
----
-
-## Next Steps
-
-### Immediate
-- implement repeated interaction with flagged counterparties
-- implement concentration risk to a single service
-- design Bitcoin extracted dataset shape
-- add Bitcoin case-study candidates
-
-### Near-term
-- add Bitcoin-specific extracted and curated cases
-- add rapid-spend and dormant-reactivation heuristics
-- add 1-hop / 2-hop Bitcoin exposure summaries
-
-### Later
-- peel-chain logic
-- stronger temporal flow reasoning
-- service clustering
-- wallet clustering confidence model
+That is the correct Wave 1-aligned repo story.
 
 ---
 
 ## Related Documents
 
-- [`ARCHITECTURE.md`](ARCHITECTURE.md)
+- [`README.md`](../README.md)
+- [`ARCHITECTURE.md`](../ARCHITECTURE.md)
 - [`docs/TYPOLOGIES.md`](TYPOLOGIES.md)
-- [`README.md`](README.md)
+- [`docs/SCORING.md`](SCORING.md)
+- [`docs/DATA-SOURCING-POLICY.md`](DATA-SOURCING-POLICY.md)

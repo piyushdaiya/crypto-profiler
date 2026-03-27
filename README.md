@@ -1,208 +1,224 @@
 # Crypto Profiler
 
 [![CI](https://github.com/piyushdaiya/crypto-profiler/actions/workflows/ci.yml/badge.svg)](https://github.com/piyushdaiya/crypto-profiler/actions/workflows/ci.yml)
-[![Go Version](https://img.shields.io/badge/Go-1.26+-00ADD8)](#tech-stack)
+[![Go Version](https://img.shields.io/badge/Go-1.23+-00ADD8)](#tech-stack)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-active%20mvp-blue)](#roadmap)
+[![Status](https://img.shields.io/badge/status-active%20mvp-blue)](#current-implementation-status)
 
-**Wallet Risk & Exposure Intelligence for AML, Fraud, Sanctions, and Crypto Surveillance**
+Crypto Profiler is a Go-based wallet risk profiling project focused on explainable, portfolio-grade crypto intelligence across multiple chains.
 
-Crypto Profiler is a Go-based platform for profiling cryptocurrency wallets using deterministic checks, graph-based exposure analysis, behavioral heuristics, curated blockchain case datasets, and address-scoped EVM trace analysis.
+The repository currently combines:
 
-It is designed for financial institutions, compliance teams, investigators, RegTech product teams, and solutions architects who need a practical way to perform **Know Your Wallet (KYW)** and crypto-risk analysis with explainable results.
+- shared live scoring for EVM wallets
+- curated dataset-mode scoring for Solana and Bitcoin Layer 1
+- trace-aware Ethereum case enrichment
+- a watchlist-driven sanctions path
+
+The immediate roadmap after this Wave 1 alignment is ERC-20 Layer 1 scoring and curated ERC-20 dataset support.
 
 ---
 
 ## Overview
 
-Blockchain data is transparent, but identifying meaningful risk is not.
+Crypto Profiler is built for KYW, AML, fraud, sanctions, and investigative-style wallet review.
 
-A wallet can appear benign at first glance while still being:
-- directly linked to a sanctioned or risky entity
-- only 1–2 hops away from a mixer, exploiter, or laundering route
-- behaving like a pass-through mule or cash-out wallet
-- showing patterns consistent with layering, smurfing, dusting, or rapid depletion after dormancy
-
-Crypto Profiler helps transform raw wallet activity into an explainable risk assessment by combining:
-- **wallet validation**
-- **watchlist and risky-entity screening**
-- **direct and indirect exposure analysis**
-- **behavioral pattern detection**
-- **weighted explainable scoring**
-- **investigator-friendly outputs**
+The goal is not to be a full chain warehouse. The goal is to make practical wallet profiling explainable and reproducible, with realistic case artifacts and scoring that can be reviewed rule by rule.
 
 ---
 
-## Why this project exists
+## Current Implementation Status
 
-Crypto-risk and financial-crime teams need more than a simple blacklist check.
-
-They need tools that can answer questions such as:
-- Is this wallet valid and active?
-- Is it linked to known risky entities?
-- How close is it to a mixer, scam, exploit, or sanctioned actor?
-- Does its behavior resemble money laundering, structuring, or rapid cash-out activity?
-- Why did the system assign this risk score?
-
-Crypto Profiler is being built to answer those questions in a portfolio-grade, explainable, and extensible way.
+| Area | Status today | Notes |
+| --- | --- | --- |
+| EVM live wallet profiling | Implemented | Uses Etherscan transaction history, watchlist checks, bootstrap labels, and the shared analyzer. |
+| Ethereum curated Layer 1 cases | Implemented | Built from extracted address-scoped native and ERC-20 transfer activity. |
+| Ethereum trace integration | Implemented | Address-scoped traces can be extracted, merged into curated cases, and surfaced in dataset mode. |
+| Solana Layer 1 | Implemented in dataset mode | Current Solana layer is stablecoin-flow based and curated from large-value USDC/USDT summaries. |
+| Bitcoin Layer 1 | Implemented in dataset mode | Current Bitcoin layer is address-level UTXO-flow based. |
+| Solana live Layer 1 scoring | Not implemented | Live Solana strategy currently provides address validation and basic activity/balance lookup only. |
+| Bitcoin live Layer 1 scoring | Not implemented | Live Bitcoin strategy currently provides address validation and basic activity/balance lookup only. |
+| ERC-20 Layer 1 scoring | Not implemented | Extraction groundwork exists, but ERC-20 curated cases and validator scoring are Wave 2 work. |
 
 ---
-## Multi-Chain Data Status
 
-Crypto Profiler now has chain-specific **Layer 1** datasets for both Ethereum and Bitcoin, with Solana support added through stablecoin-flow analysis.
-
-Validator dataset mode now supports curated Ethereum, Solana, and Bitcoin Layer 1 case artifacts.
+## Multi-Chain Layer 1 Story
 
 ### Ethereum Layer 1
-Ethereum Layer 1 is currently **trace-aware** and built from address-scoped extracted trace datasets.
 
-Current Ethereum Layer 1 coverage includes:
+Ethereum is the most mature path in the repo today.
 
-- direct and repeated interaction with labeled counterparties
-- stable routing / trusted protocol context
-- concentration and repeated counterparty analysis
-- curated trace-enriched Ethereum cases
+Implemented now:
+
+- live analyzer scoring from top-level EVM activity and labels
+- curated EVM case generation from extracted address-scoped transfer data
+- optional trace enrichment for curated cases
+- validator dataset mode that surfaces trace-aware internal-call context
+
+Not implemented yet:
+
+- ERC-20-specific Layer 1 scoring
+- trace-driven live scoring
+- hop-based or graph-aware exposure
 
 ### Solana Layer 1
-Solana Layer 1 is currently **stablecoin-flow based**.
 
-This layer is built from large-value USDC / USDT transfer exports and currently focuses on:
+Solana Layer 1 is currently stablecoin-flow based.
 
-- source / destination / authority roles
-- repeated counterparty interaction
-- broad stablecoin counterparty surface
-- authority-heavy operational behavior
-- curated Solana stablecoin-flow cases
+Implemented now:
 
-Current curated Solana cases live under:
+- extracted stablecoin summaries from local whale-flow exports
+- curated Solana cases under `data/cases/curated-solana/`
+- validator dataset-mode scoring for role-heavy and broad-surface stablecoin behavior
+
+Not implemented yet:
+
+- general instruction-aware Solana profiling
+- non-stablecoin Solana Layer 1 scoring
+- live Solana Layer 1 scoring from full extracted history
+
+### Bitcoin Layer 1
+
+Bitcoin Layer 1 is currently UTXO-flow based.
+
+Implemented now:
+
+- extracted address-scoped Bitcoin summaries from local Blockchair inputs/outputs
+- curated Bitcoin cases under `data/cases/curated-bitcoin/`
+- validator dataset-mode scoring for spend-heavy, inbound-heavy, mixed-flow, and broad-surface behavior
+
+Not implemented yet:
+
+- cluster-aware modeling
+- change detection
+- graph-aware peel-chain or pass-through scoring
+
+---
+
+## Validator Dataset Mode
+
+Validator dataset mode currently supports:
+
+- curated Ethereum cases in `data/cases/curated/`
+- trace-enriched Ethereum cases in `data/cases/curated-enriched/`
+- curated Solana cases in `data/cases/curated-solana/`
+- curated Bitcoin cases in `data/cases/curated-bitcoin/`
+
+Examples:
+
+```bash
+go run ./cmd/validator --dataset ./data/cases/curated-enriched/tornado-router-high-risk.json
+go run ./cmd/validator --dataset ./data/cases/curated-solana/solana-stablecoin-authority-operator.json
+go run ./cmd/validator --dataset ./data/cases/curated-bitcoin/bitcoin-broad-spend-heavy-operational-hub.json
+```
+
+Dataset mode is the current delivery path for:
+
+- reproducible demos
+- case-study walkthroughs
+- trace-aware EVM examples
+- Solana Layer 1 stablecoin-flow scoring
+- Bitcoin Layer 1 UTXO-flow scoring
+
+---
+
+## Live Validator Mode
+
+The live validator currently supports three chain strategies:
+
+- EVM via Etherscan
+- Bitcoin via Blockchain.com
+- Solana via CoinStats
+
+Example:
+
+```bash
+go run ./cmd/validator 0xd90e2f925da726b50c4ed8d0fb90ad053324f31b
+```
+
+Important nuance:
+
+- live EVM has the strongest current scoring path
+- live Bitcoin and live Solana are still basic address-state lookups, not full Layer 1 dataset scoring
+
+---
+
+## Data Pipeline
+
+The repo includes an intentionally lightweight extract-and-curate workflow.
+
+### Ethereum
+
+- `cmd/extractcases` builds address-scoped EVM extracted datasets
+- `cmd/curatecases` turns extracted datasets into curated cases
+- `scripts/extract_traces.py` builds address-scoped trace summaries
+- `cmd/enrichcases` merges trace summaries into curated EVM cases
+
+### Solana
+
+- `scripts/mine_solana_whale_candidates.py` mines stablecoin-flow candidates
+- `scripts/extract_solana_stablecoin.py` builds extracted stablecoin summaries
+- `scripts/curate_solana_stablecoin.py` creates curated Solana cases
+
+### Bitcoin
+
+- `scripts/mine_bitcoin_candidates.py` mines UTXO-flow candidates
+- `scripts/extract_bitcoin_layer1.py` builds extracted Bitcoin summaries
+- `scripts/curate_bitcoin_layer1.py` creates curated Bitcoin cases
+
+---
+
+## Current Curated Cases
+
+### Ethereum
+
+- `data/cases/curated/public-wallet-noisy-inbound.json`
+- `data/cases/curated/tornado-router-high-risk.json`
+- `data/cases/curated/uniswap-v3-router-trusted-protocol.json`
+- trace-enriched variants under `data/cases/curated-enriched/`
+
+### Solana
 
 - `data/cases/curated-solana/solana-usdc-distributor-treasury-like.json`
 - `data/cases/curated-solana/solana-stablecoin-authority-operator.json`
 - `data/cases/curated-solana/solana-broad-surface-authority-mixed-stablecoin.json`
 
-### Bitcoin Layer 1
-Bitcoin Layer 1 is currently **UTXO-flow based**.
-
-This layer is built from local Blockchair input/output datasets and currently focuses on:
-
-- inbound receipt vs outbound spend behavior
-- repeated counterparty interaction
-- operational / service-like spend-heavy behavior
-- noisy inbound broad-surface behavior
-- curated Bitcoin Layer 1 cases
-
-Current curated Bitcoin cases live under:
-
-
+### Bitcoin
 
 - `data/cases/curated-bitcoin/bitcoin-broad-spend-heavy-operational-hub.json`
 - `data/cases/curated-bitcoin/bitcoin-noisy-inbound-broad-surface.json`
 - `data/cases/curated-bitcoin/bitcoin-legacy-mixed-flow-broad-value.json`
 
- 
 ---
 
-## Core capabilities
+## Documentation Map
 
-### 1. Wallet validation
-- chain-aware address validation
-- checksum verification where applicable
-- normalized wallet representation
-
-### 2. Risk screening
-- exact-match screening against labeled wallets and risky entities
-- support for sanctions/watchlist integration
-- internal label support for exchanges, mixers, scams, exploit wallets, and trusted entities
-
-### 3. Exposure analysis
-- direct counterparty checks
-- repeated flagged-counterparty interaction detection
-- weighted exposure scoring
-- transaction and trace-aware reasoning foundation
-- architecture prepared for future 1-hop and 2-hop graph traversal
-
-### 4. Behavioral detection
-Initial and planned heuristics include:
-- peeling-chain style layering
-- smurfing / structured transfers
-- hop-to-mixer proximity
-- dusting and sweep patterns
-- high-velocity burst activity
-- pass-through / rapid outflow behavior
-- service concentration to trusted or high-risk infrastructure
-
-### 5. Explainable scoring
-- weighted score from 0–100
-- severity bands and review guidance
-- triggered rules and evidence
-- rationale string for analyst review
-
-### 6. Investigator-ready output
-- structured JSON reports
-- CLI-readable summaries
-- case-study friendly sample outputs
-- dataset-backed demo mode
-- trace-aware extracted artifacts for future case enrichment
-
----
-
-## Architecture
-
-See the full architecture document here:
-
-[`ARCHITECTURE.md`](ARCHITECTURE.md)
-
-### High-level flow
-
-1. Accept wallet address and chain context
-2. Validate and normalize the address
-3. Retrieve transaction, trace, and label context
-4. Build exposure and counterparty summaries
-5. Apply deterministic and heuristic rules
-6. Compute weighted explainable risk score
-7. Generate JSON and analyst-friendly output
-
-### Design principles
-
-- **Go-first implementation**
-- **Explainable scoring over black-box decisions**
-- **Deterministic-first risk detection**
-- **Graph-aware exposure analysis**
-- **Modular rule engine**
-- **Docker-friendly local execution**
-- **Trace-aware EVM expansion path**
-- **Designed to integrate with a future shared watchlist engine**
-
----
-
-## Data Model Documents
-
-The project now includes explicit data-model documentation for the current MVP sources:
-
+- [`ARCHITECTURE.md`](ARCHITECTURE.md)
+- [`docs/TYPOLOGIES.md`](docs/TYPOLOGIES.md)
+- [`docs/SCORING.md`](docs/SCORING.md)
+- [`docs/EVM-CALLS-INTEGRATION.md`](docs/EVM-CALLS-INTEGRATION.md)
+- [`docs/ETHEREUM-DATA-MODEL.md`](docs/ETHEREUM-DATA-MODEL.md)
+- [`docs/SOLANA-DATA-MODEL.md`](docs/SOLANA-DATA-MODEL.md)
 - [`docs/BITCOIN-DATA-MODEL.md`](docs/BITCOIN-DATA-MODEL.md)
 - [`docs/ERC20-DATA-MODEL.md`](docs/ERC20-DATA-MODEL.md)
-- [`docs/TYPOLOGIES.md`](docs/TYPOLOGIES.md)
-- [`docs/ETHEREUM-DATA-MODEL.md`](docs/ETHEREUM-DATA-MODEL.md)
-- [`docs/DATA-SOURCING-POLICY.md`](docs/DATA-SOURCING-POLICY.md)
-- [`docs/SOLANA-DATA-MODEL.md`](docs/SOLANA-DATA-MODEL.md)
 - [`docs/DATA-SOURCING-POLICY.md`](docs/DATA-SOURCING-POLICY.md)
 
-These documents define:
-- the canonical MVP data window
-- how raw source files are interpreted
-- what behavior the current engine can support
-- what remains planned for later phases
+Recommended reading order for the current repo state:
+
+1. this README
+2. `ARCHITECTURE.md`
+3. `docs/TYPOLOGIES.md`
+4. `docs/SCORING.md`
+5. chain-specific data model docs
 
 ---
 
 ## Security
 
-Crypto Profiler includes an initial security baseline covering:
+The repo includes:
 
-- secure watchlist client behavior
-- malformed input handling
-- sanctions short-circuit decisioning
-- OWASP Phase 1 security-focused tests
+- a watchlist / sanctions engine
+- malformed-input and validator safety tests
+- initial OWASP-oriented security coverage
 
 See:
 
@@ -211,225 +227,7 @@ See:
 
 ---
 
-## v0.1 MVP scope
-
-The first public milestone is intentionally focused.
-
-### In scope
-- Bitcoin and Ethereum / EVM-first wallet model
-- wallet validation and normalization
-- exact-match risky wallet/entity checks
-- direct and limited hop-based exposure analysis
-- a small set of high-value behavioral heuristics
-- explainable scoring with reason codes
-- JSON and CLI outputs
-- reproducible demo data and case-study examples
-- address-scoped EVM traces extraction for internal-call context
-
-### Out of scope for v0.1
-- full-chain ingestion into a persistent warehouse
-- production UI dashboard
-- mempool surveillance
-- ML-first scoring
-- fuzzy entity resolution / name matching
-- full cross-chain attribution
-- complete market-manipulation surveillance engine
-- full case management workflows
-
----
-
-## Dataset-Backed Profiling
-
-In addition to live profiling flows, Crypto Profiler supports curated dataset mode for reproducible demos and case studies.
-
-### Example
-
-```bash
-go run ./cmd/validator --dataset ./data/cases/curated/tornado-router-high-risk.json
-go run ./cmd/validator --dataset ./data/cases/curated/uniswap-v3-router-trusted-protocol.json
-go run ./cmd/validator --dataset ./data/cases/curated/public-wallet-noisy-inbound.json
-```
-
-This mode is useful for:
-
-- portfolio demos
-- stable case-study walkthroughs
-- screenshot/video generation
-- testing without live API drift
-
----
-
-## Data Pipeline
-
-Crypto Profiler includes a lightweight data pipeline for creating portfolio-grade blockchain case artifacts.
-
-### Extraction
-Raw Blockchair Ethereum and ERC-20 transaction files can be scanned to build per-address extracted datasets.
-
-### Curation
-Large extracted datasets can then be reduced into curated case files containing:
-
-- summary statistics
-- top counterparties
-- capped sample transfers
-- case metadata and risk posture
-
-### EVM traces extraction
-A separate EVM trace extractor can scan exported Ethereum traces Parquet files and build per-address trace summaries containing:
-
-- inbound / outbound / self trace counts
-- failed trace counts
-- value-bearing internal call counts
-- max trace depth
-- top trace counterparties
-- sampled trace rows
-- compressed raw trace subsets per address
-
-### Trace-aware curated enrichment
-
-Curated case artifacts can be enriched with address-scoped trace summaries:
-
-```bash
-go run ./cmd/enrichcases \
-  --in ./data/cases/curated \
-  --trace ./data/cases/extracted-traces \
-  --out ./data/cases/curated-enriched
-```
-
-This allows dataset-backed validator runs to surface:
-- internal trace counts
-- failed internal call counts
-- max trace depth
-- broader internal counterparty surface
-
-
-### Current curated cases
-
-- `public-wallet-noisy-inbound`
-- `tornado-router-high-risk`
-- `uniswap-v3-router-trusted-protocol`
-
-These complement the deterministic sanctioned-wallet case already demonstrated via the watchlist engine.
-
-
-
----
-
-## Example use cases
-
-Crypto Profiler is being designed for scenarios such as:
-
-- screening a wallet before a transfer or onboarding decision
-- triaging a wallet linked to suspicious inbound funds
-- tracing whether a wallet is 1–2 hops from a mixer or exploit wallet
-- identifying laundering-style behaviors such as peeling chains or rapid cash-out
-- detecting persistent interaction with flagged counterparties
-- distinguishing high-risk concentration from trusted protocol concentration
-- generating structured risk evidence for analyst review
-- demonstrating wallet intelligence architecture in regulated environments
-
----
-
-## Sample output
-
-```json
-{
-  "address": "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b",
-  "network": "EVM",
-  "is_valid": true,
-  "validation_details": "Dataset Mode | High-Risk Mixer Infrastructure | Label: HIGH RISK: Tornado Cash (Router) | Risk Posture: REVIEWABLE_HIGH_RISK",
-  "is_active": true,
-  "balance": "",
-  "tx_count": 1132,
-  "first_seen": "2025-02-27T00:13:23Z",
-  "last_seen": "2025-03-05T23:28:23Z",
-  "risk_score": 22.5,
-  "risk_grade": "ELEVATED",
-  "review_recommended": true,
-  "risk_breakdown": {
-    "fraud_risk": 45,
-    "reputation_risk": 0,
-    "lending_risk": 0
-  },
-  "risk_reasons": [
-    {
-      "code": "profiled_address_high_risk_label",
-      "category": "FRAUD",
-      "description": "Profiled address labeled as high-risk entity: Tornado Cash Router",
-      "offset": 45,
-      "source": "bootstrap_entities",
-      "related_entity": "Tornado Cash Router",
-      "related_address": "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b",
-      "severity": "HIGH",
-      "confidence": "HIGH",
-      "evidence_count": 1
-    },
-    {
-      "code": "established_history",
-      "category": "REPUTATION",
-      "description": "Established History (>1 Year)",
-      "offset": -10,
-      "evidence_count": 1
-    }
-  ]
-}
-```
-
----
-
-## Case Study: Established Wallet with Mixer Interaction
-
-Crypto Profiler detected a direct interaction with a mixer-related entity, but did **not** over-penalize the wallet because there were no reinforcing suspicious signals such as fresh-wallet behavior, high-velocity bursts, or rapid pass-through activity.
-
-This case demonstrates an important design principle in the scoring engine:
-
-> Single-signal exposure should remain visible as evidence, while stronger conclusions should come from multi-signal correlation.
-
-**Why it matters**
-- reduces false positives
-- improves analyst trust
-- preserves explainability
-- better reflects real compliance and investigative workflows
-
-**Result**
-- mixer interaction remained visible
-- contextual mitigation was applied
-- final score stayed low because suspicious context was absent
-
-See the full write-up here:
-
-[`docs/case-studies/established-wallet-mixer-no-reinforcing-signals.md`](docs/case-studies/established-wallet-mixer-no-reinforcing-signals.md)
-
----
-
-## Case Study: Direct Sanctioned Wallet
-
-Crypto Profiler uses the watchlist engine to detect a direct sanctions match and immediately short-circuits to a critical outcome.
-
-This case demonstrates the deterministic end of the scoring model:
-- maximum risk score
-- critical grade
-- mandatory review recommendation
-- sanctions-first decisioning over heuristic scoring
-
-See the full write-up here:
-
-[`docs/case-studies/direct-sanctioned-wallet.md`](docs/case-studies/direct-sanctioned-wallet.md)
-
----
-
-## Testing and CI
-
-Crypto Profiler includes unit tests across the core MVP logic:
-
-- address syntax validation for Bitcoin, EVM, and Solana
-- analyzer scoring and combination rules
-- repeated flagged-counterparty interaction
-- high-risk and trusted service concentration
-- watchlist client success/error handling
-- validator CLI flows
-- curated dataset loading and profiling support
-- OWASP Phase 1 security-focused test coverage for watchlist and validator flows
+## Testing
 
 Run locally:
 
@@ -438,92 +236,34 @@ go test ./...
 go build ./...
 ```
 
-GitHub Actions CI runs:
+Dataset-mode validation examples:
 
-- `go build ./...`
-- `go test ./...`
-- Docker image build
-- Docker Compose smoke test
+```bash
+go run ./cmd/validator --dataset ./data/cases/curated-enriched/uniswap-v3-router-trusted-protocol.json
+go run ./cmd/validator --dataset ./data/cases/curated-solana/solana-usdc-distributor-treasury-like.json
+go run ./cmd/validator --dataset ./data/cases/curated-bitcoin/bitcoin-noisy-inbound-broad-surface.json
+```
 
 ---
 
-## Watchlist Engine Verification
+## Wave 2 Follow-On Work
 
-After starting the stack, verify that the watchlist engine initialized successfully and completed its sanctions sync.
+Wave 2 is intentionally separate from this Wave 1 alignment pass.
 
-### Start the stack
+Next major items are:
 
-```bash
-docker compose up -d --build
-```
-
-### Follow engine logs
-
-```bash
-docker compose logs -f engine
-```
-
-### Expected behavior
-
-The engine should:
-
-- start successfully
-- expose the HTTP service on port `8080`
-- initialize the sync loop
-- detect updates to the sanctions source
-- download and parse the OFAC feed
-- rebuild the SQLite-backed sanctions database
-- serve `/check` requests successfully
-
-Example log flow:
-
-```text
-🔹 [ENGINE] Starting Watchlist Engine...
-✅ [ENGINE] Database Available & Listening on :8080
-🔹 [ENGINE] Initializing Sync Loop...
-⬇️  [SYNC] Update Detected. Starting OFAC Download...
-🔹 [SYNC] Parsing XML Stream...
-✅ [SYNC] Done. Scanned <count> parties. Loaded <count> sanctioned addresses.
-✅ [SYNC] Database Update Complete.
-```
-
-> Note: scanned-party and sanctioned-address counts may change over time as upstream sanctions data changes.
-
-### Functional validation
-
-Run a known sanctioned address through the validator:
-
-```bash
-docker compose exec validator ./validator bc1qcp6fr7gtyukympl6unr7uv78h3vprycwj455zx
-```
-
-Expected outcome:
-
-- `risk_score = 100`
-- `risk_grade = "CRITICAL (Sanctioned)"`
-- `review_recommended = true`
-
-This confirms that:
-
-1. the validator is running
-2. the watchlist engine is reachable
-3. the sanctions lookup path is working end to end
+- ERC-20 Layer 1 curated extraction and scoring
+- ERC-20 validator dataset support
+- 1-hop and 2-hop exposure summaries
+- pass-through and U-turn behavior
+- richer graph-aware reasoning
 
 ---
 
-## Tech stack
+## Tech Stack
 
-- **Go** for core logic and services
-- **Docker** for local execution
-- **Config-driven rules and scoring**
-- **Blockchair-based extraction pipeline** for Ethereum and ERC-20 raw datasets
-- **Bitcoin transactions / inputs / outputs** for UTXO-aware modeling
-- **BigQuery + Cloud Storage** for Ethereum traces export
-- **Python + PyArrow** for address-scoped EVM trace extraction
-- **Curated case artifacts** for stable portfolio and demo flows
-
----
-
-## License
-
-This project is licensed under the MIT License. See [`LICENSE`](LICENSE).
+- Go 1.23
+- Docker / Docker Compose
+- watchlist-driven sanctions checks
+- Blockchair historical datasets for EVM and Bitcoin extraction
+- BigQuery exports for Ethereum traces and Solana stablecoin-flow source data

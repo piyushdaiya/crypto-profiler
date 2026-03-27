@@ -13,7 +13,7 @@ Output per tracked address:
 Example:
   python3 scripts/extract_solana_stablecoin.py \
     --parquet-dir "/Volumes/Extreme SSD/thinkpad-backup/media-Data/solana-data-tmp/whale-stablecoin-flows" \
-    --addresses data/candidates/solana_addresses_local.txt \
+    --addresses data/candidates/solana_addresses.local.txt \
     --out data/cases/extracted-solana-stablecoin
 """
 

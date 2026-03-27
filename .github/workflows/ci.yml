@@ -14,10 +14,19 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
-          go-version-file: go.mod
+          go-version: '1.25.8'
+          check-latest: true
           cache: true
+          cache-dependency-path: |
+            go.mod
+            go.sum
+
+      - name: Show Go version
+        run: |
+          go version
+          go env GOVERSION
 
       - name: Build
         run: make build

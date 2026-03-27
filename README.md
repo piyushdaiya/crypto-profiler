@@ -10,11 +10,11 @@ Crypto Profiler is a Go-based wallet risk profiling project focused on explainab
 The repository currently combines:
 
 - shared live scoring for EVM wallets
-- curated dataset-mode scoring for Solana and Bitcoin Layer 1
+- curated dataset-mode scoring for ERC-20, Solana, and Bitcoin Layer 1
 - trace-aware Ethereum case enrichment
 - a watchlist-driven sanctions path
 
-The immediate roadmap after this Wave 1 alignment is ERC-20 Layer 1 scoring and curated ERC-20 dataset support.
+The immediate roadmap after this Wave 2 implementation is deeper behavior scoring on top of the now-aligned multi-chain Layer 1 base.
 
 ---
 
@@ -28,16 +28,17 @@ The goal is not to be a full chain warehouse. The goal is to make practical wall
 
 ## Current Implementation Status
 
-| Area | Status today | Notes |
-| --- | --- | --- |
-| EVM live wallet profiling | Implemented | Uses Etherscan transaction history, watchlist checks, bootstrap labels, and the shared analyzer. |
-| Ethereum curated Layer 1 cases | Implemented | Built from extracted address-scoped native and ERC-20 transfer activity. |
-| Ethereum trace integration | Implemented | Address-scoped traces can be extracted, merged into curated cases, and surfaced in dataset mode. |
-| Solana Layer 1 | Implemented in dataset mode | Current Solana layer is stablecoin-flow based and curated from large-value USDC/USDT summaries. |
-| Bitcoin Layer 1 | Implemented in dataset mode | Current Bitcoin layer is address-level UTXO-flow based. |
-| Solana live Layer 1 scoring | Not implemented | Live Solana strategy currently provides address validation and basic activity/balance lookup only. |
-| Bitcoin live Layer 1 scoring | Not implemented | Live Bitcoin strategy currently provides address validation and basic activity/balance lookup only. |
-| ERC-20 Layer 1 scoring | Not implemented | Extraction groundwork exists, but ERC-20 curated cases and validator scoring are Wave 2 work. |
+| Area                               | Status today                | Notes                                                                                                                                            |
+|------------------------------------|-----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| EVM live wallet profiling          | Implemented                 | Uses Etherscan transaction history, watchlist checks, bootstrap labels, and the shared analyzer.                                                 |
+| Ethereum curated Layer 1 cases     | Implemented                 | Built from extracted address-scoped native and ERC-20 transfer activity.                                                                         |
+| Ethereum trace integration         | Implemented                 | Address-scoped traces can be extracted, merged into curated cases, and surfaced in dataset mode.                                                 |
+| ERC-20 Layer 1                     | Implemented in dataset mode | Address-scoped ERC-20 transfer summaries, curated cases, and validator dataset scoring are now in place.                                         |
+| Solana Layer 1                     | Implemented in dataset mode | Current Solana layer is stablecoin-flow based and curated from large-value USDC/USDT summaries.                                                  |
+| Bitcoin Layer 1                    | Implemented in dataset mode | Current Bitcoin layer is address-level UTXO-flow based.                                                                                          |
+| Solana live Layer 1 scoring        | Not implemented             | Live Solana strategy currently provides address validation and basic activity/balance lookup only.                                               |
+| Bitcoin live Layer 1 scoring       | Not implemented             | Live Bitcoin strategy currently provides address validation and basic activity/balance lookup only.                                              |
+| ERC-20 live or graph-aware scoring | Not implemented             | Current ERC-20 support is curated dataset mode only; live token scoring, swap-aware interpretation, and graph-aware exposure remain future work. |
 
 ---
 
@@ -56,9 +57,26 @@ Implemented now:
 
 Not implemented yet:
 
-- ERC-20-specific Layer 1 scoring
 - trace-driven live scoring
 - hop-based or graph-aware exposure
+
+### ERC-20 Layer 1
+
+ERC-20 Layer 1 is now a dedicated dataset-mode path built from local Blockchair ERC-20 transfer shards plus the latest token metadata snapshot.
+
+Implemented now:
+
+- behavior-driven ERC-20 candidate mining from local transfer data
+- address-scoped ERC-20 extraction with raw subset artifacts and summary JSON
+- curated ERC-20 cases under `data/cases/curated-erc20/`
+- validator dataset-mode scoring for trusted protocol hubs, noisy inbound token surfaces, broad token surfaces, mixed token activity, repeated counterparties, and token concentration
+
+Not implemented yet:
+
+- live ERC-20 scoring inside the EVM address strategy
+- swap-aware decoding or protocol-intent interpretation
+- trace-aware pass-through or U-turn scoring for ERC-20 flows
+- hop-based or graph-aware token exposure
 
 ### Solana Layer 1
 
@@ -100,6 +118,7 @@ Validator dataset mode currently supports:
 
 - curated Ethereum cases in `data/cases/curated/`
 - trace-enriched Ethereum cases in `data/cases/curated-enriched/`
+- curated ERC-20 cases in `data/cases/curated-erc20/`
 - curated Solana cases in `data/cases/curated-solana/`
 - curated Bitcoin cases in `data/cases/curated-bitcoin/`
 
@@ -116,6 +135,7 @@ Dataset mode is the current delivery path for:
 - reproducible demos
 - case-study walkthroughs
 - trace-aware EVM examples
+- ERC-20 Layer 1 token-surface scoring
 - Solana Layer 1 stablecoin-flow scoring
 - Bitcoin Layer 1 UTXO-flow scoring
 
@@ -165,6 +185,12 @@ The repo includes an intentionally lightweight extract-and-curate workflow.
 - `scripts/extract_bitcoin_layer1.py` builds extracted Bitcoin summaries
 - `scripts/curate_bitcoin_layer1.py` creates curated Bitcoin cases
 
+### ERC-20
+
+- `scripts/mine_erc20_candidates.py` mines ERC-20 Layer 1 candidates from local Blockchair transfer shards
+- `scripts/extract_erc20_layer1.py` builds extracted ERC-20 summaries and compressed raw subsets
+- `scripts/curate_erc20_layer1.py` creates curated ERC-20 cases
+
 ---
 
 ## Current Curated Cases
@@ -187,6 +213,12 @@ The repo includes an intentionally lightweight extract-and-curate workflow.
 - `data/cases/curated-bitcoin/bitcoin-broad-spend-heavy-operational-hub.json`
 - `data/cases/curated-bitcoin/bitcoin-noisy-inbound-broad-surface.json`
 - `data/cases/curated-bitcoin/bitcoin-legacy-mixed-flow-broad-value.json`
+
+### ERC-20
+
+- `data/cases/curated-erc20/erc20-uniswap-v2-router-trusted-token-hub.json`
+- `data/cases/curated-erc20/erc20-exchange-like-broad-service-surface.json`
+- `data/cases/curated-erc20/erc20-noisy-inbound-broad-token-surface.json`
 
 ---
 
@@ -240,23 +272,22 @@ Dataset-mode validation examples:
 
 ```bash
 go run ./cmd/validator --dataset ./data/cases/curated-enriched/uniswap-v3-router-trusted-protocol.json
+go run ./cmd/validator --dataset ./data/cases/curated-erc20/erc20-exchange-like-broad-service-surface.json
 go run ./cmd/validator --dataset ./data/cases/curated-solana/solana-usdc-distributor-treasury-like.json
 go run ./cmd/validator --dataset ./data/cases/curated-bitcoin/bitcoin-noisy-inbound-broad-surface.json
 ```
 
 ---
 
-## Wave 2 Follow-On Work
+## Next Practical Work
 
-Wave 2 is intentionally separate from this Wave 1 alignment pass.
+The next major items after the current Wave 2 ERC-20 implementation are:
 
-Next major items are:
-
-- ERC-20 Layer 1 curated extraction and scoring
-- ERC-20 validator dataset support
 - 1-hop and 2-hop exposure summaries
 - pass-through and U-turn behavior
+- fresh-wallet plus immediate large-flow reasoning
 - richer graph-aware reasoning
+- stronger live Solana and Bitcoin Layer 1 scoring
 
 ---
 

@@ -1,0 +1,15 @@
+# Example ERC-20 candidate addresses
+# These are illustrative reference addresses for reproducible demo workflows.
+# They are behavior-driven examples only, not authoritative labels.
+
+# trusted protocol token hub example
+0x7a250d5630b4cf539739df2c5dacb4c659f2488d
+
+# broad token operational surface example
+0x66a9893cc07d91d95644aedd05d03f95e1dba8af
+
+# noisy inbound broad token surface example
+0xf89d7b9c864f589bbf53a82105107622b35eaa40
+
+# exchange-like broad token service surface example
+0x28c6c06298d514db089934071355e5743bf21d60

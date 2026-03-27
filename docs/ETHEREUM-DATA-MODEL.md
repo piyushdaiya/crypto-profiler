@@ -14,11 +14,11 @@ It explains:
 
 This document is intentionally MVP-focused and aligned to the current architecture.
 
-Wave 1 status note:
+Current status note:
 
 - Ethereum live scoring and curated EVM case support are implemented today.
 - Trace extraction and trace-enriched curated cases are implemented today.
-- ERC-20 extraction groundwork exists, but ERC-20 Layer 1 scoring and validator dataset support remain Wave 2 work.
+- ERC-20 Layer 1 extraction, curated cases, and validator dataset support are implemented today as a parallel EVM dataset-mode path.
 
 ---
 
@@ -101,7 +101,7 @@ Ethereum transactions alone do not explain token movement.
 ERC-20 transfer events are required for token-centric behavior.
 
 ### Current implementation note
-The repo can already extract and carry ERC-20 transfer context inside curated EVM cases, but ERC-20 does not yet have its own completed Layer 1 scoring path.
+The repo can already extract and carry ERC-20 transfer context inside curated EVM cases, and ERC-20 now also has its own dedicated Layer 1 dataset-mode scoring path.
 
 ### Related document
 - [`docs/ERC20-DATA-MODEL.md`](ERC20-DATA-MODEL.md)

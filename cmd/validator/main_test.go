@@ -235,6 +235,135 @@ func TestRun_DatasetModeLoadsCuratedCase(t *testing.T) {
 	}
 }
 
+func TestRun_DatasetModeLoadsERC20CuratedCase(t *testing.T) {
+	dir := t.TempDir()
+
+	casePath := dir + "/erc20-case.json"
+	labelsPath := dir + "/bootstrap_entities.json"
+
+	labelsRaw := `{
+	  "0xe592427a0aece92de3edee1f18e0157c05861564": {
+	    "address": "0xe592427a0aece92de3edee1f18e0157c05861564",
+	    "name": "Uniswap V3 Router",
+	    "category": "PROTOCOL",
+	    "severity": "LOW",
+	    "confidence": "HIGH",
+	    "source": "bootstrap_entities",
+	    "trusted": true,
+	    "notes": "Trusted protocol router"
+	  }
+	}`
+
+	if err := os.WriteFile(labelsPath, []byte(labelsRaw), 0o644); err != nil {
+		t.Fatalf("failed to write bootstrap labels: %v", err)
+	}
+
+	setEnvForTest(t, "BOOTSTRAP_LABELS_PATH", labelsPath)
+
+	raw := `{
+	  "case_id": "erc20-uniswap-v3-router-token-hub",
+	  "title": "ERC-20 Trusted Protocol Token Hub",
+	  "risk_posture": "LOW_REVIEWABLE_PROTOCOL_HUB",
+	  "address": "0xe592427a0aece92de3edee1f18e0157c05861564",
+	  "chain": "EVM",
+	  "label": "PROTOCOL: Uniswap V3 Router",
+	  "generated_at": "2025-06-17T00:00:00Z",
+	  "source_dataset_type": "erc20_layer1",
+	  "source_row_count": 25000,
+	  "raw_subset_file": "e592427a0aece92de3edee1f18e0157c05861564.erc20.ndjson.gz",
+	  "erc20_summary": {
+	    "first_seen": "2025-03-16 00:00:23",
+	    "last_seen": "2025-06-17 23:59:47",
+	    "inbound_transfer_count": 12000,
+	    "outbound_transfer_count": 13000,
+	    "inbound_counterparties": 2200,
+	    "outbound_counterparties": 1800,
+	    "unique_counterparties": 3100,
+	    "unique_token_contracts": 85,
+	    "repeated_counterparties": 36,
+	    "max_counterparty_interactions": 160,
+	    "dominant_direction": "outbound",
+	    "dominant_token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+	    "dominant_token_symbol": "USDC",
+	    "dominant_token_transfer_share_pct": 31.25
+	  },
+	  "token_breakdown": [
+	    {
+	      "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+	      "token_name": "USD Coin",
+	      "token_symbol": "USDC",
+	      "token_decimals": 6,
+	      "transfer_count": 7812,
+	      "inbound_count": 3900,
+	      "outbound_count": 3912,
+	      "inbound_value_raw": "1250000000000",
+	      "outbound_value_raw": "1255000000000",
+	      "unique_counterparties": 1800
+	    }
+	  ],
+	  "top_counterparties": [
+	    {
+	      "address": "0x1111111111111111111111111111111111111111",
+	      "interactions": 160,
+	      "inbound_count": 80,
+	      "outbound_count": 80,
+	      "unique_tokens": 12,
+	      "top_tokens": [
+	        {
+	          "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+	          "symbol": "USDC",
+	          "count": 90
+	        }
+	      ]
+	    }
+	  ],
+	  "sample_transfers": [],
+	  "curation_notes": {
+	    "narrative": "Trusted protocol router with a broad ERC-20 surface."
+	  }
+	}`
+
+	if err := os.WriteFile(casePath, []byte(raw), 0o644); err != nil {
+		t.Fatalf("failed to write curated ERC-20 case: %v", err)
+	}
+
+	var out bytes.Buffer
+	var errOut bytes.Buffer
+
+	code := run([]string{"--dataset", casePath}, &out, &errOut, nil)
+	if code != 0 {
+		t.Fatalf("expected exit code 0, got %d; stderr=%s", code, errOut.String())
+	}
+
+	var got model.WalletProfile
+	if err := json.Unmarshal(out.Bytes(), &got); err != nil {
+		t.Fatalf("failed to decode stdout json: %v\nstdout=%s", err, out.String())
+	}
+
+	if got.Address != "0xe592427a0aece92de3edee1f18e0157c05861564" {
+		t.Fatalf("unexpected address %q", got.Address)
+	}
+
+	if got.Network != "EVM" {
+		t.Fatalf("expected EVM network, got %q", got.Network)
+	}
+
+	if got.RiskScore <= 0 {
+		t.Fatalf("expected positive dataset-driven risk score, got %v", got.RiskScore)
+	}
+
+	var found bool
+	for _, reason := range got.RiskReasons {
+		if reason.Code == "erc20_trusted_protocol_token_hub" {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Fatalf("expected erc20_trusted_protocol_token_hub reason, got %+v", got.RiskReasons)
+	}
+}
+
 func setEnvForTest(t *testing.T, key, value string) {
 	t.Helper()
 

@@ -6,5 +6,7 @@ data/cases/extracted/*.json
 data/cases/extracted-traces/*.traces.ndjson.gz
 data/eth-traces-sample/
 data/candidates/*.local.txt
+scripts/__pycache__/
 data/cases/extracted-solana-stablecoin/
+data/cases/extracted-erc20/
 data/cases/solana-extracted/

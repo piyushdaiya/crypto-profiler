@@ -49,6 +49,7 @@ Committed curated artifacts currently live under:
 
 - `data/cases/curated/`
 - `data/cases/curated-enriched/`
+- `data/cases/curated-erc20/`
 - `data/cases/curated-solana/`
 - `data/cases/curated-bitcoin/`
 
@@ -71,7 +72,7 @@ These should be treated as intentional reference artifacts, not as permission to
 
 Examples:
 
-- curated Ethereum, Solana, and Bitcoin case JSON
+- curated Ethereum, ERC-20, Solana, and Bitcoin case JSON
 - trace-enriched curated EVM cases
 - benchmark cases used in validator dataset mode
 
@@ -96,6 +97,7 @@ Examples:
 Examples:
 
 - `data/candidates/evm_addresses.example.txt`
+- `data/candidates/erc20_addresses.example.txt`
 - `data/candidates/bitcoin_addresses.example.txt`
 - `data/candidates/solana_addresses.example.txt`
 
@@ -180,18 +182,20 @@ Keep local or external:
 
 Current status:
 
-- extraction groundwork exists
-- ERC-20 curated Layer 1 support is not finished yet
+- address-scoped ERC-20 Layer 1 extraction is implemented
+- ERC-20 curated Layer 1 support is implemented in dataset mode
 
 Safe to commit when intentional:
 
 - small token reference/config files
-- future curated ERC-20 case artifacts once Wave 2 work lands
+- curated ERC-20 case artifacts under `data/cases/curated-erc20/`
+- committed example candidate templates such as `data/candidates/erc20_addresses.example.txt`
 
 Keep local or external:
 
 - large raw ERC-20 transfer archives
 - full token metadata dumps
+- working extraction outputs under `data/cases/extracted-erc20/`
 
 ---
 
@@ -229,5 +233,6 @@ This keeps the repo story aligned with the actual committed data.
 - [`docs/TYPOLOGIES.md`](TYPOLOGIES.md)
 - [`docs/SCORING.md`](SCORING.md)
 - [`docs/ETHEREUM-DATA-MODEL.md`](ETHEREUM-DATA-MODEL.md)
+- [`docs/ERC20-DATA-MODEL.md`](ERC20-DATA-MODEL.md)
 - [`docs/SOLANA-DATA-MODEL.md`](SOLANA-DATA-MODEL.md)
 - [`docs/BITCOIN-DATA-MODEL.md`](BITCOIN-DATA-MODEL.md)

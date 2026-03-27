@@ -10,13 +10,13 @@ It is intentionally implementation-aware:
 - which rules are only used in curated dataset mode
 - what is still planned for later live or graph-aware work
 
-Wave 1 status:
+Current status:
 
 - Ethereum native transaction scoring is implemented in the shared analyzer.
 - Ethereum trace integration is implemented as dataset enrichment and observational context.
+- ERC-20 Layer 1 scoring is implemented in validator dataset mode.
 - Solana stablecoin-flow scoring is implemented in validator dataset mode.
 - Bitcoin UTXO-flow scoring is implemented in validator dataset mode.
-- ERC-20 Layer 1 scoring is not implemented yet.
 
 ---
 
@@ -60,15 +60,15 @@ Sanctions short-circuit to:
 
 ## What Is Implemented Today
 
-| Area | Implemented now | Notes |
-| --- | --- | --- |
-| Shared live analyzer | Yes | Used for EVM live profiling and curated EVM cases. |
-| Ethereum trace-aware context | Yes | Added in dataset mode as observational context, not live scoring. |
-| Solana stablecoin-flow scoring | Yes | Curated dataset mode only. |
-| Bitcoin UTXO-flow scoring | Yes | Curated dataset mode only. |
-| ERC-20 Layer 1 scoring | No | Wave 2 target. |
-| 1-hop / 2-hop exposure scoring | No | Planned. |
-| Graph-aware or cluster-aware scoring | No | Planned. |
+| Area                                 | Implemented now | Notes                                                             |
+|--------------------------------------|-----------------|-------------------------------------------------------------------|
+| Shared live analyzer                 | Yes             | Used for EVM live profiling and curated EVM cases.                |
+| Ethereum trace-aware context         | Yes             | Added in dataset mode as observational context, not live scoring. |
+| ERC-20 Layer 1 scoring               | Yes             | Curated dataset mode only.                                        |
+| Solana stablecoin-flow scoring       | Yes             | Curated dataset mode only.                                        |
+| Bitcoin UTXO-flow scoring            | Yes             | Curated dataset mode only.                                        |
+| 1-hop / 2-hop exposure scoring       | No              | Planned.                                                          |
+| Graph-aware or cluster-aware scoring | No              | Planned.                                                          |
 
 ---
 
@@ -81,17 +81,17 @@ Ethereum currently uses two layers:
 
 ### Shared analyzer rule families
 
-| Rule family | Current reason codes | Implementation note |
-| --- | --- | --- |
-| Sanctions | `direct_sanctions_match`, `direct_sanctions_exposure` | Direct match short-circuits; direct exposure is also scored. |
-| Direct high-risk exposure | `profiled_address_high_risk_label`, `direct_mixer_interaction`, `direct_high_risk_entity` | Direct labeled contact is the main non-sanctions escalation path. |
-| Wallet age | `fresh_wallet`, `established_history` | New wallets are escalated; old wallets can be mitigated. |
-| Trusted context | `profiled_address_trusted_label`, `exchange_interaction`, `trusted_or_protocol_interaction` | Trusted or exchange context reduces score but does not override stronger fraud signals. |
-| Activity burst | `high_velocity_behavior` | Tx-rate threshold heuristic. |
-| Repeated high-risk contact | `repeated_flagged_counterparty_interaction` | Category-aware repeated-contact scoring. |
-| Service concentration | `high_risk_service_concentration`, `exchange_concentration`, `single_service_concentration` | Count-based concentration to the top labeled service. |
-| Noisy inbound observations | `noisy_inbound_activity`, `high_counterparty_fan_in`, `zero_value_inbound_pattern` | Low-severity observational rules. |
-| Combination logic | `combo_mixer_plus_fresh_wallet`, `combo_mixer_plus_high_velocity`, `combo_contextual_mitigation_established_wallet` | Multi-signal escalation and contextual mitigation. |
+| Rule family                | Current reason codes                                                                                                | Implementation note                                                                     |
+|----------------------------|---------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| Sanctions                  | `direct_sanctions_match`, `direct_sanctions_exposure`                                                               | Direct match short-circuits; direct exposure is also scored.                            |
+| Direct high-risk exposure  | `profiled_address_high_risk_label`, `direct_mixer_interaction`, `direct_high_risk_entity`                           | Direct labeled contact is the main non-sanctions escalation path.                       |
+| Wallet age                 | `fresh_wallet`, `established_history`                                                                               | New wallets are escalated; old wallets can be mitigated.                                |
+| Trusted context            | `profiled_address_trusted_label`, `exchange_interaction`, `trusted_or_protocol_interaction`                         | Trusted or exchange context reduces score but does not override stronger fraud signals. |
+| Activity burst             | `high_velocity_behavior`                                                                                            | Tx-rate threshold heuristic.                                                            |
+| Repeated high-risk contact | `repeated_flagged_counterparty_interaction`                                                                         | Category-aware repeated-contact scoring.                                                |
+| Service concentration      | `high_risk_service_concentration`, `exchange_concentration`, `single_service_concentration`                         | Count-based concentration to the top labeled service.                                   |
+| Noisy inbound observations | `noisy_inbound_activity`, `high_counterparty_fan_in`, `zero_value_inbound_pattern`                                  | Low-severity observational rules.                                                       |
+| Combination logic          | `combo_mixer_plus_fresh_wallet`, `combo_mixer_plus_high_velocity`, `combo_contextual_mitigation_established_wallet` | Multi-signal escalation and contextual mitigation.                                      |
 
 ### Practical offsets in the shared analyzer
 
@@ -144,11 +144,47 @@ without pretending the repo already has mature trace-driven behavioral scoring.
 
 ### What is not implemented yet for Ethereum
 
-- ERC-20-specific Layer 1 scoring
 - trace-driven pass-through or U-turn detection
 - value-weighted concentration from traces
 - hop-based exposure
 - graph-aware path scoring
+
+---
+
+## ERC-20 Layer 1 Scoring
+
+ERC-20 scoring is currently implemented only in validator dataset mode for curated ERC-20 Layer 1 cases.
+
+It is built from `erc20_summary`, `token_breakdown`, and `top_counterparties`.
+
+### Implemented ERC-20 rule families
+
+| Rule family                            | Trigger shape                                                                      | Current reason code                            | Offset           |
+|----------------------------------------|------------------------------------------------------------------------------------|------------------------------------------------|------------------|
+| Trusted protocol token hub             | Trusted/protocol label with very large transfer count and broad counterparty reach | `erc20_trusted_protocol_token_hub`             | `REPUTATION +16` |
+| Exchange-style service surface         | Exchange label with large transfer count and broad counterparty reach              | `erc20_exchange_service_surface`               | `REPUTATION +14` |
+| Noisy inbound token surface            | Inbound-heavy activity with broad counterparties across many token contracts       | `erc20_noisy_token_inbound_surface`            | `FRAUD +14`      |
+| Broad token counterparty surface       | Very broad token counterparty surface across many token contracts                  | `erc20_broad_token_counterparty_surface`       | `FRAUD +8`       |
+| Mixed token activity                   | Activity across many token contracts                                               | `erc20_mixed_token_activity`                   | `REPUTATION +4`  |
+| Repeated counterparty activity         | Many repeated counterparties or very high interaction with one counterparty        | `erc20_repeated_counterparty_activity`         | `FRAUD +4`       |
+| Single-token operational concentration | One token dominates a large share of transfer activity                             | `erc20_single_token_operational_concentration` | `REPUTATION +3`  |
+
+### Practical interpretation
+
+Today, ERC-20 dataset-mode scoring is trying to answer questions like:
+
+- is this wallet behaving like a trusted protocol token hub?
+- is this token surface broad enough to be operationally significant or reviewable?
+- is the activity inbound-noisy across many counterparties and tokens?
+- is there repeated counterparty structure worth highlighting?
+- is token activity mixed across many contracts or heavily concentrated to one asset?
+
+### What is not implemented yet for ERC-20
+
+- live ERC-20 scoring inside the EVM address strategy
+- swap-aware or protocol-intent interpretation
+- trace-aware ERC-20 pass-through or U-turn detection
+- hop-based or graph-aware token exposure
 
 ---
 
@@ -160,14 +196,14 @@ It is built from summary fields in `stablecoin_summary`, `mint_breakdown`, and `
 
 ### Implemented Solana rule families
 
-| Rule family | Trigger shape | Current reason code | Offset |
-| --- | --- | --- | --- |
-| Source-heavy stablecoin distribution | Dominant role is `source`, with very large outbound count and broad source counterparties | `solana_source_heavy_stablecoin_distributor` | `REPUTATION +12` |
-| Authority-heavy operator behavior | Dominant role is `authority` with very large authority-linked transfer count | `solana_authority_heavy_stablecoin_operator` | `FRAUD +28` |
-| Very broad mixed stablecoin surface | Very broad counterparty surface across multiple mints | `solana_broad_mixed_stablecoin_surface` | `FRAUD +12` |
-| Broad stablecoin counterparty surface | Broad counterparty surface without the stronger mixed-surface case | `solana_broad_stablecoin_counterparty_surface` | `FRAUD +8` |
-| Mixed stablecoin activity | Activity across multiple stablecoin mints | `solana_mixed_stablecoin_activity` | `REPUTATION +4` |
-| Repeated large counterparty interaction | Heavy repeated interaction with the top counterparty | `solana_repeated_large_counterparty_interaction` | `FRAUD +4` |
+| Rule family                             | Trigger shape                                                                             | Current reason code                              | Offset           |
+|-----------------------------------------|-------------------------------------------------------------------------------------------|--------------------------------------------------|------------------|
+| Source-heavy stablecoin distribution    | Dominant role is `source`, with very large outbound count and broad source counterparties | `solana_source_heavy_stablecoin_distributor`     | `REPUTATION +12` |
+| Authority-heavy operator behavior       | Dominant role is `authority` with very large authority-linked transfer count              | `solana_authority_heavy_stablecoin_operator`     | `FRAUD +28`      |
+| Very broad mixed stablecoin surface     | Very broad counterparty surface across multiple mints                                     | `solana_broad_mixed_stablecoin_surface`          | `FRAUD +12`      |
+| Broad stablecoin counterparty surface   | Broad counterparty surface without the stronger mixed-surface case                        | `solana_broad_stablecoin_counterparty_surface`   | `FRAUD +8`       |
+| Mixed stablecoin activity               | Activity across multiple stablecoin mints                                                 | `solana_mixed_stablecoin_activity`               | `REPUTATION +4`  |
+| Repeated large counterparty interaction | Heavy repeated interaction with the top counterparty                                      | `solana_repeated_large_counterparty_interaction` | `FRAUD +4`       |
 
 ### Practical interpretation
 
@@ -195,16 +231,16 @@ It is built from `utxo_summary` and `top_counterparties`.
 
 ### Implemented Bitcoin rule families
 
-| Rule family | Trigger shape | Current reason code | Offset |
-| --- | --- | --- | --- |
-| Legacy mixed-flow broad-value wallet | Legacy-format address with very large inbound, outbound, and counterparty breadth | `bitcoin_legacy_mixed_flow_broad_value` | `FRAUD +16` |
-| Spend-heavy operational hub | Outbound-dominant wallet with very large spend count and broad surface | `bitcoin_spend_heavy_operational_hub` | `FRAUD +18` |
-| Noisy inbound broad surface | Inbound-dominant wallet with very large inbound count and broad surface | `bitcoin_noisy_inbound_broad_surface` | `FRAUD +14` |
-| Balanced high-volume hub | Large balanced inbound and outbound activity | `bitcoin_balanced_high_volume_hub` | `REPUTATION +8` |
-| Extremely broad surface | Very high unique counterparty count | `bitcoin_extremely_broad_counterparty_surface` | `FRAUD +10` |
-| Broad surface | Broad, but not extreme, unique counterparty count | `bitcoin_broad_counterparty_surface` | `FRAUD +6` |
-| Extreme repeated interaction | Very high interaction count with top counterparty | `bitcoin_extreme_repeated_counterparty_interaction` | `FRAUD +10` |
-| Repeated interaction | Heavy interaction with top counterparty | `bitcoin_repeated_counterparty_interaction` | `FRAUD +4` |
+| Rule family                          | Trigger shape                                                                     | Current reason code                                 | Offset          |
+|--------------------------------------|-----------------------------------------------------------------------------------|-----------------------------------------------------|-----------------|
+| Legacy mixed-flow broad-value wallet | Legacy-format address with very large inbound, outbound, and counterparty breadth | `bitcoin_legacy_mixed_flow_broad_value`             | `FRAUD +16`     |
+| Spend-heavy operational hub          | Outbound-dominant wallet with very large spend count and broad surface            | `bitcoin_spend_heavy_operational_hub`               | `FRAUD +18`     |
+| Noisy inbound broad surface          | Inbound-dominant wallet with very large inbound count and broad surface           | `bitcoin_noisy_inbound_broad_surface`               | `FRAUD +14`     |
+| Balanced high-volume hub             | Large balanced inbound and outbound activity                                      | `bitcoin_balanced_high_volume_hub`                  | `REPUTATION +8` |
+| Extremely broad surface              | Very high unique counterparty count                                               | `bitcoin_extremely_broad_counterparty_surface`      | `FRAUD +10`     |
+| Broad surface                        | Broad, but not extreme, unique counterparty count                                 | `bitcoin_broad_counterparty_surface`                | `FRAUD +6`      |
+| Extreme repeated interaction         | Very high interaction count with top counterparty                                 | `bitcoin_extreme_repeated_counterparty_interaction` | `FRAUD +10`     |
+| Repeated interaction                 | Heavy interaction with top counterparty                                           | `bitcoin_repeated_counterparty_interaction`         | `FRAUD +4`      |
 
 ### Practical interpretation
 
@@ -255,11 +291,11 @@ It does not currently:
 
 ### Future live or graph-aware scoring
 
-The roadmap after Wave 1 is to add:
+The roadmap after the current ERC-20 implementation is to add:
 
-- ERC-20 Layer 1 scoring
 - graph-aware 1-hop and 2-hop exposure
 - trace-aware pass-through and U-turn logic
+- fresh-wallet plus immediate large-flow reasoning
 - value-weighted concentration
 - richer Solana and Bitcoin live-flow reasoning
 
@@ -269,5 +305,6 @@ The roadmap after Wave 1 is to add:
 
 - [`docs/TYPOLOGIES.md`](TYPOLOGIES.md)
 - [`docs/EVM-CALLS-INTEGRATION.md`](EVM-CALLS-INTEGRATION.md)
+- [`docs/ERC20-DATA-MODEL.md`](ERC20-DATA-MODEL.md)
 - [`docs/SOLANA-DATA-MODEL.md`](SOLANA-DATA-MODEL.md)
 - [`docs/BITCOIN-DATA-MODEL.md`](BITCOIN-DATA-MODEL.md)

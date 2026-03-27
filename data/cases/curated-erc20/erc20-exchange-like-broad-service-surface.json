@@ -1,0 +1,1791 @@
+{
+  "case_id": "erc20-exchange-like-broad-service-surface",
+  "title": "ERC-20 Exchange-Like Broad Service Surface",
+  "description": "Inbound-heavy ERC-20 service-like address with broad counterparty reach, many token contracts, and repeated settlement-style interaction patterns.",
+  "risk_posture": "LOW_REVIEWABLE_SERVICE_SURFACE",
+  "label": "EXCHANGE-LIKE TOKEN SERVICE SURFACE",
+  "address": "0x28c6c06298d514db089934071355e5743bf21d60",
+  "chain": "EVM",
+  "generated_at": "2026-03-27T20:14:27.758477Z",
+  "source_dataset_type": "erc20_layer1",
+  "source_row_count": 2574451,
+  "raw_subset_file": "28c6c06298d514db089934071355e5743bf21d60.erc20.ndjson.gz",
+  "erc20_summary": {
+    "first_seen": "2025-03-16 00:00:23",
+    "last_seen": "2025-06-17 23:59:47",
+    "inbound_transfer_count": 1734990,
+    "outbound_transfer_count": 839459,
+    "self_transfer_count": 2,
+    "inbound_counterparties": 324597,
+    "outbound_counterparties": 273098,
+    "unique_counterparties": 595112,
+    "unique_token_contracts": 418,
+    "repeated_counterparties": 142540,
+    "max_counterparty_interactions": 74038,
+    "dominant_direction": "inbound",
+    "dominant_token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    "dominant_token_symbol": "USDC",
+    "dominant_token_transfer_share_pct": 29.78
+  },
+  "token_breakdown": [
+    {
+      "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token_name": "USD//C",
+      "token_symbol": "USDC",
+      "token_decimals": 6,
+      "transfer_count": 766792,
+      "inbound_count": 524110,
+      "outbound_count": 242681,
+      "inbound_value_raw": "79915761999366632",
+      "outbound_value_raw": "78343619853189492",
+      "unique_counterparties": 207356
+    },
+    {
+      "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+      "token_name": "Tether USD",
+      "token_symbol": "USDT",
+      "token_decimals": 6,
+      "transfer_count": 661653,
+      "inbound_count": 461264,
+      "outbound_count": 200388,
+      "inbound_value_raw": "74691334642109045",
+      "outbound_value_raw": "75629521937212425",
+      "unique_counterparties": 188811
+    },
+    {
+      "token_address": "0x6982508145454ce325ddbe47a25d4ec3d2311933",
+      "token_name": "Pepe",
+      "token_symbol": "PEPE",
+      "token_decimals": 18,
+      "transfer_count": 48937,
+      "inbound_count": 28861,
+      "outbound_count": 20076,
+      "inbound_value_raw": "2.227813127404319093203255798E+32",
+      "outbound_value_raw": "2.266496067156570137776300000E+32",
+      "unique_counterparties": 10288
+    },
+    {
+      "token_address": "0xe6bfd33f52d82ccb5b37e16d3dd81f9ffdabb195",
+      "token_name": "Space and Time",
+      "token_symbol": "SXT",
+      "token_decimals": 18,
+      "transfer_count": 36542,
+      "inbound_count": 32845,
+      "outbound_count": 3697,
+      "inbound_value_raw": "735135363510143252663932924",
+      "outbound_value_raw": "716151854653720880000000000",
+      "unique_counterparties": 14877
+    },
+    {
+      "token_address": "0x514910771af9ca656af840dff83e8264ecf986ca",
+      "token_name": "ChainLink Token",
+      "token_symbol": "LINK",
+      "token_decimals": 18,
+      "transfer_count": 34532,
+      "inbound_count": 22587,
+      "outbound_count": 11945,
+      "inbound_value_raw": "83391889779162529095513818",
+      "outbound_value_raw": "84064540591842830000000000",
+      "unique_counterparties": 10362
+    },
+    {
+      "token_address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+      "token_name": "Uniswap",
+      "token_symbol": "UNI",
+      "token_decimals": 18,
+      "transfer_count": 27770,
+      "inbound_count": 20625,
+      "outbound_count": 7145,
+      "inbound_value_raw": "136107687221082433080034706",
+      "outbound_value_raw": "133740511063522700000000000",
+      "unique_counterparties": 3364
+    },
+    {
+      "token_address": "0x57e114b691db790c35207b2e685d4a43181e6061",
+      "token_name": "ENA",
+      "token_symbol": "ENA",
+      "token_decimals": 18,
+      "transfer_count": 27688,
+      "inbound_count": 19520,
+      "outbound_count": 8168,
+      "inbound_value_raw": "2909026767795247655221645416",
+      "outbound_value_raw": "2884937479856501680000000000",
+      "unique_counterparties": 5928
+    },
+    {
+      "token_address": "0xa191021599f60e2fde1bc8c8d1a07e9bd663c4a9",
+      "token_name": "BlazeETH",
+      "token_symbol": "claim rewards on t.ly/ethblaze",
+      "token_decimals": 0,
+      "transfer_count": 27192,
+      "inbound_count": 1,
+      "outbound_count": 27191,
+      "inbound_value_raw": "1",
+      "outbound_value_raw": "27191",
+      "unique_counterparties": 18326
+    },
+    {
+      "token_address": "0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce",
+      "token_name": "SHIBA INU",
+      "token_symbol": "SHIB",
+      "token_decimals": 18,
+      "transfer_count": 26921,
+      "inbound_count": 17259,
+      "outbound_count": 9662,
+      "inbound_value_raw": "2.729709922931202760683621218E+31",
+      "outbound_value_raw": "2.681086282982639678999000000E+31",
+      "unique_counterparties": 9321
+    },
+    {
+      "token_address": "0x8457ca5040ad67fdebbcc8edce889a335bc0fbfb",
+      "token_name": "AltLayer Token",
+      "token_symbol": "ALT",
+      "token_decimals": 18,
+      "transfer_count": 24351,
+      "inbound_count": 22839,
+      "outbound_count": 1512,
+      "inbound_value_raw": "1234851430234668122535504723",
+      "outbound_value_raw": "1234764089453079260000000000",
+      "unique_counterparties": 20499
+    },
+    {
+      "token_address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+      "token_name": "Wrapped BTC",
+      "token_symbol": "WBTC",
+      "token_decimals": 8,
+      "transfer_count": 21851,
+      "inbound_count": 16322,
+      "outbound_count": 5529,
+      "inbound_value_raw": "4483890958194",
+      "outbound_value_raw": "4436155037557",
+      "unique_counterparties": 5697
+    },
+    {
+      "token_address": "0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
+      "token_name": "Aave Token",
+      "token_symbol": "AAVE",
+      "token_decimals": 18,
+      "transfer_count": 21400,
+      "inbound_count": 14591,
+      "outbound_count": 6809,
+      "inbound_value_raw": "5428725814569232924062209",
+      "outbound_value_raw": "5235211384122450000000000",
+      "unique_counterparties": 2781
+    },
+    {
+      "token_address": "0xe4ca21f564da03b06a8527400975a4821c1f6d3e",
+      "token_name": "BlazeETH",
+      "token_symbol": "claim rewards on t.ly/ethblaze",
+      "token_decimals": 0,
+      "transfer_count": 19687,
+      "inbound_count": 1,
+      "outbound_count": 19686,
+      "inbound_value_raw": "1",
+      "outbound_value_raw": "19686",
+      "unique_counterparties": 19687
+    },
+    {
+      "token_address": "0xfaba6f8e4a5e8ab82f62fe7c39859fa577269be3",
+      "token_name": "Ondo",
+      "token_symbol": "ONDO",
+      "token_decimals": 18,
+      "transfer_count": 19581,
+      "inbound_count": 15379,
+      "outbound_count": 4202,
+      "inbound_value_raw": "573993566441658086266274864",
+      "outbound_value_raw": "554492341870513900000000000",
+      "unique_counterparties": 7913
+    },
+    {
+      "token_address": "0x3073f7aaa4db83f95e9fff17424f71d4751a3073",
+      "token_name": "Movement",
+      "token_symbol": "MOVE",
+      "token_decimals": 8,
+      "transfer_count": 18008,
+      "inbound_count": 11918,
+      "outbound_count": 6090,
+      "inbound_value_raw": "132581805385655972",
+      "outbound_value_raw": "129883916617187864",
+      "unique_counterparties": 2019
+    },
+    {
+      "token_address": "0xd533a949740bb3306d119cc777fa900ba034cd52",
+      "token_name": "Curve DAO Token",
+      "token_symbol": "CRV",
+      "token_decimals": 18,
+      "transfer_count": 15970,
+      "inbound_count": 11254,
+      "outbound_count": 4716,
+      "inbound_value_raw": "518495657291588534085605185",
+      "outbound_value_raw": "525333882228858650000000000",
+      "unique_counterparties": 1768
+    },
+    {
+      "token_address": "0x69af81e73a73b40adf4f3d4223cd9b1ece623074",
+      "token_name": "Mask Network",
+      "token_symbol": "MASK",
+      "token_decimals": 18,
+      "transfer_count": 15670,
+      "inbound_count": 10691,
+      "outbound_count": 4979,
+      "inbound_value_raw": "212493988239358914637654845",
+      "outbound_value_raw": "205309413095000000000000000",
+      "unique_counterparties": 1030
+    },
+    {
+      "token_address": "0xd1d2eb1b1e90b638588728b4130137d262c87cae",
+      "token_name": "Gala",
+      "token_symbol": "GALA",
+      "token_decimals": 8,
+      "transfer_count": 14045,
+      "inbound_count": 10158,
+      "outbound_count": 3887,
+      "inbound_value_raw": "719988469149437090",
+      "outbound_value_raw": "737809305478381660",
+      "unique_counterparties": 3985
+    },
+    {
+      "token_address": "0x6b175474e89094c44da98b954eedeac495271d0f",
+      "token_name": "Dai Stablecoin",
+      "token_symbol": "DAI",
+      "token_decimals": 18,
+      "transfer_count": 13870,
+      "inbound_count": 10809,
+      "outbound_count": 3061,
+      "inbound_value_raw": "470026045422879537109836457",
+      "outbound_value_raw": "481318630460939740000000000",
+      "unique_counterparties": 3867
+    },
+    {
+      "token_address": "0xaea46a60368a7bd060eec7df8cba43b7ef41ad85",
+      "token_name": "Fetch",
+      "token_symbol": "FET",
+      "token_decimals": 18,
+      "transfer_count": 13630,
+      "inbound_count": 9096,
+      "outbound_count": 4534,
+      "inbound_value_raw": "462739352208997096702162614",
+      "outbound_value_raw": "476084677405037660000000000",
+      "unique_counterparties": 3599
+    }
+  ],
+  "top_counterparties": [
+    {
+      "address": "0x06fd4ba7973a0d39a91734bbc35bc2bcaa99e3b0",
+      "label": "",
+      "interactions": 74038,
+      "inbound_count": 74038,
+      "outbound_count": 0,
+      "unique_tokens": 156,
+      "top_tokens": [
+        {
+          "token_address": "0x6982508145454ce325ddbe47a25d4ec3d2311933",
+          "symbol": "PEPE",
+          "count": 3155
+        },
+        {
+          "token_address": "0x57e114b691db790c35207b2e685d4a43181e6061",
+          "symbol": "ENA",
+          "count": 2212
+        },
+        {
+          "token_address": "0x69af81e73a73b40adf4f3d4223cd9b1ece623074",
+          "symbol": "MASK",
+          "count": 2010
+        },
+        {
+          "token_address": "0xd533a949740bb3306d119cc777fa900ba034cd52",
+          "symbol": "CRV",
+          "count": 1983
+        },
+        {
+          "token_address": "0xd1d2eb1b1e90b638588728b4130137d262c87cae",
+          "symbol": "GALA",
+          "count": 1969
+        }
+      ]
+    },
+    {
+      "address": "0xc17a40852e4bfe04bc81af355fdf132c539ba753",
+      "label": "",
+      "interactions": 34806,
+      "inbound_count": 34806,
+      "outbound_count": 0,
+      "unique_tokens": 111,
+      "top_tokens": [
+        {
+          "token_address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+          "symbol": "UNI",
+          "count": 1825
+        },
+        {
+          "token_address": "0xc4441c2be5d8fa8126822b9929ca0b81ea0de38e",
+          "symbol": "USUAL",
+          "count": 1755
+        },
+        {
+          "token_address": "0x320623b8e4ff03373931769a31fc52a4e78b5d70",
+          "symbol": "RSR",
+          "count": 1678
+        },
+        {
+          "token_address": "0x1bbe973bef3a977fc51cbed703e8ffdefe001fed",
+          "symbol": "PORTAL",
+          "count": 1646
+        },
+        {
+          "token_address": "0x57e114b691db790c35207b2e685d4a43181e6061",
+          "symbol": "ENA",
+          "count": 1601
+        }
+      ]
+    },
+    {
+      "address": "0xeae7380dd4cef6fbd1144f49e4d1e6964258a4f4",
+      "label": "",
+      "interactions": 29169,
+      "inbound_count": 29169,
+      "outbound_count": 0,
+      "unique_tokens": 90,
+      "top_tokens": [
+        {
+          "token_address": "0x6982508145454ce325ddbe47a25d4ec3d2311933",
+          "symbol": "PEPE",
+          "count": 4462
+        },
+        {
+          "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC",
+          "count": 3191
+        },
+        {
+          "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "symbol": "USDT",
+          "count": 2524
+        },
+        {
+          "token_address": "0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
+          "symbol": "AAVE",
+          "count": 2511
+        },
+        {
+          "token_address": "0x57e114b691db790c35207b2e685d4a43181e6061",
+          "symbol": "ENA",
+          "count": 2262
+        }
+      ]
+    },
+    {
+      "address": "0xfe9529b753b412941127fea1981e5ce0a85c101e",
+      "label": "",
+      "interactions": 28975,
+      "inbound_count": 28975,
+      "outbound_count": 0,
+      "unique_tokens": 108,
+      "top_tokens": [
+        {
+          "token_address": "0x69af81e73a73b40adf4f3d4223cd9b1ece623074",
+          "symbol": "MASK",
+          "count": 1771
+        },
+        {
+          "token_address": "0x0fd10b9899882a6f2fcb5c371e17e70fdee00c38",
+          "symbol": "PUNDIX",
+          "count": 1110
+        },
+        {
+          "token_address": "0x3073f7aaa4db83f95e9fff17424f71d4751a3073",
+          "symbol": "MOVE",
+          "count": 1060
+        },
+        {
+          "token_address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+          "symbol": "UNI",
+          "count": 1022
+        },
+        {
+          "token_address": "0xc00e94cb662c3520282e6f5717214004a7f26888",
+          "symbol": "COMP",
+          "count": 925
+        }
+      ]
+    },
+    {
+      "address": "0x1a847b0d11120b8510edcd3c81c4e4249460330a",
+      "label": "",
+      "interactions": 12845,
+      "inbound_count": 12845,
+      "outbound_count": 0,
+      "unique_tokens": 118,
+      "top_tokens": [
+        {
+          "token_address": "0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b",
+          "symbol": "CVX",
+          "count": 958
+        },
+        {
+          "token_address": "0x320623b8e4ff03373931769a31fc52a4e78b5d70",
+          "symbol": "RSR",
+          "count": 796
+        },
+        {
+          "token_address": "0x579cea1889991f68acc35ff5c3dd0621ff29b0c9",
+          "symbol": "IQ",
+          "count": 710
+        },
+        {
+          "token_address": "0x1bbe973bef3a977fc51cbed703e8ffdefe001fed",
+          "symbol": "PORTAL",
+          "count": 639
+        },
+        {
+          "token_address": "0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0",
+          "symbol": "FXS",
+          "count": 547
+        }
+      ]
+    },
+    {
+      "address": "0x7833341fff5bbbac5a0bd0ca28d6d9fa7d094601",
+      "label": "",
+      "interactions": 12766,
+      "inbound_count": 12766,
+      "outbound_count": 0,
+      "unique_tokens": 186,
+      "top_tokens": [
+        {
+          "token_address": "0xde4ee8057785a7e8e800db58f9784845a5c2cbd6",
+          "symbol": "DEXE",
+          "count": 849
+        },
+        {
+          "token_address": "0xff20817765cb7f73d4bde2e66e067e58d11095c2",
+          "symbol": "AMP",
+          "count": 657
+        },
+        {
+          "token_address": "0xe6bfd33f52d82ccb5b37e16d3dd81f9ffdabb195",
+          "symbol": "SXT",
+          "count": 487
+        },
+        {
+          "token_address": "0x5cf04716ba20127f1e2297addcf4b5035000c9eb",
+          "symbol": "NKN",
+          "count": 404
+        },
+        {
+          "token_address": "0xe3c408bd53c31c085a1746af401a4042954ff740",
+          "symbol": "GMT",
+          "count": 392
+        }
+      ]
+    },
+    {
+      "address": "0x41fbba5cb38d22b2d80606406944cedd7c97f6f9",
+      "label": "",
+      "interactions": 12299,
+      "inbound_count": 12299,
+      "outbound_count": 0,
+      "unique_tokens": 116,
+      "top_tokens": [
+        {
+          "token_address": "0x3073f7aaa4db83f95e9fff17424f71d4751a3073",
+          "symbol": "MOVE",
+          "count": 1266
+        },
+        {
+          "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC",
+          "count": 627
+        },
+        {
+          "token_address": "0xa9b1eb5908cfc3cdf91f9b8b3a74108598009096",
+          "symbol": "Auction",
+          "count": 471
+        },
+        {
+          "token_address": "0xfe0c30065b384f05761f15d0cc899d4f9f9cc0eb",
+          "symbol": "ETHFI",
+          "count": 455
+        },
+        {
+          "token_address": "0x69af81e73a73b40adf4f3d4223cd9b1ece623074",
+          "symbol": "MASK",
+          "count": 424
+        }
+      ]
+    },
+    {
+      "address": "0x27bffb0f09c18539f9a47a39958bb149fe42a155",
+      "label": "",
+      "interactions": 11603,
+      "inbound_count": 11603,
+      "outbound_count": 0,
+      "unique_tokens": 86,
+      "top_tokens": [
+        {
+          "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "symbol": "USDT",
+          "count": 2790
+        },
+        {
+          "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC",
+          "count": 1247
+        },
+        {
+          "token_address": "0x514910771af9ca656af840dff83e8264ecf986ca",
+          "symbol": "LINK",
+          "count": 778
+        },
+        {
+          "token_address": "0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
+          "symbol": "AAVE",
+          "count": 776
+        },
+        {
+          "token_address": "0x6982508145454ce325ddbe47a25d4ec3d2311933",
+          "symbol": "PEPE",
+          "count": 669
+        }
+      ]
+    },
+    {
+      "address": "0x21a31ee1afc51d94c2efccaa2092ad1028285549",
+      "label": "",
+      "interactions": 10220,
+      "inbound_count": 0,
+      "outbound_count": 10220,
+      "unique_tokens": 229,
+      "top_tokens": [
+        {
+          "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "symbol": "USDT",
+          "count": 211
+        },
+        {
+          "token_address": "0x6982508145454ce325ddbe47a25d4ec3d2311933",
+          "symbol": "PEPE",
+          "count": 176
+        },
+        {
+          "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC",
+          "count": 174
+        },
+        {
+          "token_address": "0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
+          "symbol": "AAVE",
+          "count": 153
+        },
+        {
+          "token_address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+          "symbol": "WBTC",
+          "count": 149
+        }
+      ]
+    },
+    {
+      "address": "0xd5f5475502120ad0e3dbaa25ecedffd19d6569fa",
+      "label": "",
+      "interactions": 10184,
+      "inbound_count": 10184,
+      "outbound_count": 0,
+      "unique_tokens": 141,
+      "top_tokens": [
+        {
+          "token_address": "0x3073f7aaa4db83f95e9fff17424f71d4751a3073",
+          "symbol": "MOVE",
+          "count": 696
+        },
+        {
+          "token_address": "0x58b6a8a3302369daec383334672404ee733ab239",
+          "symbol": "LPT",
+          "count": 496
+        },
+        {
+          "token_address": "0x69af81e73a73b40adf4f3d4223cd9b1ece623074",
+          "symbol": "MASK",
+          "count": 475
+        },
+        {
+          "token_address": "0x62d0a8458ed7719fdaf978fe5929c6d342b0bfce",
+          "symbol": "BEAM",
+          "count": 405
+        },
+        {
+          "token_address": "0xa9b1eb5908cfc3cdf91f9b8b3a74108598009096",
+          "symbol": "Auction",
+          "count": 318
+        }
+      ]
+    },
+    {
+      "address": "0xdfd5293d8e347dfe59e90efd55b2956a1343963d",
+      "label": "",
+      "interactions": 10169,
+      "inbound_count": 1,
+      "outbound_count": 10168,
+      "unique_tokens": 228,
+      "top_tokens": [
+        {
+          "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "symbol": "USDT",
+          "count": 186
+        },
+        {
+          "token_address": "0x6982508145454ce325ddbe47a25d4ec3d2311933",
+          "symbol": "PEPE",
+          "count": 180
+        },
+        {
+          "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC",
+          "count": 163
+        },
+        {
+          "token_address": "0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
+          "symbol": "AAVE",
+          "count": 155
+        },
+        {
+          "token_address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+          "symbol": "WBTC",
+          "count": 139
+        }
+      ]
+    },
+    {
+      "address": "0xfe9cb5423f54c8d69917c5beeb8c00503b4a1a91",
+      "label": "",
+      "interactions": 8906,
+      "inbound_count": 8906,
+      "outbound_count": 0,
+      "unique_tokens": 12,
+      "top_tokens": [
+        {
+          "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC",
+          "count": 3011
+        },
+        {
+          "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "symbol": "USDT",
+          "count": 1420
+        },
+        {
+          "token_address": "0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
+          "symbol": "AAVE",
+          "count": 1235
+        },
+        {
+          "token_address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+          "symbol": "UNI",
+          "count": 1129
+        },
+        {
+          "token_address": "0x5a98fcbea516cf06857215779fd812ca3bef1b32",
+          "symbol": "LDO",
+          "count": 891
+        }
+      ]
+    },
+    {
+      "address": "0xee845948e6806d12e966137caa07d49bbe632fe3",
+      "label": "",
+      "interactions": 7698,
+      "inbound_count": 7698,
+      "outbound_count": 0,
+      "unique_tokens": 190,
+      "top_tokens": [
+        {
+          "token_address": "0x3073f7aaa4db83f95e9fff17424f71d4751a3073",
+          "symbol": "MOVE",
+          "count": 199
+        },
+        {
+          "token_address": "0x69af81e73a73b40adf4f3d4223cd9b1ece623074",
+          "symbol": "MASK",
+          "count": 172
+        },
+        {
+          "token_address": "0x58b6a8a3302369daec383334672404ee733ab239",
+          "symbol": "LPT",
+          "count": 160
+        },
+        {
+          "token_address": "0x643c4e15d7d62ad0abec4a9bd4b001aa3ef52d66",
+          "symbol": "SYRUP",
+          "count": 116
+        },
+        {
+          "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC",
+          "count": 114
+        }
+      ]
+    },
+    {
+      "address": "0x05cfc8d3ca36bc774963c3999efd8a1e38f5b40b",
+      "label": "",
+      "interactions": 7675,
+      "inbound_count": 7675,
+      "outbound_count": 0,
+      "unique_tokens": 88,
+      "top_tokens": [
+        {
+          "token_address": "0xdbdb4d16eda451d0503b854cf79d55697f90c8df",
+          "symbol": "ALCX",
+          "count": 849
+        },
+        {
+          "token_address": "0x57e114b691db790c35207b2e685d4a43181e6061",
+          "symbol": "ENA",
+          "count": 512
+        },
+        {
+          "token_address": "0x643c4e15d7d62ad0abec4a9bd4b001aa3ef52d66",
+          "symbol": "SYRUP",
+          "count": 415
+        },
+        {
+          "token_address": "0x57b946008913b82e4df85f501cbaed910e58d26c",
+          "symbol": "POND",
+          "count": 329
+        },
+        {
+          "token_address": "0xe6bfd33f52d82ccb5b37e16d3dd81f9ffdabb195",
+          "symbol": "SXT",
+          "count": 313
+        }
+      ]
+    },
+    {
+      "address": "0xa71e0cf4a779d2f53042f5605f63826740832850",
+      "label": "",
+      "interactions": 7309,
+      "inbound_count": 7309,
+      "outbound_count": 0,
+      "unique_tokens": 109,
+      "top_tokens": [
+        {
+          "token_address": "0x419d0d8bdd9af5e606ae2232ed285aff190e711b",
+          "symbol": "FUN",
+          "count": 438
+        },
+        {
+          "token_address": "0x137ddb47ee24eaa998a535ab00378d6bfa84f893",
+          "symbol": "RDNT",
+          "count": 419
+        },
+        {
+          "token_address": "0x320623b8e4ff03373931769a31fc52a4e78b5d70",
+          "symbol": "RSR",
+          "count": 370
+        },
+        {
+          "token_address": "0xa0246c9032bc3a600820415ae600c6388619a14d",
+          "symbol": "FARM",
+          "count": 368
+        },
+        {
+          "token_address": "0x41e5560054824ea6b0732e656e3ad64e20e94e45",
+          "symbol": "CVC",
+          "count": 352
+        }
+      ]
+    },
+    {
+      "address": "0x8048498c795c15f6471161ae029f6c888f43cb54",
+      "label": "",
+      "interactions": 7261,
+      "inbound_count": 0,
+      "outbound_count": 7261,
+      "unique_tokens": 68,
+      "top_tokens": [
+        {
+          "token_address": "0x3593d125a4f7849a1b059e64f4517a86dd60c95d",
+          "symbol": "OM",
+          "count": 725
+        },
+        {
+          "token_address": "0xcf0c122c6b73ff809c693db761e7baebe62b6a2e",
+          "symbol": "FLOKI",
+          "count": 317
+        },
+        {
+          "token_address": "0xff20817765cb7f73d4bde2e66e067e58d11095c2",
+          "symbol": "AMP",
+          "count": 292
+        },
+        {
+          "token_address": "0x57e114b691db790c35207b2e685d4a43181e6061",
+          "symbol": "ENA",
+          "count": 289
+        },
+        {
+          "token_address": "0xfe0c30065b384f05761f15d0cc899d4f9f9cc0eb",
+          "symbol": "ETHFI",
+          "count": 287
+        }
+      ]
+    },
+    {
+      "address": "0x95e63f78bd2fd5ea8a0d58182f3d998558881fda",
+      "label": "",
+      "interactions": 7114,
+      "inbound_count": 7114,
+      "outbound_count": 0,
+      "unique_tokens": 128,
+      "top_tokens": [
+        {
+          "token_address": "0x3f382dbd960e3a9bbceae22651e88158d2791550",
+          "symbol": "GHST",
+          "count": 741
+        },
+        {
+          "token_address": "0x4c19596f5aaff459fa38b0f7ed92f11ae6543784",
+          "symbol": "TRU",
+          "count": 693
+        },
+        {
+          "token_address": "0x61e90a50137e1f645c9ef4a0d3a4f01477738406",
+          "symbol": "LOKA",
+          "count": 460
+        },
+        {
+          "token_address": "0xef3a930e1ffffacd2fc13434ac81bd278b0ecc8d",
+          "symbol": "FIS",
+          "count": 355
+        },
+        {
+          "token_address": "0x5cf04716ba20127f1e2297addcf4b5035000c9eb",
+          "symbol": "NKN",
+          "count": 333
+        }
+      ]
+    },
+    {
+      "address": "0x7e6af92df2aecd6113325c0b58f821ab1dce37f6",
+      "label": "",
+      "interactions": 6943,
+      "inbound_count": 0,
+      "outbound_count": 6943,
+      "unique_tokens": 105,
+      "top_tokens": [
+        {
+          "token_address": "0xfe0c30065b384f05761f15d0cc899d4f9f9cc0eb",
+          "symbol": "ETHFI",
+          "count": 310
+        },
+        {
+          "token_address": "0x3073f7aaa4db83f95e9fff17424f71d4751a3073",
+          "symbol": "MOVE",
+          "count": 245
+        },
+        {
+          "token_address": "0xf2c88757f8d03634671208935974b60a2a28bdb3",
+          "symbol": "SHELL",
+          "count": 240
+        },
+        {
+          "token_address": "0x57e114b691db790c35207b2e685d4a43181e6061",
+          "symbol": "ENA",
+          "count": 202
+        },
+        {
+          "token_address": "0xca14007eff0db1f8135f4c25b34de49ab0d42766",
+          "symbol": "STRK",
+          "count": 170
+        }
+      ]
+    },
+    {
+      "address": "0x5ba11fa7e47399e21101ef5cdcbdf281f476e91b",
+      "label": "",
+      "interactions": 6887,
+      "inbound_count": 6887,
+      "outbound_count": 0,
+      "unique_tokens": 94,
+      "top_tokens": [
+        {
+          "token_address": "0x8a2279d4a90b6fe1c4b30fa660cc9f926797baa2",
+          "symbol": "CHR",
+          "count": 955
+        },
+        {
+          "token_address": "0xe53ec727dbdeb9e2d5456c3be40cff031ab40a55",
+          "symbol": "SUPER",
+          "count": 442
+        },
+        {
+          "token_address": "0x767fe9edc9e0df98e07454847909b5e959d7ca0e",
+          "symbol": "ILV",
+          "count": 317
+        },
+        {
+          "token_address": "0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b",
+          "symbol": "CVX",
+          "count": 300
+        },
+        {
+          "token_address": "0x8de5b80a0c1b02fe4976851d030b36122dbb8624",
+          "symbol": "VANRY",
+          "count": 295
+        }
+      ]
+    },
+    {
+      "address": "0xb3e8c75912438c2282e0afa51b41bff8e835bc88",
+      "label": "",
+      "interactions": 6442,
+      "inbound_count": 6442,
+      "outbound_count": 0,
+      "unique_tokens": 14,
+      "top_tokens": [
+        {
+          "token_address": "0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
+          "symbol": "AAVE",
+          "count": 1243
+        },
+        {
+          "token_address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+          "symbol": "UNI",
+          "count": 1194
+        },
+        {
+          "token_address": "0x455e53cbb86018ac2b8092fdcd39d8444affc3f6",
+          "symbol": "POL",
+          "count": 806
+        },
+        {
+          "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "symbol": "USDT",
+          "count": 639
+        },
+        {
+          "token_address": "0x514910771af9ca656af840dff83e8264ecf986ca",
+          "symbol": "LINK",
+          "count": 551
+        }
+      ]
+    }
+  ],
+  "sample_transfers": [
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "9d8d1d69fad7eeda39ee36b7dadf37c436d1040be36af4d0482178e8b09c8fba",
+      "sender": "0x08dc8ffc2db71ea07537d1328b3be0799b604396",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x08dc8ffc2db71ea07537d1328b3be0799b604396",
+      "token_address": "0x3472a5a71965499acd81997a54bba8d852c6e53d",
+      "token_name": "Badger",
+      "token_symbol": "BADGER",
+      "token_decimals": 18,
+      "value_raw": "3642800000000000000000",
+      "value_display": "3642.8",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "220aa9c1fb91601637d9ec09ef64c45956be08d355b7f373be28ebbf3affb9e7",
+      "sender": "0x0bc1ec3315e86ae3125d83fc2214c2fea788f453",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x0bc1ec3315e86ae3125d83fc2214c2fea788f453",
+      "token_address": "0x62d0a8458ed7719fdaf978fe5929c6d342b0bfce",
+      "token_name": "Beam",
+      "token_symbol": "BEAM",
+      "token_decimals": 18,
+      "value_raw": "88477209461350000000000",
+      "value_display": "88477.20946135",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "548879dcdc07bcab611e0d0cc146853a964ad12273877e12346776a9a0c07be8",
+      "sender": "0xb89bd5c942914289fdf4356e1be25f9a8824343f",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0xb89bd5c942914289fdf4356e1be25f9a8824343f",
+      "token_address": "0xff20817765cb7f73d4bde2e66e067e58d11095c2",
+      "token_name": "Amp",
+      "token_symbol": "AMP",
+      "token_decimals": 18,
+      "value_raw": "4998070999999999656329216",
+      "value_display": "4998070.999999999656329216",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "a9fe04aa7ba8affa95fbf319f30affb1615f12ea83bd52f744a3e6b48a81ee0a",
+      "sender": "0xfe9529b753b412941127fea1981e5ce0a85c101e",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0xfe9529b753b412941127fea1981e5ce0a85c101e",
+      "token_address": "0xa9b1eb5908cfc3cdf91f9b8b3a74108598009096",
+      "token_name": "Bounce Token",
+      "token_symbol": "Auction",
+      "token_decimals": 18,
+      "value_raw": "966000000000000000000",
+      "value_display": "966",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "27f97c7de3ea8940e08601a2fdd2d0cd348e9f5c793e27ec5d47e2c1a02e0e69",
+      "sender": "0x5503ca04a7c4417dc2ddc3debf6545b7d1c0dcc1",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x5503ca04a7c4417dc2ddc3debf6545b7d1c0dcc1",
+      "token_address": "0xbb0e17ef65f82ab018d8edd776e8dd940327b28b",
+      "token_name": "Axie Infinity Shard",
+      "token_symbol": "AXS",
+      "token_decimals": 18,
+      "value_raw": "69979993967081370000",
+      "value_display": "69.97999396708137",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "aad5023df512d81e9299b78274c730948f02e52b3e44f2cfcd66308f1b316c43",
+      "sender": "0x06fd4ba7973a0d39a91734bbc35bc2bcaa99e3b0",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x06fd4ba7973a0d39a91734bbc35bc2bcaa99e3b0",
+      "token_address": "0x18aaa7115705e8be94bffebde57af9bfc265b998",
+      "token_name": "Audius",
+      "token_symbol": "AUDIO",
+      "token_decimals": 18,
+      "value_raw": "231414283200000000000000",
+      "value_display": "231414.2832",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "56a043cda894f0e7957f18c517ae27721b5ad390602def2581c55fbfee4637db",
+      "sender": "0x1a847b0d11120b8510edcd3c81c4e4249460330a",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x1a847b0d11120b8510edcd3c81c4e4249460330a",
+      "token_address": "0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b",
+      "token_name": "Convex Token",
+      "token_symbol": "CVX",
+      "token_decimals": 18,
+      "value_raw": "1007987713935522941448",
+      "value_display": "1007.987713935522941448",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "522cb17b59cd4c489925344ea8b18eb8b33c220c5acda7c979b5685337a9bb3b",
+      "sender": "0xa71e0cf4a779d2f53042f5605f63826740832850",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0xa71e0cf4a779d2f53042f5605f63826740832850",
+      "token_address": "0xef3a930e1ffffacd2fc13434ac81bd278b0ecc8d",
+      "token_name": "StaFi",
+      "token_symbol": "FIS",
+      "token_decimals": 18,
+      "value_raw": "4788803584572614969252",
+      "value_display": "4788.803584572614969252",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "fff4cba44378edde40da48875cf6f5e369bdc8970cda8927a047ee0e8baee829",
+      "sender": "0x8f397b1d7d8f06cc3fdf94050ad4b9d40d5f2f9d",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x8f397b1d7d8f06cc3fdf94050ad4b9d40d5f2f9d",
+      "token_address": "0xfe0c30065b384f05761f15d0cc899d4f9f9cc0eb",
+      "token_name": "ether.fi governance token",
+      "token_symbol": "ETHFI",
+      "token_decimals": 18,
+      "value_raw": "636265730520000000000",
+      "value_display": "636.26573052",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "63ae70f0187f7ec4727a0aaf8bf65ff44173b803831ca63deda63a9c26080900",
+      "sender": "0x0bc1ec3315e86ae3125d83fc2214c2fea788f453",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x0bc1ec3315e86ae3125d83fc2214c2fea788f453",
+      "token_address": "0xf57e7e7c23978c3caec3c3548e3d615c346e79ff",
+      "token_name": "Immutable X",
+      "token_symbol": "IMX",
+      "token_decimals": 18,
+      "value_raw": "838841646550000000000",
+      "value_display": "838.84164655",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "c36615008cbd9e87ba0e023927bb23e273adb332f75d16422a5ae2fcfa644db4",
+      "sender": "0x29984d1f9055cafb02dcdd53c54b727902e44975",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x29984d1f9055cafb02dcdd53c54b727902e44975",
+      "token_address": "0x595832f8fc6bf59c85c527fec3740a1b7a361269",
+      "token_name": "PowerLedger",
+      "token_symbol": "POWR",
+      "token_decimals": 6,
+      "value_raw": "47686310000",
+      "value_display": "47686.31",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "0b26b0478e51362f059e7e8a4fbcaecfe301a83f7fe99bd6b104cc991d860dd7",
+      "sender": "0x61ab3d3637f27573bc5409f219cba6841e7bd18c",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x61ab3d3637f27573bc5409f219cba6841e7bd18c",
+      "token_address": "0x4a220e6096b25eadb88358cb44068a3248254675",
+      "token_name": "Quant",
+      "token_symbol": "QNT",
+      "token_decimals": 18,
+      "value_raw": "11208814760000000000",
+      "value_display": "11.20881476",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "10b2a9b494b5f68ae9e27b89bf4d24fe323da04d5f6bda014ee98fa898b4c855",
+      "sender": "0x95e63f78bd2fd5ea8a0d58182f3d998558881fda",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x95e63f78bd2fd5ea8a0d58182f3d998558881fda",
+      "token_address": "0x3b50805453023a91a8bf641e279401a0b23fa6f9",
+      "token_name": "Renzo",
+      "token_symbol": "REZ",
+      "token_decimals": 18,
+      "value_raw": "469832449670780000000000",
+      "value_display": "469832.44967078",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "f5b9589f322d3b6616964938a61b8e80a7cd25d77e86adb5f4f10e9cdc4cc374",
+      "sender": "0x62b014b27a1f6054ea1800fc40ebcff6912d6d3a",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x62b014b27a1f6054ea1800fc40ebcff6912d6d3a",
+      "token_address": "0x6982508145454ce325ddbe47a25d4ec3d2311933",
+      "token_name": "Pepe",
+      "token_symbol": "PEPE",
+      "token_decimals": 18,
+      "value_raw": "2334537847000000000000000000",
+      "value_display": "2334537847",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "f90d122c4706eab4810000d2af6089054b84360ad0eb7c1c1c2649c795ee31e6",
+      "sender": "0xd5f5475502120ad0e3dbaa25ecedffd19d6569fa",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0xd5f5475502120ad0e3dbaa25ecedffd19d6569fa",
+      "token_address": "0xc43c6bfeda065fe2c4c11765bf838789bd0bb5de",
+      "token_name": "Redstone",
+      "token_symbol": "RED",
+      "token_decimals": 18,
+      "value_raw": "44300000000000000000000",
+      "value_display": "44300",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "042ffacd6226bc11aba39e21a7352ac56b8fb7319486fdc24b820c7345edac72",
+      "sender": "0xfe9529b753b412941127fea1981e5ce0a85c101e",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0xfe9529b753b412941127fea1981e5ce0a85c101e",
+      "token_address": "0x18aaa7115705e8be94bffebde57af9bfc265b998",
+      "token_name": "Audius",
+      "token_symbol": "AUDIO",
+      "token_decimals": 18,
+      "value_raw": "89355000000000000000000",
+      "value_display": "89355",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "b5fcec4f33130376c9567df0ca3e36a2004da73ba1a85f0e0045cd9ba3d8297f",
+      "sender": "0x1a847b0d11120b8510edcd3c81c4e4249460330a",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x1a847b0d11120b8510edcd3c81c4e4249460330a",
+      "token_address": "0x8207c1ffc5b6804f6024322ccf34f29c3541ae26",
+      "token_name": "OriginToken",
+      "token_symbol": "OGN",
+      "token_decimals": 18,
+      "value_raw": "31090416699538783053608",
+      "value_display": "31090.416699538783053608",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "0cbd874332fbc155e6212bcce98b97def15d0fc9ff0f087978aa763462eb8b67",
+      "sender": "0xa67c3ea2877140dd2274f7da79cec336d8f4683b",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0xa67c3ea2877140dd2274f7da79cec336d8f4683b",
+      "token_address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+      "token_name": "Uniswap",
+      "token_symbol": "UNI",
+      "token_decimals": 18,
+      "value_raw": "5999931010000000000000",
+      "value_display": "5999.93101",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "006bca25643b869d4dea993bf69279d698e3dfadaf2b4ef2ca5c58f0d3ae7cd9",
+      "sender": "0xb46a0f71fded6ceb00b1c9278e0ac7e22c242df5",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0xb46a0f71fded6ceb00b1c9278e0ac7e22c242df5",
+      "token_address": "0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f",
+      "token_name": "Synthetix Network Token",
+      "token_symbol": "SNX",
+      "token_decimals": 18,
+      "value_raw": "19999779008490000000000",
+      "value_display": "19999.77900849",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "c30947b277841e15ab964fd7270be3a54db323d4f901e38f97e70ff8cd753332",
+      "sender": "0x8c8c6e693e22cf4120858e40fb21c1eaf2280b64",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x8c8c6e693e22cf4120858e40fb21c1eaf2280b64",
+      "token_address": "0xc4441c2be5d8fa8126822b9929ca0b81ea0de38e",
+      "token_name": "USUAL",
+      "token_symbol": "USUAL",
+      "token_decimals": 18,
+      "value_raw": "38504438000000000000000",
+      "value_display": "38504.438",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "ff62e6e2aeca8bdb12ff0226fa1008bbfb3966be7c9f6abf30146af310ff55ca",
+      "sender": "0xa71e0cf4a779d2f53042f5605f63826740832850",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0xa71e0cf4a779d2f53042f5605f63826740832850",
+      "token_address": "0xd01409314acb3b245cea9500ece3f6fd4d70ea30",
+      "token_name": "LTO Network Token",
+      "token_symbol": "LTO",
+      "token_decimals": 8,
+      "value_raw": "120188305408",
+      "value_display": "1201.88305408",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "8617063fffa9f13152f2e568ee6f9289417e5896b72feae4a0aa649c9501a655",
+      "sender": "0xb46a0f71fded6ceb00b1c9278e0ac7e22c242df5",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0xb46a0f71fded6ceb00b1c9278e0ac7e22c242df5",
+      "token_address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+      "token_name": "Uniswap",
+      "token_symbol": "UNI",
+      "token_decimals": 18,
+      "value_raw": "3999983282660000000000",
+      "value_display": "3999.98328266",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "6af552b182a1e04ec3c84fa0083e0e9973b6cc04fd5b2682dbc383973ac7ac3f",
+      "sender": "0xe5a0ba46c7c2b02c4b4964897975930dd46d11cd",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0xe5a0ba46c7c2b02c4b4964897975930dd46d11cd",
+      "token_address": "0xc4441c2be5d8fa8126822b9929ca0b81ea0de38e",
+      "token_name": "USUAL",
+      "token_symbol": "USUAL",
+      "token_decimals": 18,
+      "value_raw": "19893562574808617696174",
+      "value_display": "19893.562574808617696174",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "ec5d68b4ce704a49d2346a398bcdecab1b270cc880fc22032d763af350d4810b",
+      "sender": "0x1a847b0d11120b8510edcd3c81c4e4249460330a",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x1a847b0d11120b8510edcd3c81c4e4249460330a",
+      "token_address": "0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f",
+      "token_name": "Synthetix Network Token",
+      "token_symbol": "SNX",
+      "token_decimals": 18,
+      "value_raw": "1313941303976601082038",
+      "value_display": "1313.941303976601082038",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "567920b21207b1e6d828d6377d410589670e8907f7e8d219984fa4495d6a41dd",
+      "sender": "0x6e5e7741424c0de7cb9fd3d3422ba2e97047660d",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x6e5e7741424c0de7cb9fd3d3422ba2e97047660d",
+      "token_address": "0xc4441c2be5d8fa8126822b9929ca0b81ea0de38e",
+      "token_name": "USUAL",
+      "token_symbol": "USUAL",
+      "token_decimals": 18,
+      "value_raw": "5413021989049506907826",
+      "value_display": "5413.021989049506907826",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:54:11",
+      "tx_hash": "61182275e0a72b17df9572870334ccf5e45e3d9451028a52f3e448d7d37621b1",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0xca99edd02c350f0b2c3a585156848f38d1096a0e",
+      "direction": "outbound",
+      "counterparty": "0xca99edd02c350f0b2c3a585156848f38d1096a0e",
+      "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+      "token_name": "Tether USD",
+      "token_symbol": "USDT",
+      "token_decimals": 6,
+      "value_raw": "294850000",
+      "value_display": "294.85",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:54:11",
+      "tx_hash": "d1e39cdb74135b12bc56bd48fc7f22cdb0ad28a8a9892b23591157f943a4cc12",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0xbee3211ab312a8d065c4fef0247448e17a8da000",
+      "direction": "outbound",
+      "counterparty": "0xbee3211ab312a8d065c4fef0247448e17a8da000",
+      "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token_name": "USD//C",
+      "token_symbol": "USDC",
+      "token_decimals": 6,
+      "value_raw": "445802500000",
+      "value_display": "445802.5",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:54:35",
+      "tx_hash": "286c32df2a03176641714e15656d082eb1924af3071ca57264e46d70f7358c68",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0xb1b2d032aa2f52347fbcfd08e5c3cc55216e8404",
+      "direction": "outbound",
+      "counterparty": "0xb1b2d032aa2f52347fbcfd08e5c3cc55216e8404",
+      "token_address": "0xc20059e0317de91738d13af027dfc4a50781b066",
+      "token_name": "Spark",
+      "token_symbol": "SPK",
+      "token_decimals": 18,
+      "value_raw": "34195000000000000000000",
+      "value_display": "34195",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:54:35",
+      "tx_hash": "7bf5e62b7ecf6153b431c11c9d9a9fd116dd9502ce1ffcbef0f42be145e863cb",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0x8984d2b449edc1262fa4b2db11d7bde9a04d3737",
+      "direction": "outbound",
+      "counterparty": "0x8984d2b449edc1262fa4b2db11d7bde9a04d3737",
+      "token_address": "0x812ba41e071c7b7fa4ebcfb62df5f45f6fa853ee",
+      "token_name": "Neiro",
+      "token_symbol": "Neiro",
+      "token_decimals": 9,
+      "value_raw": "3892677000000000",
+      "value_display": "3892677",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:54:59",
+      "tx_hash": "f268980361d33454bebe9403303c122c5b7b6c207929f10f1b9288e786c939db",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0xf84a0ef1517f3579516c88f6a4e6732529617160",
+      "direction": "outbound",
+      "counterparty": "0xf84a0ef1517f3579516c88f6a4e6732529617160",
+      "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token_name": "USD//C",
+      "token_symbol": "USDC",
+      "token_decimals": 6,
+      "value_raw": "98500000",
+      "value_display": "98.5",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:55:11",
+      "tx_hash": "de8cc33b1b871db7306861336f4a0b213c80c8d3eb9d2971cef9184fcfa36e5d",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0x98c3d3183c4b8a650614ad179a1a98be0a8d6b8e",
+      "direction": "outbound",
+      "counterparty": "0x98c3d3183c4b8a650614ad179a1a98be0a8d6b8e",
+      "token_address": "0xc20059e0317de91738d13af027dfc4a50781b066",
+      "token_name": "Spark",
+      "token_symbol": "SPK",
+      "token_decimals": 18,
+      "value_raw": "39673000000000000000000",
+      "value_display": "39673",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:55:11",
+      "tx_hash": "1c68886b9b1dd4edada936b572c18aba61475091bd8b4d87cf21b08e1956ea6e",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0x2d6894208151133b2196d4fb050f1bfff01ed674",
+      "direction": "outbound",
+      "counterparty": "0x2d6894208151133b2196d4fb050f1bfff01ed674",
+      "token_address": "0xc20059e0317de91738d13af027dfc4a50781b066",
+      "token_name": "Spark",
+      "token_symbol": "SPK",
+      "token_decimals": 18,
+      "value_raw": "199968000000000000000000",
+      "value_display": "199968",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:55:35",
+      "tx_hash": "54093d2796654252ba6476410a5dab88acc9dd5d3f2755e928e3f02adefd3369",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0xb505da0f735cbfafd40f6ffd35beb8b8ecb18a37",
+      "direction": "outbound",
+      "counterparty": "0xb505da0f735cbfafd40f6ffd35beb8b8ecb18a37",
+      "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+      "token_name": "Tether USD",
+      "token_symbol": "USDT",
+      "token_decimals": 6,
+      "value_raw": "343562292",
+      "value_display": "343.562292",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:55:35",
+      "tx_hash": "ec4ff0903b01e5a0e9526f83eadd591d84a43701975efda459fee03185c0acb1",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0x20a348b0201de8fb603e124ee3924b6d1aab135e",
+      "direction": "outbound",
+      "counterparty": "0x20a348b0201de8fb603e124ee3924b6d1aab135e",
+      "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token_name": "USD//C",
+      "token_symbol": "USDC",
+      "token_decimals": 6,
+      "value_raw": "300500000",
+      "value_display": "300.5",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:56:11",
+      "tx_hash": "ddf88f508b18e9a9487bec257d9b8371f768317cf29f6b30347f5f1641281d04",
+      "sender": "0x06fd4ba7973a0d39a91734bbc35bc2bcaa99e3b0",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x06fd4ba7973a0d39a91734bbc35bc2bcaa99e3b0",
+      "token_address": "0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0",
+      "token_name": "Frax Share",
+      "token_symbol": "FXS",
+      "token_decimals": 18,
+      "value_raw": "3950469700000000000000",
+      "value_display": "3950.4697",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:56:11",
+      "tx_hash": "5b310d85f323ff070c0463b24d52d073d383c4594ec45be0934f7f0cc884df84",
+      "sender": "0xc17a40852e4bfe04bc81af355fdf132c539ba753",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0xc17a40852e4bfe04bc81af355fdf132c539ba753",
+      "token_address": "0x3845badade8e6dff049820680d1f14bd3903a5d0",
+      "token_name": "SAND",
+      "token_symbol": "SAND",
+      "token_decimals": 18,
+      "value_raw": "1419000000000000000000",
+      "value_display": "1419",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:56:11",
+      "tx_hash": "3f192e78641c4e7e9c0428c18728d2b6bef9ec3f59478ba1b957622ac0ad9e8a",
+      "sender": "0xb46a0f71fded6ceb00b1c9278e0ac7e22c242df5",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0xb46a0f71fded6ceb00b1c9278e0ac7e22c242df5",
+      "token_address": "0xaea46a60368a7bd060eec7df8cba43b7ef41ad85",
+      "token_name": "Fetch",
+      "token_symbol": "FET",
+      "token_decimals": 18,
+      "value_raw": "4285615245770000000000",
+      "value_display": "4285.61524577",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:56:11",
+      "tx_hash": "38654ad68a054a3910a299297b184874930ef8bebe63440bfbcbc9d61342f532",
+      "sender": "0xa8a7d1479661a2400b876561e20c632c50d825fe",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0xa8a7d1479661a2400b876561e20c632c50d825fe",
+      "token_address": "0x8457ca5040ad67fdebbcc8edce889a335bc0fbfb",
+      "token_name": "AltLayer Token",
+      "token_symbol": "ALT",
+      "token_decimals": 18,
+      "value_raw": "6858980963506381034549",
+      "value_display": "6858.980963506381034549",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:56:23",
+      "tx_hash": "5de049ef9e96b390df1c2ab2927de116e26d38335b52da39b88bcae7182e2c55",
+      "sender": "0xeae7380dd4cef6fbd1144f49e4d1e6964258a4f4",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0xeae7380dd4cef6fbd1144f49e4d1e6964258a4f4",
+      "token_address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+      "token_name": "Wrapped BTC",
+      "token_symbol": "WBTC",
+      "token_decimals": 8,
+      "value_raw": "1115000000",
+      "value_display": "11.15",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:57:11",
+      "tx_hash": "46b66090662f7828e3de4e6fe9ef0bdf2f2ef0e5fa0071bb5a52bcbf0f739706",
+      "sender": "0x00c0dc8f22b11c595bf60ec9e1e3e70dfd4af355",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x00c0dc8f22b11c595bf60ec9e1e3e70dfd4af355",
+      "token_address": "0x514910771af9ca656af840dff83e8264ecf986ca",
+      "token_name": "ChainLink Token",
+      "token_symbol": "LINK",
+      "token_decimals": 18,
+      "value_raw": "127737335758555100000",
+      "value_display": "127.7373357585551",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:57:47",
+      "tx_hash": "2f48be0e46f5a67bec8f17f74a27c00ec3ac7bf8d3604486ac6c4a65f7ae8d42",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0x8048498c795c15f6471161ae029f6c888f43cb54",
+      "direction": "outbound",
+      "counterparty": "0x8048498c795c15f6471161ae029f6c888f43cb54",
+      "token_address": "0xbbbbca6a901c926f240b89eacb641d8aec7aeafd",
+      "token_name": "LoopringCoin V2",
+      "token_symbol": "LRC",
+      "token_decimals": 18,
+      "value_raw": "44782000000000000000000",
+      "value_display": "44782",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:57:47",
+      "tx_hash": "8c67a97c6bc46d8e08054524c21cf0743ba68e8a8e7ab0e05d233ac11e3a5b26",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0x61310c27d905f34bea1f5b447f4711ee0168b614",
+      "direction": "outbound",
+      "counterparty": "0x61310c27d905f34bea1f5b447f4711ee0168b614",
+      "token_address": "0xc20059e0317de91738d13af027dfc4a50781b066",
+      "token_name": "Spark",
+      "token_symbol": "SPK",
+      "token_decimals": 18,
+      "value_raw": "599968000000000000000000",
+      "value_display": "599968",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:57:59",
+      "tx_hash": "4ff83545b7644c213de07aef451436d0d600d9e026b2b63bb9a8096e17b761a3",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0xef6c8d50f8baf2affbd5ce10863bdcf293a4c74b",
+      "direction": "outbound",
+      "counterparty": "0xef6c8d50f8baf2affbd5ce10863bdcf293a4c74b",
+      "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+      "token_name": "Tether USD",
+      "token_symbol": "USDT",
+      "token_decimals": 6,
+      "value_raw": "20498400369",
+      "value_display": "20498.400369",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:58:47",
+      "tx_hash": "2783cf8133606b622c02a27b4e7f941758fadcdbd7ef1e324aa83cbb1da313c3",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0xdf6aeac2124676c2da31fb76b756bc32c819acb6",
+      "direction": "outbound",
+      "counterparty": "0xdf6aeac2124676c2da31fb76b756bc32c819acb6",
+      "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+      "token_name": "Tether USD",
+      "token_symbol": "USDT",
+      "token_decimals": 6,
+      "value_raw": "50500000",
+      "value_display": "50.5",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:58:59",
+      "tx_hash": "1c2e77417d117baa7ed3e0db988fd5ec3e59fe8b7e2722bb03a399c5097c3571",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0xbee3211ab312a8d065c4fef0247448e17a8da000",
+      "direction": "outbound",
+      "counterparty": "0xbee3211ab312a8d065c4fef0247448e17a8da000",
+      "token_address": "0xdef1ca1fb7fbcdc777520aa7f396b4e015f497ab",
+      "token_name": "CoW Protocol Token",
+      "token_symbol": "COW",
+      "token_decimals": 18,
+      "value_raw": "19021510000000000000000",
+      "value_display": "19021.51",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:11",
+      "tx_hash": "5c8e6bdfc4cbcc35ed2a9fa9cbb37bcf28909d18ab24b5a7c792957d44424a80",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0x36b3a04a678e5ad39e9252574c84c2c08a2c3760",
+      "direction": "outbound",
+      "counterparty": "0x36b3a04a678e5ad39e9252574c84c2c08a2c3760",
+      "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+      "token_name": "Tether USD",
+      "token_symbol": "USDT",
+      "token_decimals": 6,
+      "value_raw": "376018993",
+      "value_display": "376.018993",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "890d89b0a323627102e88c14ac43d162e3be76e1f9b446c0f34e312c72477115",
+      "sender": "0x06fd4ba7973a0d39a91734bbc35bc2bcaa99e3b0",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0x06fd4ba7973a0d39a91734bbc35bc2bcaa99e3b0",
+      "token_address": "0x643c4e15d7d62ad0abec4a9bd4b001aa3ef52d66",
+      "token_name": "Syrup Token",
+      "token_symbol": "SYRUP",
+      "token_decimals": 18,
+      "value_raw": "22247235363330000000000",
+      "value_display": "22247.23536333",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "29775b0c2467608004b835d1a411abf840cb53de44602382bddc8d17bd551b21",
+      "sender": "0xc17a40852e4bfe04bc81af355fdf132c539ba753",
+      "recipient": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "direction": "inbound",
+      "counterparty": "0xc17a40852e4bfe04bc81af355fdf132c539ba753",
+      "token_address": "0xb131f4a55907b10d1f0a50d8ab8fa09ec342cd74",
+      "token_name": "Memecoin",
+      "token_symbol": "MEME",
+      "token_decimals": 18,
+      "value_raw": "38406000000000000000000",
+      "value_display": "38406",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:47",
+      "tx_hash": "fd85e26e56aab7b88f5f632643ad24fb39f4483e3e2bd8684473bccf4fc22b2a",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0x7e6af92df2aecd6113325c0b58f821ab1dce37f6",
+      "direction": "outbound",
+      "counterparty": "0x7e6af92df2aecd6113325c0b58f821ab1dce37f6",
+      "token_address": "0xcdf7028ceab81fa0c6971208e83fa7872994bee5",
+      "token_name": "Threshold Network Token",
+      "token_symbol": "T",
+      "token_decimals": 18,
+      "value_raw": "239505575772260000000000",
+      "value_display": "239505.57577226",
+      "label_sender": "",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:47",
+      "tx_hash": "562afdfe9bb477e06a33e1916bf67dd076819760c3914aaed479128757268a31",
+      "sender": "0x28c6c06298d514db089934071355e5743bf21d60",
+      "recipient": "0x90b97d1037a6393ecd51c1bb87a11eae1010d407",
+      "direction": "outbound",
+      "counterparty": "0x90b97d1037a6393ecd51c1bb87a11eae1010d407",
+      "token_address": "0xd1d2eb1b1e90b638588728b4130137d262c87cae",
+      "token_name": "Gala",
+      "token_symbol": "GALA",
+      "token_decimals": 8,
+      "value_raw": "188516787675587",
+      "value_display": "1885167.87675587",
+      "label_sender": "",
+      "label_recipient": ""
+    }
+  ],
+  "curation_notes": {
+    "narrative": "This case is useful as an ERC-20 benchmark for exchange-like or service-style token activity: broad but structured counterparty exposure, repeated settlement interactions, and a high-volume token surface that should not be interpreted the same way as a noisy inbound address.",
+    "erc20_layer": "Layer 1 ERC-20 transfer dataset",
+    "intended_typologies": [
+      "exchange-style service surface",
+      "repeated ERC-20 counterparty interaction",
+      "token-heavy operational behavior",
+      "broad ERC-20 counterparty surface"
+    ],
+    "limitations": [
+      "Derived from ERC-20 transfer rows only",
+      "Does not yet include trace-native ERC-20 scoring or swap decoding",
+      "Not an authoritative label of illicit activity"
+    ]
+  }
+}

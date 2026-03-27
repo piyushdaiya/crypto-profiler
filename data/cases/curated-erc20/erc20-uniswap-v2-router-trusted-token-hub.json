@@ -1,0 +1,1429 @@
+{
+  "case_id": "erc20-uniswap-v2-router-trusted-token-hub",
+  "title": "ERC-20 Trusted Protocol Token Hub",
+  "description": "Trusted protocol router with a large ERC-20 transfer surface, broad counterparty reach, and token-diverse operational flow.",
+  "risk_posture": "LOW_REVIEWABLE_PROTOCOL_HUB",
+  "label": "PROTOCOL: Uniswap V2 Router",
+  "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+  "chain": "EVM",
+  "generated_at": "2026-03-27T20:14:27.756436Z",
+  "source_dataset_type": "erc20_layer1",
+  "source_row_count": 3747643,
+  "raw_subset_file": "7a250d5630b4cf539739df2c5dacb4c659f2488d.erc20.ndjson.gz",
+  "erc20_summary": {
+    "first_seen": "2025-03-16 00:00:23",
+    "last_seen": "2025-06-17 23:59:59",
+    "inbound_transfer_count": 1530887,
+    "outbound_transfer_count": 2216753,
+    "self_transfer_count": 3,
+    "inbound_counterparties": 33445,
+    "outbound_counterparties": 47828,
+    "unique_counterparties": 54478,
+    "unique_token_contracts": 19325,
+    "repeated_counterparties": 30580,
+    "max_counterparty_interactions": 118744,
+    "dominant_direction": "outbound",
+    "dominant_token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+    "dominant_token_symbol": "WETH",
+    "dominant_token_transfer_share_pct": 97.87
+  },
+  "token_breakdown": [
+    {
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "transfer_count": 3667857,
+      "inbound_count": 1491701,
+      "outbound_count": 2176156,
+      "inbound_value_raw": "1080183602405013477833067",
+      "outbound_value_raw": "905938543754515774465901",
+      "unique_counterparties": 37446
+    },
+    {
+      "token_address": "0xaf59f6613920d98ef64a133b21b28495a63e808f",
+      "token_name": "NAFO",
+      "token_symbol": "NAFO",
+      "token_decimals": 18,
+      "transfer_count": 522,
+      "inbound_count": 174,
+      "outbound_count": 348,
+      "inbound_value_raw": "2.464641485633209057294625195E+32",
+      "outbound_value_raw": "2.464641485633209057294625197E+32",
+      "unique_counterparties": 3
+    },
+    {
+      "token_address": "0xa2cd3d43c775978a96bdbf12d733d5a1ed94fb18",
+      "token_name": "Chain",
+      "token_symbol": "XCN",
+      "token_decimals": 18,
+      "transfer_count": 482,
+      "inbound_count": 241,
+      "outbound_count": 241,
+      "inbound_value_raw": "26562581003052520255179468",
+      "outbound_value_raw": "26562581003052520255179468",
+      "unique_counterparties": 98
+    },
+    {
+      "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token_name": "USD//C",
+      "token_symbol": "USDC",
+      "token_decimals": 6,
+      "transfer_count": 284,
+      "inbound_count": 143,
+      "outbound_count": 141,
+      "inbound_value_raw": "165844623508966",
+      "outbound_value_raw": "165844623508966",
+      "unique_counterparties": 81
+    },
+    {
+      "token_address": "0x640d5f962606de41e3b6065134ab85b1214b1085",
+      "token_name": "https://rb.gy/uo4ofs",
+      "token_symbol": "1UP",
+      "token_decimals": 18,
+      "transfer_count": 282,
+      "inbound_count": 94,
+      "outbound_count": 188,
+      "inbound_value_raw": "1782000184476945135306",
+      "outbound_value_raw": "1782000184476945135306",
+      "unique_counterparties": 3
+    },
+    {
+      "token_address": "0x21f3e600210d2bd5d80aa81bba1831c5e95b863b",
+      "token_name": "DeepThot",
+      "token_symbol": "DPTHOT",
+      "token_decimals": 9,
+      "transfer_count": 280,
+      "inbound_count": 140,
+      "outbound_count": 140,
+      "inbound_value_raw": "1159223063448099788616",
+      "outbound_value_raw": "1159645739496728012112",
+      "unique_counterparties": 2
+    },
+    {
+      "token_address": "0x9cfeddba1a347dce93fd51860d6628a8f8911103",
+      "token_name": "nu",
+      "token_symbol": "FTXrx",
+      "token_decimals": 9,
+      "transfer_count": 236,
+      "inbound_count": 118,
+      "outbound_count": 118,
+      "inbound_value_raw": "1324363271016118070",
+      "outbound_value_raw": "1324363271016118070",
+      "unique_counterparties": 2
+    },
+    {
+      "token_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+      "token_name": "Tether USD",
+      "token_symbol": "USDT",
+      "token_decimals": 6,
+      "transfer_count": 224,
+      "inbound_count": 112,
+      "outbound_count": 112,
+      "inbound_value_raw": "115771625444543",
+      "outbound_value_raw": "115771625444543",
+      "unique_counterparties": 63
+    },
+    {
+      "token_address": "0xbc254b640c48fe45a7f7bcceb9f3a6ff99706840",
+      "token_name": "Make Europe Great Again",
+      "token_symbol": "Mega",
+      "token_decimals": 9,
+      "transfer_count": 220,
+      "inbound_count": 110,
+      "outbound_count": 110,
+      "inbound_value_raw": "743747206017595827898",
+      "outbound_value_raw": "743747206017595827898",
+      "unique_counterparties": 2
+    },
+    {
+      "token_address": "0x1c54a24f2380efff0194aadced4b71001d265d01",
+      "token_name": "Bitserve",
+      "token_symbol": "Bitserve",
+      "token_decimals": 9,
+      "transfer_count": 212,
+      "inbound_count": 106,
+      "outbound_count": 106,
+      "inbound_value_raw": "77408469013405525",
+      "outbound_value_raw": "77408469013405525",
+      "unique_counterparties": 2
+    },
+    {
+      "token_address": "0xfca88920ca5639ad5e954ea776e73dec54fdc065",
+      "token_name": "WORLDS GREATEST ETHEREUM PRINTER",
+      "token_symbol": "",
+      "token_decimals": 18,
+      "transfer_count": 200,
+      "inbound_count": 56,
+      "outbound_count": 144,
+      "inbound_value_raw": "332591908713685507153698838",
+      "outbound_value_raw": "332591908713685507153698838",
+      "unique_counterparties": 8
+    },
+    {
+      "token_address": "0x2a3bff78b79a009976eea096a51a948a3dc00e34",
+      "token_name": "Wilder",
+      "token_symbol": "WILD",
+      "token_decimals": 18,
+      "transfer_count": 194,
+      "inbound_count": 97,
+      "outbound_count": 97,
+      "inbound_value_raw": "2149786761921365467554169",
+      "outbound_value_raw": "2149786761921365467554169",
+      "unique_counterparties": 47
+    },
+    {
+      "token_address": "0x8afe4055ebc86bd2afb3940c0095c9aca511d852",
+      "token_name": "Arbius",
+      "token_symbol": "AIUS",
+      "token_decimals": 18,
+      "transfer_count": 188,
+      "inbound_count": 94,
+      "outbound_count": 94,
+      "inbound_value_raw": "12761662254454772296074",
+      "outbound_value_raw": "12761662254454772296074",
+      "unique_counterparties": 42
+    },
+    {
+      "token_address": "0x4c35a479ed89b516df2a9d31cc6aab21f056945f",
+      "token_name": "Jetpack wearing Hamsters",
+      "token_symbol": "JWH",
+      "token_decimals": 9,
+      "transfer_count": 172,
+      "inbound_count": 86,
+      "outbound_count": 86,
+      "inbound_value_raw": "560854784473523723036",
+      "outbound_value_raw": "560854784473523723036",
+      "unique_counterparties": 3
+    },
+    {
+      "token_address": "0x2048e0d048224381cac3ea06012ced4a6f122d32",
+      "token_name": "BANDS CRYPTO",
+      "token_symbol": "$BANDS",
+      "token_decimals": 18,
+      "transfer_count": 160,
+      "inbound_count": 80,
+      "outbound_count": 80,
+      "inbound_value_raw": "62032201444468487740310333",
+      "outbound_value_raw": "62032201444468487740310333",
+      "unique_counterparties": 3
+    },
+    {
+      "token_address": "0x82a605d6d9114f4ad6d5ee461027477eeed31e34",
+      "token_name": "Sensay",
+      "token_symbol": "SNSY",
+      "token_decimals": 18,
+      "transfer_count": 158,
+      "inbound_count": 79,
+      "outbound_count": 79,
+      "inbound_value_raw": "365841951939393989153593898",
+      "outbound_value_raw": "365841951939393989153593898",
+      "unique_counterparties": 30
+    },
+    {
+      "token_address": "0x0a033ef03d9f52c456d2ad20ce907e3aa804f1ec",
+      "token_name": "zKProxy",
+      "token_symbol": "zKProxy",
+      "token_decimals": 9,
+      "transfer_count": 150,
+      "inbound_count": 75,
+      "outbound_count": 75,
+      "inbound_value_raw": "57021607364029711",
+      "outbound_value_raw": "57021607364029711",
+      "unique_counterparties": 2
+    },
+    {
+      "token_address": "0x37949378c6456c8b6ac227ba6b0671ce68b2254c",
+      "token_name": "MILADY 2.0",
+      "token_symbol": "$LADYS2.0",
+      "token_decimals": 9,
+      "transfer_count": 148,
+      "inbound_count": 74,
+      "outbound_count": 74,
+      "inbound_value_raw": "511829658587276652660486",
+      "outbound_value_raw": "511829658587276652660486",
+      "unique_counterparties": 2
+    },
+    {
+      "token_address": "0x6b175474e89094c44da98b954eedeac495271d0f",
+      "token_name": "Dai Stablecoin",
+      "token_symbol": "DAI",
+      "token_decimals": 18,
+      "transfer_count": 146,
+      "inbound_count": 73,
+      "outbound_count": 73,
+      "inbound_value_raw": "95366607203692958590621",
+      "outbound_value_raw": "95366607203692958590621",
+      "unique_counterparties": 48
+    },
+    {
+      "token_address": "0xda5c6bef84a15ca0f5495a6717a6d95ceccab45e",
+      "token_name": "Potato",
+      "token_symbol": "Tater",
+      "token_decimals": 6,
+      "transfer_count": 146,
+      "inbound_count": 73,
+      "outbound_count": 73,
+      "inbound_value_raw": "12263199757389",
+      "outbound_value_raw": "12263199757389",
+      "unique_counterparties": 3
+    }
+  ],
+  "top_counterparties": [
+    {
+      "address": "0xb8713bd23c33b15236af67e5badceb8e49cb0244",
+      "label": "",
+      "interactions": 118744,
+      "inbound_count": 51248,
+      "outbound_count": 67496,
+      "unique_tokens": 2,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 118688
+        },
+        {
+          "token_address": "0xfca88920ca5639ad5e954ea776e73dec54fdc065",
+          "symbol": "",
+          "count": 56
+        }
+      ]
+    },
+    {
+      "address": "0x055fb841cce69000fbaff2691ad39fa6e23826a1",
+      "label": "",
+      "interactions": 107522,
+      "inbound_count": 37532,
+      "outbound_count": 69990,
+      "unique_tokens": 2,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 107515
+        },
+        {
+          "token_address": "0x4d4574f50dd8b9dbe623cf329dcc78d76935e610",
+          "symbol": "ZEUS",
+          "count": 7
+        }
+      ]
+    },
+    {
+      "address": "0x604485c32ed7628f12b1bde85ef6ef717409704b",
+      "label": "",
+      "interactions": 58406,
+      "inbound_count": 30044,
+      "outbound_count": 28362,
+      "unique_tokens": 1,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 58406
+        }
+      ]
+    },
+    {
+      "address": "0x1d13070b48823b68ca9dc9a55bfc0945bd7c59af",
+      "label": "",
+      "interactions": 57012,
+      "inbound_count": 28662,
+      "outbound_count": 28350,
+      "unique_tokens": 1,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 57012
+        }
+      ]
+    },
+    {
+      "address": "0x4255c33130c02a3680c2295f91678dd8074d8327",
+      "label": "",
+      "interactions": 39386,
+      "inbound_count": 14640,
+      "outbound_count": 24746,
+      "unique_tokens": 2,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 39384
+        },
+        {
+          "token_address": "0x90001c5f2c6ffd4b90a801afddefcbf31965c667",
+          "symbol": "OMALLEY",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "address": "0x1b7cebbe9ed42ee2cadf334cc90ccc3be84d3df7",
+      "label": "",
+      "interactions": 32908,
+      "inbound_count": 17888,
+      "outbound_count": 15020,
+      "unique_tokens": 1,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 32908
+        }
+      ]
+    },
+    {
+      "address": "0x9726746c6b96b489715185071b3be774521bc5b7",
+      "label": "",
+      "interactions": 28853,
+      "inbound_count": 15295,
+      "outbound_count": 13558,
+      "unique_tokens": 2,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 28851
+        },
+        {
+          "token_address": "0x2a9db31f0f0329b03ddd7a8a4b5297815bba0124",
+          "symbol": "SNIBBU",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "address": "0xbc89b6015f5553a995b605ef92bb75f3657b2ab4",
+      "label": "",
+      "interactions": 26616,
+      "inbound_count": 8723,
+      "outbound_count": 17893,
+      "unique_tokens": 2,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 26593
+        },
+        {
+          "token_address": "0xd27418c366ccfc4bec6b66e6f08fe22bb7f09552",
+          "symbol": "VERX",
+          "count": 23
+        }
+      ]
+    },
+    {
+      "address": "0xeead662a16c68fe58c2278c63201f2c739ee3317",
+      "label": "",
+      "interactions": 26210,
+      "inbound_count": 12997,
+      "outbound_count": 13213,
+      "unique_tokens": 2,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 26208
+        },
+        {
+          "token_address": "0x404d3295c8b1c61662068db584125a7ebcc0d651",
+          "symbol": "MAMBO",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "address": "0x67c4ca4b83dedfe9ca3ca3eaf6d6f01b2d2bcc7f",
+      "label": "",
+      "interactions": 22874,
+      "inbound_count": 11764,
+      "outbound_count": 11110,
+      "unique_tokens": 1,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 22874
+        }
+      ]
+    },
+    {
+      "address": "0x9c04560df8dff626555317ccc2c336b9c24fda41",
+      "label": "",
+      "interactions": 22781,
+      "inbound_count": 11462,
+      "outbound_count": 11319,
+      "unique_tokens": 1,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 22781
+        }
+      ]
+    },
+    {
+      "address": "0xdab143548832194c8f2677eba9830e0b453b37c6",
+      "label": "",
+      "interactions": 22639,
+      "inbound_count": 10164,
+      "outbound_count": 12475,
+      "unique_tokens": 1,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 22639
+        }
+      ]
+    },
+    {
+      "address": "0xcfb26df385d790aa7e417394ec1196a3bd56aa8c",
+      "label": "",
+      "interactions": 21980,
+      "inbound_count": 10389,
+      "outbound_count": 11591,
+      "unique_tokens": 2,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 21970
+        },
+        {
+          "token_address": "0x774eaf7a53471628768dc679da945847d34b9a55",
+          "symbol": "GASS",
+          "count": 10
+        }
+      ]
+    },
+    {
+      "address": "0x9a88bc3b255bd9401d0f19f363eaa1e88ee70e1d",
+      "label": "",
+      "interactions": 21784,
+      "inbound_count": 7424,
+      "outbound_count": 14360,
+      "unique_tokens": 1,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 21784
+        }
+      ]
+    },
+    {
+      "address": "0x8f6a3da33da2ecf1a570da4091dfd55be32b7a13",
+      "label": "",
+      "interactions": 20447,
+      "inbound_count": 7745,
+      "outbound_count": 12702,
+      "unique_tokens": 1,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 20447
+        }
+      ]
+    },
+    {
+      "address": "0x7035813f7ef58d6d1f0f1b0d0947bbf73c9a0153",
+      "label": "",
+      "interactions": 20162,
+      "inbound_count": 10364,
+      "outbound_count": 9798,
+      "unique_tokens": 1,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 20162
+        }
+      ]
+    },
+    {
+      "address": "0x64305e6ad49a5279b766ddd5bad7a1a5d06794d7",
+      "label": "",
+      "interactions": 19853,
+      "inbound_count": 10185,
+      "outbound_count": 9668,
+      "unique_tokens": 2,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 19851
+        },
+        {
+          "token_address": "0xabc930fdd6bcbbc2b5ae0d338138a025ec12ee55",
+          "symbol": "LABUBU",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "address": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "label": "",
+      "interactions": 19844,
+      "inbound_count": 4729,
+      "outbound_count": 15115,
+      "unique_tokens": 3,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 19702
+        },
+        {
+          "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC",
+          "count": 141
+        },
+        {
+          "token_address": "0xfd04a35069d49623c6e7f90483db6872177275e1",
+          "symbol": "UD",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "address": "0xca7c2771d248dcbe09eabe0ce57a62e18da178c0",
+      "label": "",
+      "interactions": 19777,
+      "inbound_count": 10142,
+      "outbound_count": 9635,
+      "unique_tokens": 2,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 19774
+        },
+        {
+          "token_address": "0xcf0c122c6b73ff809c693db761e7baebe62b6a2e",
+          "symbol": "FLOKI",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "address": "0x1c4424195a984440461adc86307786c8075fe332",
+      "label": "",
+      "interactions": 18646,
+      "inbound_count": 9463,
+      "outbound_count": 9183,
+      "unique_tokens": 1,
+      "top_tokens": [
+        {
+          "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH",
+          "count": 18646
+        }
+      ]
+    }
+  ],
+  "sample_transfers": [
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "7df5a910666e5fc5cbcf14761d2adb538872d64cf20a5d01995ee6947d2a9746",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xcf4236db746dbc1855a4d095aaf58da9b030491e",
+      "direction": "outbound",
+      "counterparty": "0xcf4236db746dbc1855a4d095aaf58da9b030491e",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "94881301188907043",
+      "value_display": "0.094881301188907043",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:23",
+      "tx_hash": "f4eb6b87924f482764581559a9b89fffa959ed43262a67f48fe6c260d2143743",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "direction": "outbound",
+      "counterparty": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "382622581731674",
+      "value_display": "0.000382622581731674",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:35",
+      "tx_hash": "f87c40548461c70054f7b5f7b9c0ec882a3732206a7fd863611616a19059e83b",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0x2b0ee16991a1a9638fefe4b6d7df1da9a38cbc78",
+      "direction": "outbound",
+      "counterparty": "0x2b0ee16991a1a9638fefe4b6d7df1da9a38cbc78",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "20000000000000000",
+      "value_display": "0.02",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:35",
+      "tx_hash": "e77a0975e767536f5a49be5a4ce923254d1a7c760acba044cc44a03a2af699f0",
+      "sender": "0xc61355ed7462ac7d9b7907f0de67b4f52662c7b4",
+      "recipient": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "direction": "inbound",
+      "counterparty": "0xc61355ed7462ac7d9b7907f0de67b4f52662c7b4",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "2188737918322597587",
+      "value_display": "2.188737918322597587",
+      "label_sender": "",
+      "label_recipient": "PROTOCOL: Uniswap V2 Router"
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:35",
+      "tx_hash": "f6452241109f204eea6bf5f90748c80ac25039114dcd1746303da8778e399865",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xca66b028762d73cc548bcb2cde56b88b2eec01ee",
+      "direction": "outbound",
+      "counterparty": "0xca66b028762d73cc548bcb2cde56b88b2eec01ee",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "220400000000000000",
+      "value_display": "0.2204",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:59",
+      "tx_hash": "1e7387063fda7e97ecb5c7deb69871161c92d4835ae5d9d68033c629c2308e51",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xc61355ed7462ac7d9b7907f0de67b4f52662c7b4",
+      "direction": "outbound",
+      "counterparty": "0xc61355ed7462ac7d9b7907f0de67b4f52662c7b4",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "4883000000000000",
+      "value_display": "0.004883",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:59",
+      "tx_hash": "5d7c3b23d9354b98583e10906266393bcda705024dde9d98b56c00124037c692",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xc61355ed7462ac7d9b7907f0de67b4f52662c7b4",
+      "direction": "outbound",
+      "counterparty": "0xc61355ed7462ac7d9b7907f0de67b4f52662c7b4",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "5274000000000000",
+      "value_display": "0.005274",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:59",
+      "tx_hash": "5094908d991690dff94e3ee3e1c14c701b45c52999defcceb8805c6194e49d96",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xc61355ed7462ac7d9b7907f0de67b4f52662c7b4",
+      "direction": "outbound",
+      "counterparty": "0xc61355ed7462ac7d9b7907f0de67b4f52662c7b4",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "21173000000000000",
+      "value_display": "0.021173",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:59",
+      "tx_hash": "2a7975dd15f774ec9e5e68468ab6617a319c70f5f91bd56402f88a5b5cfabc7c",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xc61355ed7462ac7d9b7907f0de67b4f52662c7b4",
+      "direction": "outbound",
+      "counterparty": "0xc61355ed7462ac7d9b7907f0de67b4f52662c7b4",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "24049015319662772",
+      "value_display": "0.024049015319662772",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:00:59",
+      "tx_hash": "ebce6cf515c943d240f3da8438e1151af568575d7c34b6aa1cbba650ce8ad281",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xce5debe9dd76f96bb5fa00eb3cc084d43ec0dbf3",
+      "direction": "outbound",
+      "counterparty": "0xce5debe9dd76f96bb5fa00eb3cc084d43ec0dbf3",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "100000000000000000",
+      "value_display": "0.1",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:01:11",
+      "tx_hash": "05cfe1a72a105724c62c1a697345629de5a31440f96c25d36f56b51cdb2d22ab",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0x2fd694566a41c9f8365205ce803ec24f66822d34",
+      "direction": "outbound",
+      "counterparty": "0x2fd694566a41c9f8365205ce803ec24f66822d34",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "8500000000000000",
+      "value_display": "0.0085",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:01:11",
+      "tx_hash": "cea6132d02444960416ecd39dff31da64c9af9454b5d778861fed29c1c325860",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0x5d6b5238809077ab58744ec30401fc142dfb9e73",
+      "direction": "outbound",
+      "counterparty": "0x5d6b5238809077ab58744ec30401fc142dfb9e73",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "49750000000000000",
+      "value_display": "0.04975",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:01:11",
+      "tx_hash": "d4abd9283f6dae6731389ac2c7ad4b083b4debc6f91e148edc2ce2a740a2a7cb",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0x1f8d28221c2386ddb7ea31bbd6dfc861888ce36a",
+      "direction": "outbound",
+      "counterparty": "0x1f8d28221c2386ddb7ea31bbd6dfc861888ce36a",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "10022759853341120592",
+      "value_display": "10.022759853341120592",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:01:23",
+      "tx_hash": "461148995e477de26cfaa4d9fb009490c5d86115c043f29ad0cdc934a524a197",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0x3075ff29511446fec10a662d1866475bec1b3637",
+      "direction": "outbound",
+      "counterparty": "0x3075ff29511446fec10a662d1866475bec1b3637",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "19800000000000000",
+      "value_display": "0.0198",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:01:35",
+      "tx_hash": "2ee8fc79167488e74fc84b109c464a81f3ebb5089f999d273bc43e33f1080d69",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0x5d6b5238809077ab58744ec30401fc142dfb9e73",
+      "direction": "outbound",
+      "counterparty": "0x5d6b5238809077ab58744ec30401fc142dfb9e73",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "10223310121417148",
+      "value_display": "0.010223310121417148",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:01:47",
+      "tx_hash": "569f969a50478a1166a664d5e0b138bcbd620212e0fc0d2347b4c1e388c4be1c",
+      "sender": "0x1f8d28221c2386ddb7ea31bbd6dfc861888ce36a",
+      "recipient": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "direction": "inbound",
+      "counterparty": "0x1f8d28221c2386ddb7ea31bbd6dfc861888ce36a",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "13869009097998981885",
+      "value_display": "13.869009097998981885",
+      "label_sender": "",
+      "label_recipient": "PROTOCOL: Uniswap V2 Router"
+    },
+    {
+      "block_timestamp": "2025-03-16 00:02:11",
+      "tx_hash": "ab99467c7197eeed6d74a2b6dfccba2426856f52e229396ccd4ef7a1ee964264",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0x48789721450d78c08bae61f0f91bcc9ec87cbb7e",
+      "direction": "outbound",
+      "counterparty": "0x48789721450d78c08bae61f0f91bcc9ec87cbb7e",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "99000000000000000",
+      "value_display": "0.099",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:02:23",
+      "tx_hash": "967d5c663ec8d57860ada8bd0179da27e3f764aa6fd1ad96a8ab358eddda9361",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0x2fd694566a41c9f8365205ce803ec24f66822d34",
+      "direction": "outbound",
+      "counterparty": "0x2fd694566a41c9f8365205ce803ec24f66822d34",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "78500000000000000",
+      "value_display": "0.0785",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:02:23",
+      "tx_hash": "8479e59cd4e4958f6712f70efdc0bed5bfe95dc9de9723ea645e27931f519934",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0x5d6b5238809077ab58744ec30401fc142dfb9e73",
+      "direction": "outbound",
+      "counterparty": "0x5d6b5238809077ab58744ec30401fc142dfb9e73",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "4597641354600000",
+      "value_display": "0.0045976413546",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:02:35",
+      "tx_hash": "e39e52ecb409f4a26d858e2a33ffd3362607b248b4bb8c269795152e008796c9",
+      "sender": "0x8616b44b734817a2c954016a57cf2c4d72d6f838",
+      "recipient": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "direction": "inbound",
+      "counterparty": "0x8616b44b734817a2c954016a57cf2c4d72d6f838",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "150789003537",
+      "value_display": "1.50789003537E-7",
+      "label_sender": "",
+      "label_recipient": "PROTOCOL: Uniswap V2 Router"
+    },
+    {
+      "block_timestamp": "2025-03-16 00:02:35",
+      "tx_hash": "1d92100718748e378e850bfc10d124b6519abfc88c4ec73dc5de599f9803a9b4",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xc61355ed7462ac7d9b7907f0de67b4f52662c7b4",
+      "direction": "outbound",
+      "counterparty": "0xc61355ed7462ac7d9b7907f0de67b4f52662c7b4",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "3855900000000000105",
+      "value_display": "3.855900000000000105",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-03-16 00:02:35",
+      "tx_hash": "77b9c7b4c3c4c243f925799a5c4b03729b56861975965aa2df98e9e0f180d50b",
+      "sender": "0x1f8d28221c2386ddb7ea31bbd6dfc861888ce36a",
+      "recipient": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "direction": "inbound",
+      "counterparty": "0x1f8d28221c2386ddb7ea31bbd6dfc861888ce36a",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "5568901768105329795",
+      "value_display": "5.568901768105329795",
+      "label_sender": "",
+      "label_recipient": "PROTOCOL: Uniswap V2 Router"
+    },
+    {
+      "block_timestamp": "2025-03-16 00:02:35",
+      "tx_hash": "dac18709ffed3f8ec86b7f51fcf63f8992f75288a65a849e7cebdd28f5a3eb56",
+      "sender": "0x1f8d28221c2386ddb7ea31bbd6dfc861888ce36a",
+      "recipient": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "direction": "inbound",
+      "counterparty": "0x1f8d28221c2386ddb7ea31bbd6dfc861888ce36a",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "3456052598759125223",
+      "value_display": "3.456052598759125223",
+      "label_sender": "",
+      "label_recipient": "PROTOCOL: Uniswap V2 Router"
+    },
+    {
+      "block_timestamp": "2025-03-16 00:02:35",
+      "tx_hash": "980ad7f3740e95b92e63fa8d6886cae590a32f60a4790cd30be24a2f3cb23670",
+      "sender": "0xca66b028762d73cc548bcb2cde56b88b2eec01ee",
+      "recipient": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "direction": "inbound",
+      "counterparty": "0xca66b028762d73cc548bcb2cde56b88b2eec01ee",
+      "token_address": "0x6d224cb0b3364b22c27a818ba83324fb69cc8e85",
+      "token_name": "RWA.fun",
+      "token_symbol": "RFUN",
+      "token_decimals": 18,
+      "value_raw": "5772530889903873043002621638",
+      "value_display": "5772530889.903873043002621638",
+      "label_sender": "",
+      "label_recipient": "PROTOCOL: Uniswap V2 Router"
+    },
+    {
+      "block_timestamp": "2025-03-16 00:02:35",
+      "tx_hash": "980ad7f3740e95b92e63fa8d6886cae590a32f60a4790cd30be24a2f3cb23670",
+      "sender": "0xca66b028762d73cc548bcb2cde56b88b2eec01ee",
+      "recipient": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "direction": "inbound",
+      "counterparty": "0xca66b028762d73cc548bcb2cde56b88b2eec01ee",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "47957853328607814440",
+      "value_display": "47.95785332860781444",
+      "label_sender": "",
+      "label_recipient": "PROTOCOL: Uniswap V2 Router"
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:11",
+      "tx_hash": "9d86430d4cff298132a87d746cc6f55409afd22a60e637460c0eeb2766dad23a",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0x7e8e2298908c75b4bed55ac26035203cba90e550",
+      "direction": "outbound",
+      "counterparty": "0x7e8e2298908c75b4bed55ac26035203cba90e550",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "72100000000000000",
+      "value_display": "0.0721",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "bad04228473b16fca368ad53f8702ac8f1b84626b4a4fc1cd441ce5316ec4457",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "direction": "outbound",
+      "counterparty": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "550000000000000064",
+      "value_display": "0.550000000000000064",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "42a57fb4f0948cb77ea585ab781bc71ab57ed28010bd81cb10f5700a2e3b02ae",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "direction": "outbound",
+      "counterparty": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "500000000000000000",
+      "value_display": "0.5",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "598874bb62a4f097b1a175196d2be47c77a1c86f9823028ca728f52fd1e4a892",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "direction": "outbound",
+      "counterparty": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "800000000000000000",
+      "value_display": "0.8",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "2437526ab363e96c1854cc3d10f36275db4ac797f95163fd52ba9616eb22d6f7",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "direction": "outbound",
+      "counterparty": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "250000000000000000",
+      "value_display": "0.25",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "61fc6f5e9edd67dcafcab96784cbd692013bd4a5d3a0f8539816cc0f4ca754ed",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "direction": "outbound",
+      "counterparty": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "1100000000000000128",
+      "value_display": "1.100000000000000128",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "2f3c5a0b33dfef915e41fe9b24f6f3e2790273f5928c6ebd0f7149bd175102ad",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "direction": "outbound",
+      "counterparty": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "500000000000000000",
+      "value_display": "0.5",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "c5cacab9a1f17a6c8231fb4bb72d4564b6f05bbdd462cf577e82deaddaa56dfc",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "direction": "outbound",
+      "counterparty": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "600000000000000000",
+      "value_display": "0.6",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "f7d9d8b430f9649c5c6ea34320476cdafb228447b7f921e71298242f49c2045e",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "direction": "outbound",
+      "counterparty": "0xfe011325c0ad5056a2f6b6d29cd370bcf90c9a9e",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "200000000000000000",
+      "value_display": "0.2",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "aee83473871dcd83cfab28ace7e46e136f3f3524517ef4b842816a79e8786a55",
+      "sender": "0x7007152a9ec95f32937798d37c49cde0e97ac1c4",
+      "recipient": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "direction": "inbound",
+      "counterparty": "0x7007152a9ec95f32937798d37c49cde0e97ac1c4",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "30948837160362247",
+      "value_display": "0.030948837160362247",
+      "label_sender": "",
+      "label_recipient": "PROTOCOL: Uniswap V2 Router"
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "aee83473871dcd83cfab28ace7e46e136f3f3524517ef4b842816a79e8786a55",
+      "sender": "0x1a2de9bfa9223fd91cccc2228a5fa22d940c695b",
+      "recipient": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "direction": "inbound",
+      "counterparty": "0x1a2de9bfa9223fd91cccc2228a5fa22d940c695b",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "9549885906056724",
+      "value_display": "0.009549885906056724",
+      "label_sender": "",
+      "label_recipient": "PROTOCOL: Uniswap V2 Router"
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "92424829526f8ccb07b65c96c3ce882e23566080a6059175f924c912956581ad",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0x5891bb30b11f9e742635c2bf2f1570e62d1f457e",
+      "direction": "outbound",
+      "counterparty": "0x5891bb30b11f9e742635c2bf2f1570e62d1f457e",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "403919999999999946",
+      "value_display": "0.403919999999999946",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "ad4dd4550d831a3d696054fd0ead089625f70b17ff2ff164659b927ab4a89af2",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0x77bbe66c53c0359465da69a340135e233a3e9918",
+      "direction": "outbound",
+      "counterparty": "0x77bbe66c53c0359465da69a340135e233a3e9918",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "50000000000000000",
+      "value_display": "0.05",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "c74c3a7787ade99659bba66bc7c5fc0ac1ea382f358736fd7f30ea9790cb7685",
+      "sender": "0x0846f55387ab118b4e59eee479f1a3e8ea4905ec",
+      "recipient": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "direction": "inbound",
+      "counterparty": "0x0846f55387ab118b4e59eee479f1a3e8ea4905ec",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "57940895958695666",
+      "value_display": "0.057940895958695666",
+      "label_sender": "",
+      "label_recipient": "PROTOCOL: Uniswap V2 Router"
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "a07dba12bb3f43f744ad7970da2e2a2a2e3988aea441e15dcbe24cf4961d5cac",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852",
+      "direction": "outbound",
+      "counterparty": "0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "496000000000000",
+      "value_display": "0.000496",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:23",
+      "tx_hash": "a481d918a17488151bc18ec332521cf80bbdee5007caf5c686694e52e8b95f73",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xb03cab19728b2e116672fc4935476362e4cc3e23",
+      "direction": "outbound",
+      "counterparty": "0xb03cab19728b2e116672fc4935476362e4cc3e23",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "51430000000000000",
+      "value_display": "0.05143",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:35",
+      "tx_hash": "e6d7f5525b923768322097ccdfb1831d0adecabfa2dc86f1f26ca76338df3661",
+      "sender": "0x64305e6ad49a5279b766ddd5bad7a1a5d06794d7",
+      "recipient": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "direction": "inbound",
+      "counterparty": "0x64305e6ad49a5279b766ddd5bad7a1a5d06794d7",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "160680000000000000",
+      "value_display": "0.16068",
+      "label_sender": "",
+      "label_recipient": "PROTOCOL: Uniswap V2 Router"
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:47",
+      "tx_hash": "ad3df858e0e418c56e34962b00cf1095c63989f07209db2b7f3c772485adcb44",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0x2814f6ed8fefe9702a09c779e35e73cf63e67401",
+      "direction": "outbound",
+      "counterparty": "0x2814f6ed8fefe9702a09c779e35e73cf63e67401",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "361500000000000000",
+      "value_display": "0.3615",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:47",
+      "tx_hash": "8735a0b1c103441237a1871d2dd0e4e8729f010cd3446b5240e8a81081d5a065",
+      "sender": "0xbad81f60d0aa69ae15f9ef5232f438068a39f260",
+      "recipient": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "direction": "inbound",
+      "counterparty": "0xbad81f60d0aa69ae15f9ef5232f438068a39f260",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "29683853808491119",
+      "value_display": "0.029683853808491119",
+      "label_sender": "",
+      "label_recipient": "PROTOCOL: Uniswap V2 Router"
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:47",
+      "tx_hash": "65178278a40a4198e6dd359fc18bde5ecfff25264c7104bdaf6e00ff8810a3d3",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0x5891bb30b11f9e742635c2bf2f1570e62d1f457e",
+      "direction": "outbound",
+      "counterparty": "0x5891bb30b11f9e742635c2bf2f1570e62d1f457e",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "1076999999999999957",
+      "value_display": "1.076999999999999957",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:47",
+      "tx_hash": "af86b194f469d3f223472e66212c81ac80798871a7e619a49d8ac033d65fc53b",
+      "sender": "0x7e8e2298908c75b4bed55ac26035203cba90e550",
+      "recipient": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "direction": "inbound",
+      "counterparty": "0x7e8e2298908c75b4bed55ac26035203cba90e550",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "21175913391676856",
+      "value_display": "0.021175913391676856",
+      "label_sender": "",
+      "label_recipient": "PROTOCOL: Uniswap V2 Router"
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:47",
+      "tx_hash": "e3ebe02f14285b01db1f859336122bd66fecb120b9e9655061c43969877bb831",
+      "sender": "0x77bbe66c53c0359465da69a340135e233a3e9918",
+      "recipient": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "direction": "inbound",
+      "counterparty": "0x77bbe66c53c0359465da69a340135e233a3e9918",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "97523515279654051",
+      "value_display": "0.097523515279654051",
+      "label_sender": "",
+      "label_recipient": "PROTOCOL: Uniswap V2 Router"
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:47",
+      "tx_hash": "d6332d74629f41f1fef8a431388c85f95684f9b7b28e38b356b3c6b532dea878",
+      "sender": "0x68dc72fc98fe2075eda99fd0226e0d22c10d1dd5",
+      "recipient": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "direction": "inbound",
+      "counterparty": "0x68dc72fc98fe2075eda99fd0226e0d22c10d1dd5",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "7218446645629870066",
+      "value_display": "7.218446645629870066",
+      "label_sender": "",
+      "label_recipient": "PROTOCOL: Uniswap V2 Router"
+    },
+    {
+      "block_timestamp": "2025-06-17 23:59:59",
+      "tx_hash": "de4c5333b77e51eff08295f2b3b4048825e9e0319aa01903c4b50904fc5115cb",
+      "sender": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+      "recipient": "0xaf43d01450cbbbd0fbdf1c2c7a5565909a39b486",
+      "direction": "outbound",
+      "counterparty": "0xaf43d01450cbbbd0fbdf1c2c7a5565909a39b486",
+      "token_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token_name": "Wrapped Ether",
+      "token_symbol": "WETH",
+      "token_decimals": 18,
+      "value_raw": "334",
+      "value_display": "3.34E-16",
+      "label_sender": "PROTOCOL: Uniswap V2 Router",
+      "label_recipient": ""
+    }
+  ],
+  "curation_notes": {
+    "narrative": "This case captures token-heavy ERC-20 routing activity at a known trusted protocol address. It is useful for demonstrating how a very broad token surface can still be contextualized as protocol-driven rather than automatically high-risk.",
+    "erc20_layer": "Layer 1 ERC-20 transfer dataset",
+    "intended_typologies": [
+      "trusted protocol token hub",
+      "broad ERC-20 counterparty surface",
+      "mixed token activity"
+    ],
+    "limitations": [
+      "Derived from ERC-20 transfer rows only",
+      "Does not yet include trace-native ERC-20 scoring or swap decoding",
+      "Not an authoritative label of illicit activity"
+    ]
+  }
+}

@@ -4,10 +4,10 @@
 
 This document describes the architecture that is actually implemented in the repository today.
 
-The important Wave 1 clarification is that Crypto Profiler currently has:
+The current implementation picture is that Crypto Profiler has:
 
 - one shared live analyzer used primarily for EVM
-- chain-specific dataset-mode scoring adapters for Solana and Bitcoin
+- chain-specific dataset-mode scoring adapters for ERC-20, Solana, and Bitcoin
 - trace-aware Ethereum case enrichment
 
 It does not yet have one fully unified graph-aware engine across all chains.
@@ -35,6 +35,7 @@ Curated dataset mode is not a toy in this repo. It is the main delivery path for
 - repeatable demos
 - benchmark cases
 - trace-aware Ethereum examples
+- ERC-20 Layer 1 token-surface scoring
 - current Solana Layer 1 scoring
 - current Bitcoin Layer 1 scoring
 
@@ -65,6 +66,7 @@ Current live behavior by chain:
 Dataset mode currently dispatches to:
 
 - shared curated EVM cases
+- ERC-20 Layer 1 curated cases
 - Solana stablecoin-flow curated cases
 - Bitcoin UTXO-flow curated cases
 
@@ -137,6 +139,7 @@ Responsible for:
 
 - loading curated cases
 - loading trace summaries
+- loading chain-specific curated dataset cases
 - building dataset-mode wallet profiles for curated EVM cases
 
 ### `cmd/validator/dataset_*_context.go`
@@ -144,24 +147,25 @@ Responsible for:
 Responsible for chain-specific dataset scoring adapters:
 
 - `dataset_trace_context.go`
+- `dataset_erc20_layer1_context.go`
 - `dataset_solana_stablecoin_context.go`
 - `dataset_bitcoin_layer1_context.go`
 
 This is an important architecture detail:
 
 - EVM live scoring uses the shared analyzer
-- Solana and Bitcoin Layer 1 currently score through chain-specific dataset adapters
+- ERC-20, Solana, and Bitcoin Layer 1 currently score through chain-specific dataset adapters
 
 ---
 
 ## Chain Architecture Today
 
-| Chain | Current source path | Current scoring path | Current limit |
-| --- | --- | --- | --- |
-| Ethereum | Etherscan live txs, extracted EVM datasets, optional trace summaries | Shared analyzer plus trace-aware dataset context | No ERC-20-specific scoring, no trace-driven live scoring |
-| Solana | Local stablecoin-flow Parquet exports and curated cases | Dataset-mode stablecoin scoring adapter | No general instruction-aware live scoring |
-| Bitcoin | Local Blockchair inputs/outputs and curated cases | Dataset-mode UTXO-flow scoring adapter | No cluster-aware or graph-aware scoring |
-| ERC-20 | Extractor groundwork exists | Not yet a completed scoring path | Wave 2 target |
+| Chain    | Current source path                                                                  | Current scoring path                             | Current limit                                                                      |
+|----------|--------------------------------------------------------------------------------------|--------------------------------------------------|------------------------------------------------------------------------------------|
+| Ethereum | Etherscan live txs, extracted EVM datasets, optional trace summaries                 | Shared analyzer plus trace-aware dataset context | No trace-driven live scoring, no hop-aware graph scoring                           |
+| ERC-20   | Local Blockchair ERC-20 shards, latest token metadata snapshot, curated ERC-20 cases | Dataset-mode ERC-20 Layer 1 scoring adapter      | No live token scoring, no swap-aware decoding, no trace-aware pass-through scoring |
+| Solana   | Local stablecoin-flow Parquet exports and curated cases                              | Dataset-mode stablecoin scoring adapter          | No general instruction-aware live scoring                                          |
+| Bitcoin  | Local Blockchair inputs/outputs and curated cases                                    | Dataset-mode UTXO-flow scoring adapter           | No cluster-aware or graph-aware scoring                                            |
 
 ---
 
@@ -221,6 +225,34 @@ It is a practical Layer 1 stablecoin-flow slice.
 
 ---
 
+## ERC-20 Layer 1 Architecture
+
+ERC-20 Layer 1 is now transfer-event first.
+
+### Current ERC-20 flow
+
+1. local Blockchair ERC-20 shards and token metadata stay outside git
+2. `scripts/mine_erc20_candidates.py` identifies behavior-driven ERC-20 candidates from the canonical window
+3. `scripts/extract_erc20_layer1.py` builds address-scoped summaries plus compressed raw subsets
+4. `scripts/curate_erc20_layer1.py` creates curated ERC-20 benchmark cases
+5. `cmd/validator --dataset` applies ERC-20-specific Layer 1 scoring
+
+### Current ERC-20 responsibilities
+
+- token-aware inbound vs outbound role summaries
+- broad token counterparty surface scoring
+- repeated counterparty interaction scoring
+- token diversity and single-token concentration observation
+- trusted protocol or exchange-style contextual reasoning when labels exist
+
+### Current ERC-20 limitation
+
+This is ERC-20 transfer-row Layer 1 scoring, not full DeFi intent decoding.
+
+It does not yet reconstruct swaps, decode protocol semantics, or use traces for pass-through scoring.
+
+---
+
 ## Bitcoin Layer 1 Architecture
 
 Bitcoin Layer 1 is currently UTXO-flow first.
@@ -254,6 +286,7 @@ The entity layer has two active sources:
 - bootstrap entity labels for trusted services and high-risk infrastructure
 
 This layer is used in both live scoring and curated EVM cases.
+It also provides trusted-service context for ERC-20 curated cases in dataset mode.
 
 It is not yet a full entity-resolution or clustering system.
 
@@ -307,7 +340,6 @@ The repo deliberately keeps the committed artifacts small enough to support demo
 
 The architecture is set up so the next wave can add:
 
-- ERC-20 Layer 1 curated cases and scoring
 - trace-aware pass-through or U-turn rules
 - 1-hop / 2-hop exposure summaries
 - more graph-aware scoring
@@ -322,5 +354,6 @@ Those are next-stage additions, not claims about the current implementation.
 - [`docs/TYPOLOGIES.md`](docs/TYPOLOGIES.md)
 - [`docs/SCORING.md`](docs/SCORING.md)
 - [`docs/EVM-CALLS-INTEGRATION.md`](docs/EVM-CALLS-INTEGRATION.md)
+- [`docs/ERC20-DATA-MODEL.md`](docs/ERC20-DATA-MODEL.md)
 - [`docs/SOLANA-DATA-MODEL.md`](docs/SOLANA-DATA-MODEL.md)
 - [`docs/BITCOIN-DATA-MODEL.md`](docs/BITCOIN-DATA-MODEL.md)

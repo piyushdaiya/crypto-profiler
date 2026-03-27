@@ -142,6 +142,7 @@ func runDatasetMode(path string, out io.Writer, errOut io.Writer) int {
 
 	_, hasStablecoinSummary := probe["stablecoin_summary"]
 	_, hasUTXOSummary := probe["utxo_summary"]
+	_, hasERC20Summary := probe["erc20_summary"]
 
 	if strings.EqualFold(chain, "SOLANA") && hasStablecoinSummary {
 		cc, err := datasets.LoadSolanaCuratedStablecoinCase(path)
@@ -164,6 +165,18 @@ func runDatasetMode(path string, out io.Writer, errOut io.Writer) int {
 
 		profile := buildWalletProfileFromBitcoinCuratedLayer1Case(cc)
 		applyBitcoinCuratedLayer1Context(profile, cc)
+		return writeProfile(profile, out, errOut)
+	}
+
+	if strings.EqualFold(chain, "EVM") && hasERC20Summary {
+		cc, err := datasets.LoadERC20CuratedLayer1Case(path)
+		if err != nil {
+			fmt.Fprintf(errOut, "Error loading ERC-20 curated dataset: %v\n", err)
+			return 1
+		}
+
+		profile := buildWalletProfileFromERC20CuratedLayer1Case(cc)
+		applyERC20CuratedLayer1Context(profile, cc)
 		return writeProfile(profile, out, errOut)
 	}
 

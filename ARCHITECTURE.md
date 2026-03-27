@@ -9,6 +9,7 @@ The current implementation picture is that Crypto Profiler has:
 - one shared live analyzer used primarily for EVM
 - chain-specific dataset-mode scoring adapters for ERC-20, Solana, and Bitcoin
 - trace-aware Ethereum case enrichment
+- an analyst-facing report layer on top of the validator output
 
 It does not yet have one fully unified graph-aware engine across all chains.
 
@@ -38,6 +39,15 @@ Curated dataset mode is not a toy in this repo. It is the main delivery path for
 - ERC-20 Layer 1 token-surface scoring
 - current Solana Layer 1 scoring
 - current Bitcoin Layer 1 scoring
+
+### Portfolio-ready outputs matter
+
+The architecture is intentionally designed so the same validator can serve:
+
+- machine-readable JSON for engineering workflows
+- analyst-facing report output for demos and portfolio review
+
+That keeps the repo useful for both implementation depth and presentation quality.
 
 ---
 
@@ -72,37 +82,41 @@ Dataset mode currently dispatches to:
 
 This is where the repo currently delivers its multi-chain Layer 1 scoring story.
 
+### 3. Analyst-facing report flow
+
+`cmd/validator --report` renders a concise analyst brief on top of either:
+
+- live validator output
+- curated dataset-mode output
+
+The report layer is intentionally thin:
+
+- it does not invent new scoring logic
+- it presents existing scoring, reasons, counterparties, and case context in a demo-friendly shape
+
 ---
 
 ## High-Level Architecture
 
-```text
-                      +---------------------------+
-                      |        cmd/validator      |
-                      |   live mode + dataset     |
-                      +-------------+-------------+
-                                    |
-                    +---------------+---------------+
-                    |                               |
-                    v                               v
-         +----------------------+        +----------------------+
-         |  Live Address Paths  |        |   Curated Datasets   |
-         |  internal/address    |        |   internal/datasets  |
-         +----------+-----------+        +----------+-----------+
-                    |                               |
-                    v                               v
-         +----------------------+        +----------------------+
-         | Shared Analyzer      |        | Chain-Specific       |
-         | internal/analyzer    |        | Dataset Contexts     |
-         +----------+-----------+        | cmd/validator/*      |
-                    |                    +----------+-----------+
-                    v                               |
-         +----------------------+                   v
-         | WalletProfile JSON   |        +----------------------+
-         | explainable output   |<-------| WalletProfile JSON   |
-         +----------------------+        | explainable output   |
-                                         +----------------------+
+```mermaid
+flowchart LR
+    A["cmd/validator"] --> B["Live Address Paths<br/>internal/address"]
+    A --> C["Curated Dataset Loaders<br/>internal/datasets"]
+    B --> D["Shared Analyzer<br/>internal/analyzer"]
+    C --> E["Chain-Specific Dataset Contexts<br/>cmd/validator/dataset_*_context.go"]
+    D --> F["WalletProfile"]
+    E --> F
+    F --> G["JSON Output"]
+    F --> H["Analyst Report Output<br/>--report"]
 ```
+
+### End-to-end data flow in practice
+
+1. raw chain data is extracted into address-scoped summaries outside git
+2. curated benchmark cases are committed into `data/cases/...`
+3. `cmd/validator --dataset` probes the case shape and chooses the right chain adapter
+4. chain-specific scoring produces a `WalletProfile`
+5. the output is rendered either as JSON or as an analyst-facing report
 
 ---
 
@@ -155,6 +169,17 @@ This is an important architecture detail:
 
 - EVM live scoring uses the shared analyzer
 - ERC-20, Solana, and Bitcoin Layer 1 currently score through chain-specific dataset adapters
+
+### Report layer responsibilities
+
+The report layer adds:
+
+- case title and dataset context
+- concise risk-summary framing
+- chain-specific Layer 1 context lines
+- top-counterparty presentation for demos and portfolio review
+
+It does not change the underlying scoring model.
 
 ---
 
@@ -313,6 +338,8 @@ This shared output contract is why the repo can mix:
 
 without losing coherence for the user.
 
+On top of that contract, report mode adds a human-readable presentation layer without changing the JSON schema.
+
 ---
 
 ## Data Storage Model
@@ -342,6 +369,7 @@ The architecture is set up so the next wave can add:
 
 - trace-aware pass-through or U-turn rules
 - 1-hop / 2-hop exposure summaries
+- fresh-wallet plus immediate large-flow reasoning
 - more graph-aware scoring
 
 Those are next-stage additions, not claims about the current implementation.

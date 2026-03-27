@@ -1,0 +1,33 @@
+Crypto Profiler Analyst Report
+
+Address: bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu
+Network: BITCOIN
+Mode: Dataset
+Dataset Context: Bitcoin UTXO-flow Layer 1 dataset
+Case: Bitcoin Broad Spend-Heavy Operational Hub (bitcoin-broad-spend-heavy-operational-hub)
+Risk Score: 17.00
+Risk Grade: LOW (Reviewable)
+Review Recommended: Yes
+
+Top Reasons:
+1. [FRAUD] Spend-heavy operational hub pattern observed (673118 outbound spends, 1906 counterparties) (offset +18.0)
+2. [FRAUD] Extreme repeated interaction with top counterparty (672177 interactions) (offset +10.0)
+3. [FRAUD] Broad Bitcoin counterparty surface observed (1906 counterparties) (offset +6.0)
+
+Top Counterparties:
+1. bc1qlfvc8l4ueq49nr35tppqakee72wpu8nqclkhct - 672177 interactions (0 inbound / 672177 outbound)
+2. bc1pc0p0rg3qdyzewz6s3f43l8udvdpjnjh5yssdyyn0tjl925ryfxeslvcszp - 971 interactions (971 inbound / 0 outbound)
+3. bc1petx24unvm8elfntxadkcedj08etjcjt7avsg47pc2lmv6gv47l8q0eezfp - 933 interactions (933 inbound / 0 outbound)
+4. bc1ptnq98mr2d8a8hc2uqtyar8u7d5wkgm232dagmkst9c3zmm6zmrmqf7jkpz - 904 interactions (904 inbound / 0 outbound)
+5. bc1p8gs5ngvrq23hrlad49tqrxse6pfwupgt3shvjec60htjpn39d6yqfw6u2a - 893 interactions (893 inbound / 0 outbound)
+
+Interpretation:
+This case is dominated by outbound spend activity and has a broad but still structured counterparty surface. It is useful as a Bitcoin Layer 1 benchmark for repeated interaction, spend-heavy operational flow, and service-like UTXO routing.
+
+Layer 1 Context:
+- Dominant role: outbound
+- Inbound receipts: 373838
+- Outbound spends: 673118
+- Unique counterparties: 1906
+- Inbound BTC: 5.39220377
+- Outbound BTC: 5.74837935

@@ -1,0 +1,35 @@
+Crypto Profiler Analyst Report
+
+Address: 0x7a250d5630b4cf539739df2c5dacb4c659f2488d
+Network: EVM
+Mode: Dataset
+Dataset Context: ERC-20 Layer 1 dataset
+Case: ERC-20 Trusted Protocol Token Hub (erc20-uniswap-v2-router-trusted-token-hub)
+Risk Score: 12.90
+Risk Grade: LOW (Reviewable)
+Review Recommended: Yes
+
+Top Reasons:
+1. [REPUTATION] Trusted protocol ERC-20 hub observed (3747640 transfers across 54478 counterparties) (offset +16.0)
+2. [FRAUD] Broad ERC-20 counterparty surface observed (54478 counterparties across 19325 tokens) (offset +8.0)
+3. [REPUTATION] Mixed ERC-20 activity observed across 19325 token contracts (offset +4.0)
+4. [FRAUD] Repeated ERC-20 counterparty activity observed (top counterparty interactions=118744, repeated counterparties=30580) (offset +4.0)
+5. [REPUTATION] Dominant token concentration observed (WETH at 97.87% of transfers) (offset +3.0)
+
+Top Counterparties:
+1. 0xb8713bd23c33b15236af67e5badceb8e49cb0244 - 118744 interactions across 2 tokens
+2. 0x055fb841cce69000fbaff2691ad39fa6e23826a1 - 107522 interactions across 2 tokens
+3. 0x604485c32ed7628f12b1bde85ef6ef717409704b - 58406 interactions across 1 tokens
+4. 0x1d13070b48823b68ca9dc9a55bfc0945bd7c59af - 57012 interactions across 1 tokens
+5. 0x4255c33130c02a3680c2295f91678dd8074d8327 - 39386 interactions across 2 tokens
+
+Interpretation:
+This case captures token-heavy ERC-20 routing activity at a known trusted protocol address. It is useful for demonstrating how a very broad token surface can still be contextualized as protocol-driven rather than automatically high-risk.
+
+Layer 1 Context:
+- Dominant direction: outbound
+- Unique token contracts: 19325
+- Unique counterparties: 54478
+- Repeated counterparties: 30580
+- Dominant token: WETH
+- Dominant token transfer share: 97.87%

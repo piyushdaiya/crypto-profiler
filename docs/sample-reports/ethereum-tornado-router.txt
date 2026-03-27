@@ -1,0 +1,36 @@
+Crypto Profiler Analyst Report
+
+Address: 0xd90e2f925da726b50c4ed8d0fb90ad053324f31b
+Network: EVM
+Mode: Dataset
+Dataset Context: Ethereum curated Layer 1 dataset
+Case: High-Risk Mixer Infrastructure (tornado-router-high-risk)
+Risk Score: 22.50
+Risk Grade: ELEVATED
+Review Recommended: Yes
+
+Top Reasons:
+1. [FRAUD] Profiled address labeled as high-risk entity: Tornado Cash Router (offset +45.0)
+2. [REPUTATION] Established History (>1 Year) (offset -10.0)
+3. [REPUTATION] Observed 89 failed internal calls in trace dataset (offset +0.0)
+4. [REPUTATION] Trace dataset shows broad internal counterparty surface (2130 counterparties) (offset +0.0)
+5. [REPUTATION] Trace-aware dataset context loaded (62728 internal traces observed) (offset +0.0)
+
+Top Counterparties:
+1. 0xfe487df046a7e40da04a2b119d23f60987904571 - 315 interactions (315 inbound / 0 outbound)
+2. 0x03392600086874456e08d2bac104380bcdebcfc0 - 41 interactions (41 inbound / 0 outbound)
+3. 0x548382a67db9d79c4ab473b00a9ed63efe864870 - 32 interactions (32 inbound / 0 outbound)
+4. 0x4750bcfcc340aa4b31be7e71fa072716d28c29c5 - 26 interactions (26 inbound / 0 outbound)
+5. 0x1822ea45c1342483957d259d88dc923bda835285 - 19 interactions (19 inbound / 0 outbound)
+
+Interpretation:
+Labeled Tornado Cash router with repeated inbound activity in the extracted window.
+
+Layer 1 Context:
+- Inbound transfers: 1132
+- Outbound transfers: 0
+- Unique counterparties: 129
+- Native transfers: 1132
+- Trace activity: 62728 internal traces
+- Max trace depth: 2
+- Trace counterparties: 2130

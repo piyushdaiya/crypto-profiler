@@ -26,6 +26,92 @@ The goal is not to be a full chain warehouse. The goal is to make practical wall
 
 ---
 
+## What This Project Demonstrates
+
+This repository is designed to be portfolio-grade in both engineering and presentation.
+
+It demonstrates:
+
+- multi-chain Layer 1 thinking without pretending every chain should share one identical data model
+- explainable risk scoring through visible `risk_reasons`, evidence counts, and review-oriented grades
+- a practical curated-case workflow from extraction to analyst-facing report output
+- disciplined repository storytelling through aligned docs, curated artifacts, tests, and CI security checks
+
+---
+
+## Why The Architecture Looks Like This
+
+Crypto Profiler deliberately separates:
+
+- live EVM scoring via a shared analyzer
+- curated dataset-mode scoring for ERC-20, Solana, and Bitcoin Layer 1
+- trace-aware Ethereum enrichment for cases where internal call context materially improves the story
+
+That choice keeps the implementation honest:
+
+- Ethereum is the most mature live path
+- Solana, Bitcoin, and ERC-20 are real Layer 1 slices, but currently delivered through curated dataset mode
+- the shared output contract stays consistent even when the ingestion and scoring path differs by chain
+
+---
+
+## Demo Entry Points
+
+If you only have a few minutes, start here:
+
+```bash
+go run ./cmd/validator --report --dataset ./data/cases/curated-enriched/tornado-router-high-risk.json
+go run ./cmd/validator --report --dataset ./data/cases/curated-solana/solana-stablecoin-authority-operator.json
+go run ./cmd/validator --report --dataset ./data/cases/curated-bitcoin/bitcoin-broad-spend-heavy-operational-hub.json
+go run ./cmd/validator --report --dataset ./data/cases/curated-erc20/erc20-uniswap-v2-router-trusted-token-hub.json
+```
+
+Use these for:
+
+- a trace-aware Ethereum risk case
+- a Solana authority-driven stablecoin-flow case
+- a Bitcoin spend-heavy UTXO-flow case
+- an ERC-20 trusted protocol token-surface case
+
+Walkthrough notes live in [`docs/DEMO-WALKTHROUGH.md`](docs/DEMO-WALKTHROUGH.md).
+
+Static sample outputs live in:
+
+- [`docs/sample-reports/ethereum-tornado-router.txt`](docs/sample-reports/ethereum-tornado-router.txt)
+- [`docs/sample-reports/solana-authority-operator.txt`](docs/sample-reports/solana-authority-operator.txt)
+- [`docs/sample-reports/bitcoin-operational-hub.txt`](docs/sample-reports/bitcoin-operational-hub.txt)
+- [`docs/sample-reports/erc20-uniswap-v2-router.txt`](docs/sample-reports/erc20-uniswap-v2-router.txt)
+
+---
+
+## Analyst Report Mode
+
+The validator now supports an analyst-facing report mode on top of the existing JSON output.
+
+JSON remains the default:
+
+```bash
+go run ./cmd/validator --dataset ./data/cases/curated-enriched/tornado-router-high-risk.json
+```
+
+Use `--report` for a demo-friendly summary:
+
+```bash
+go run ./cmd/validator --report --dataset ./data/cases/curated-enriched/tornado-router-high-risk.json
+```
+
+Report mode is designed to surface:
+
+- address and network
+- case title and dataset context
+- risk score, grade, and review recommendation
+- top reasons
+- top counterparties
+- short interpretation
+- chain-specific Layer 1 context
+
+---
+
 ## Current Implementation Status
 
 | Area                               | Status today                | Notes                                                                                                                                            |
@@ -125,9 +211,10 @@ Validator dataset mode currently supports:
 Examples:
 
 ```bash
-go run ./cmd/validator --dataset ./data/cases/curated-enriched/tornado-router-high-risk.json
-go run ./cmd/validator --dataset ./data/cases/curated-solana/solana-stablecoin-authority-operator.json
-go run ./cmd/validator --dataset ./data/cases/curated-bitcoin/bitcoin-broad-spend-heavy-operational-hub.json
+go run ./cmd/validator --report --dataset ./data/cases/curated-enriched/tornado-router-high-risk.json
+go run ./cmd/validator --report --dataset ./data/cases/curated-solana/solana-stablecoin-authority-operator.json
+go run ./cmd/validator --report --dataset ./data/cases/curated-bitcoin/bitcoin-broad-spend-heavy-operational-hub.json
+go run ./cmd/validator --report --dataset ./data/cases/curated-erc20/erc20-uniswap-v2-router-trusted-token-hub.json
 ```
 
 Dataset mode is the current delivery path for:
@@ -225,6 +312,7 @@ The repo includes an intentionally lightweight extract-and-curate workflow.
 ## Documentation Map
 
 - [`ARCHITECTURE.md`](ARCHITECTURE.md)
+- [`docs/DEMO-WALKTHROUGH.md`](docs/DEMO-WALKTHROUGH.md)
 - [`docs/TYPOLOGIES.md`](docs/TYPOLOGIES.md)
 - [`docs/SCORING.md`](docs/SCORING.md)
 - [`docs/EVM-CALLS-INTEGRATION.md`](docs/EVM-CALLS-INTEGRATION.md)
@@ -319,7 +407,7 @@ The next major items after the current Wave 2 ERC-20 implementation are:
 
 ## Tech Stack
 
-- Go 1.23
+- Go 1.25
 - Docker / Docker Compose
 - watchlist-driven sanctions checks
 - Blockchair historical datasets for EVM and Bitcoin extraction

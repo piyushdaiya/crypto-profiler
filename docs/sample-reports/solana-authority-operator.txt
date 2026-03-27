@@ -1,0 +1,34 @@
+Crypto Profiler Analyst Report
+
+Address: 9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo
+Network: SOLANA
+Mode: Dataset
+Dataset Context: Solana stablecoin-flow Layer 1 dataset
+Case: Solana Stablecoin Authority-Heavy Operator (solana-stablecoin-authority-operator)
+Risk Score: 21.20
+Risk Grade: ELEVATED
+Review Recommended: Yes
+
+Top Reasons:
+1. [FRAUD] Authority-heavy stablecoin operator pattern observed (662236 authority-linked transfers) (offset +28.0)
+2. [FRAUD] Broad stablecoin counterparty surface observed (1770 counterparties) (offset +8.0)
+3. [FRAUD] Heavy repeated interaction with top counterparty (654047 interactions) (offset +4.0)
+4. [REPUTATION] Mixed stablecoin activity observed across 2 mints (offset +4.0)
+
+Top Counterparties:
+1. Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6 - 654047 interactions (0 inbound / 0 outbound / 654047 authority)
+2. GJBFGauM4qPmWyyJLmuQ6YuVwTZEKVCYtsCX5CRVeCps - 130665 interactions (0 inbound / 0 outbound / 130665 authority)
+3. 7LyHeCq4Q2sMe3ewstD6ypBXK9a5GBymPhucDeRfYFiV - 69172 interactions (0 inbound / 0 outbound / 69172 authority)
+4. B1ReytLhRqk4nDRn4EJM4Ph8fma6V2hAATH2YkYvnquX - 57696 interactions (0 inbound / 0 outbound / 57696 authority)
+5. DRVT6bBn8bw8KzVXokHaAzR5C38XxA9LUdwGDmSXgezX - 54831 interactions (0 inbound / 0 outbound / 54831 authority)
+
+Interpretation:
+This case is dominated by authority-driven stablecoin flows rather than direct source or destination behavior. It is a strong benchmark for authority-role analysis, repeated interaction, and operational control-surface patterns.
+
+Layer 1 Context:
+- Dominant role: authority
+- Dominant mint: EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v
+- Authority-linked transfers: 662236
+- Source transfers: 0
+- Destination transfers: 0
+- Unique counterparties: 1770

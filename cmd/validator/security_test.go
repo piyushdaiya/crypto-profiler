@@ -42,7 +42,21 @@ func TestRun_NoArgumentsReturnsUsageError(t *testing.T) {
 		t.Fatalf("expected exit code 1, got %d", code)
 	}
 
-	if !strings.Contains(errOut.String(), "Usage: ./validator <wallet-address>") {
+	if !strings.Contains(errOut.String(), "Usage:") {
+		t.Fatalf("expected usage message, got %q", errOut.String())
+	}
+}
+
+func TestRun_HelpReturnsSuccess(t *testing.T) {
+	var out bytes.Buffer
+	var errOut bytes.Buffer
+
+	code := run([]string{"--help"}, &out, &errOut, nil)
+	if code != 0 {
+		t.Fatalf("expected exit code 0, got %d", code)
+	}
+
+	if !strings.Contains(errOut.String(), "Usage:") {
 		t.Fatalf("expected usage message, got %q", errOut.String())
 	}
 }

@@ -54,17 +54,32 @@ func run(args []string, out io.Writer, errOut io.Writer, strategies []address.Ch
 	fs.SetOutput(errOut)
 
 	datasetPath := fs.String("dataset", "", "Path to curated dataset JSON")
+	reportMode := fs.Bool("report", false, "Render a human-readable analyst report instead of JSON")
+	fs.Usage = func() {
+		fmt.Fprintln(errOut, "Usage:")
+		fmt.Fprintln(errOut, "  ./validator [--report] <wallet-address>")
+		fmt.Fprintln(errOut, "  ./validator --dataset <curated-case.json> [--report]")
+		fmt.Fprintln(errOut, "")
+		fmt.Fprintln(errOut, "Flags:")
+		fs.PrintDefaults()
+		fmt.Fprintln(errOut, "")
+		fmt.Fprintln(errOut, "Examples:")
+		fmt.Fprintln(errOut, "  go run ./cmd/validator 0xd90e2f925da726b50c4ed8d0fb90ad053324f31b")
+		fmt.Fprintln(errOut, "  go run ./cmd/validator --report --dataset ./data/cases/curated-enriched/tornado-router-high-risk.json")
+	}
 	if err := fs.Parse(args); err != nil {
+		if err == flag.ErrHelp {
+			return 0
+		}
 		return 1
 	}
 
 	if *datasetPath != "" {
-		return runDatasetMode(*datasetPath, out, errOut)
+		return runDatasetMode(*datasetPath, *reportMode, out, errOut)
 	}
 
 	if fs.NArg() < 1 {
-		fmt.Fprintln(errOut, "Usage: ./validator <wallet-address>")
-		fmt.Fprintln(errOut, "   or: ./validator --dataset <curated-case.json>")
+		fs.Usage()
 		return 1
 	}
 
@@ -118,23 +133,31 @@ func run(args []string, out io.Writer, errOut io.Writer, strategies []address.Ch
 		}
 	}
 
-	return writeProfile(result, out, errOut)
+	return writeOutput(result, buildLiveReportContext(result), *reportMode, out, errOut)
 }
 
-func runDatasetMode(path string, out io.Writer, errOut io.Writer) int {
+func runDatasetMode(path string, reportMode bool, out io.Writer, errOut io.Writer) int {
 	fmt.Fprintf(errOut, "🔍 Analyzing curated dataset %s...\n", path)
 
+	profile, reportContext, err := loadDatasetMode(path)
+	if err != nil {
+		fmt.Fprintf(errOut, "%v\n", err)
+		return 1
+	}
+
+	return writeOutput(profile, reportContext, reportMode, out, errOut)
+}
+
+func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) {
 	// #nosec G304 -- validator dataset mode intentionally reads an explicit local curated-case path provided by the operator.
 	raw, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
-		fmt.Fprintf(errOut, "Error loading dataset: %v\n", err)
-		return 1
+		return nil, nil, fmt.Errorf("Error loading dataset: %v", err)
 	}
 
 	var probe map[string]json.RawMessage
 	if err := json.Unmarshal(raw, &probe); err != nil {
-		fmt.Fprintf(errOut, "Error probing dataset: %v\n", err)
-		return 1
+		return nil, nil, fmt.Errorf("Error probing dataset: %v", err)
 	}
 
 	var chain string
@@ -149,43 +172,39 @@ func runDatasetMode(path string, out io.Writer, errOut io.Writer) int {
 	if strings.EqualFold(chain, "SOLANA") && hasStablecoinSummary {
 		cc, err := datasets.LoadSolanaCuratedStablecoinCase(path)
 		if err != nil {
-			fmt.Fprintf(errOut, "Error loading Solana curated dataset: %v\n", err)
-			return 1
+			return nil, nil, fmt.Errorf("Error loading Solana curated dataset: %v", err)
 		}
 
 		profile := buildWalletProfileFromSolanaCuratedStablecoinCase(cc)
 		applySolanaCuratedStablecoinContext(profile, cc)
-		return writeProfile(profile, out, errOut)
+		return profile, buildReportContextFromSolanaCase(cc), nil
 	}
 
 	if strings.EqualFold(chain, "BITCOIN") && hasUTXOSummary {
 		cc, err := datasets.LoadBitcoinCuratedLayer1Case(path)
 		if err != nil {
-			fmt.Fprintf(errOut, "Error loading Bitcoin curated dataset: %v\n", err)
-			return 1
+			return nil, nil, fmt.Errorf("Error loading Bitcoin curated dataset: %v", err)
 		}
 
 		profile := buildWalletProfileFromBitcoinCuratedLayer1Case(cc)
 		applyBitcoinCuratedLayer1Context(profile, cc)
-		return writeProfile(profile, out, errOut)
+		return profile, buildReportContextFromBitcoinCase(cc), nil
 	}
 
 	if strings.EqualFold(chain, "EVM") && hasERC20Summary {
 		cc, err := datasets.LoadERC20CuratedLayer1Case(path)
 		if err != nil {
-			fmt.Fprintf(errOut, "Error loading ERC-20 curated dataset: %v\n", err)
-			return 1
+			return nil, nil, fmt.Errorf("Error loading ERC-20 curated dataset: %v", err)
 		}
 
 		profile := buildWalletProfileFromERC20CuratedLayer1Case(cc)
 		applyERC20CuratedLayer1Context(profile, cc)
-		return writeProfile(profile, out, errOut)
+		return profile, buildReportContextFromERC20Case(cc), nil
 	}
 
 	cc, err := datasets.LoadCuratedCase(path)
 	if err != nil {
-		fmt.Fprintf(errOut, "Error loading dataset: %v\n", err)
-		return 1
+		return nil, nil, fmt.Errorf("Error loading dataset: %v", err)
 	}
 
 	profile := datasets.BuildWalletProfileFromCuratedCase(cc)
@@ -194,10 +213,18 @@ func runDatasetMode(path string, out io.Writer, errOut io.Writer) int {
 	analyzer.Investigate(profile, txs)
 	applyCuratedTraceContext(profile, cc)
 
-	return writeProfile(profile, out, errOut)
+	return profile, buildReportContextFromCuratedCase(cc), nil
 }
 
-func writeProfile(result *model.WalletProfile, out io.Writer, errOut io.Writer) int {
+func writeOutput(result *model.WalletProfile, context *reportContext, reportMode bool, out io.Writer, errOut io.Writer) int {
+	if reportMode {
+		if _, err := io.WriteString(out, renderReport(result, context)); err != nil {
+			fmt.Fprintf(errOut, "Error rendering report: %v\n", err)
+			return 1
+		}
+		return 0
+	}
+
 	encoder := json.NewEncoder(out)
 	encoder.SetIndent("", "  ")
 	encoder.SetEscapeHTML(false)

@@ -50,7 +50,8 @@ func NormalizeHexAddress(s string) string {
 }
 
 func LoadLegacyLabels(path string) (map[string]string, error) {
-	raw, err := os.ReadFile(path)
+	// #nosec G304 -- CLI tooling intentionally reads operator-provided local label files after path normalization.
+	raw, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +74,8 @@ func LoadLegacyLabels(path string) (map[string]string, error) {
 }
 
 func LoadAddressList(path string) ([]string, error) {
-	raw, err := os.ReadFile(path)
+	// #nosec G304 -- CLI tooling intentionally reads operator-provided local address lists after path normalization.
+	raw, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
 		return nil, err
 	}

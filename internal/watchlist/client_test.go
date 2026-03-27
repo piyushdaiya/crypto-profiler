@@ -26,8 +26,9 @@ package watchlist
 
 import (
 	"encoding/json"
+	"errors"
+	"net"
 	"net/http"
-	"net/http/httptest"
 	"os"
 	"strings"
 	"testing"
@@ -55,8 +56,50 @@ func setEnvForTest(t *testing.T, key, value string) {
 	})
 }
 
+type localHTTPTestServer struct {
+	URL   string
+	close func() error
+}
+
+func (s *localHTTPTestServer) Close() {
+	if s != nil && s.close != nil {
+		_ = s.close()
+	}
+}
+
+func newLocalHTTPTestServer(t *testing.T, handler http.Handler) *localHTTPTestServer {
+	t.Helper()
+
+	listener, err := net.Listen("tcp4", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("failed to listen on local test port: %v", err)
+	}
+
+	server := &http.Server{
+		Handler: handler,
+	}
+
+	go func() {
+		if err := server.Serve(listener); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			t.Errorf("test server stopped unexpectedly: %v", err)
+		}
+	}()
+
+	ts := &localHTTPTestServer{
+		URL: "http://" + listener.Addr().String(),
+		close: func() error {
+			defer listener.Close()
+			return server.Close()
+		},
+	}
+
+	t.Cleanup(ts.Close)
+
+	return ts
+}
+
 func TestCheckWatchlist_Success(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := newLocalHTTPTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/check" {
 			http.NotFound(w, r)
 			return
@@ -71,7 +114,6 @@ func TestCheckWatchlist_Success(t *testing.T) {
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(resp)
 	}))
-	defer server.Close()
 
 	setEnvForTest(t, "WATCHLIST_ENGINE_URL", server.URL)
 
@@ -92,11 +134,10 @@ func TestCheckWatchlist_Success(t *testing.T) {
 }
 
 func TestCheckWatchlist_Timeout(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := newLocalHTTPTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(3 * time.Second)
 		w.WriteHeader(http.StatusOK)
 	}))
-	defer server.Close()
 
 	setEnvForTest(t, "WATCHLIST_ENGINE_URL", server.URL)
 
@@ -107,10 +148,9 @@ func TestCheckWatchlist_Timeout(t *testing.T) {
 }
 
 func TestCheckWatchlist_Non200(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := newLocalHTTPTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "bad gateway", http.StatusBadGateway)
 	}))
-	defer server.Close()
 
 	setEnvForTest(t, "WATCHLIST_ENGINE_URL", server.URL)
 
@@ -125,11 +165,10 @@ func TestCheckWatchlist_Non200(t *testing.T) {
 }
 
 func TestCheckWatchlist_BadJSON(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := newLocalHTTPTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"sanctioned": tru`))
 	}))
-	defer server.Close()
 
 	setEnvForTest(t, "WATCHLIST_ENGINE_URL", server.URL)
 

@@ -74,7 +74,7 @@ func main() {
 		fail("extract datasets", err)
 	}
 
-	if err := os.MkdirAll(*outDir, 0o755); err != nil {
+	if err := os.MkdirAll(*outDir, 0o750); err != nil {
 		fail("create output directory", err)
 	}
 
@@ -90,7 +90,7 @@ func main() {
 			fail("marshal dataset", err)
 		}
 
-		if err := os.WriteFile(filename, raw, 0o644); err != nil {
+		if err := os.WriteFile(filename, raw, 0o600); err != nil {
 			fail("write dataset", err)
 		}
 

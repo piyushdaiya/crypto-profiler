@@ -27,10 +27,13 @@ package main
 import (
 	"database/sql"
 	"encoding/xml"
+	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -39,8 +42,35 @@ import (
 
 var db *sql.DB
 
+func sanitizeLogField(s string) string {
+	replacer := strings.NewReplacer(
+		"\r", "_",
+		"\n", "_",
+		"\t", "_",
+	)
+	return replacer.Replace(s)
+}
+
+func validatedListenAddr() string {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	p, err := strconv.Atoi(port)
+	if err != nil || p < 1 || p > 65535 {
+		log.Fatal("❌ [ENGINE] Invalid PORT value")
+	}
+
+	return fmt.Sprintf(":%d", p)
+}
+
+func closeWithLog(label string, c io.Closer) {
+	if err := c.Close(); err != nil {
+		log.Printf("⚠️ [ENGINE] %s close failed: %v", label, err)
+	}
+}
 func main() {
-	// Setup Logging
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
 	log.Println("🔹 [ENGINE] Starting Watchlist Engine...")
 
@@ -54,7 +84,7 @@ func main() {
 	if err != nil {
 		log.Fatal("❌ [ENGINE] DB Error:", err)
 	}
-	defer db.Close()
+	defer closeWithLog("database", db)
 
 	if err := db.Ping(); err != nil {
 		log.Fatal("❌ [ENGINE] DB Ping Failed:", err)
@@ -67,26 +97,44 @@ func main() {
 		startSyncLoop()
 	}()
 
-	http.HandleFunc("/check", loggingMiddleware(checkAddressHandler))
-	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/check", loggingMiddleware(checkAddressHandler))
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+		if _, err := w.Write([]byte("OK")); err != nil {
+			log.Printf("⚠️ [ENGINE] Health response write failed: %v", err)
+		}
 	})
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+	addr := validatedListenAddr()
+
+	server := &http.Server{
+		Addr:              addr,
+		Handler:           mux,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		IdleTimeout:       60 * time.Second,
 	}
 
-	log.Printf("✅ [ENGINE] Database Available & Listening on :%s", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Printf("✅ [ENGINE] Database Available & Listening on %s", sanitizeLogField(addr))
+
+	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		log.Fatal(err)
+	}
 }
 
 func loggingMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
+
+		method := sanitizeLogField(r.Method)
+		path := sanitizeLogField(r.URL.Path)
+
 		next(w, r)
-		log.Printf("📡 [REQ] %s %s took %v", r.Method, r.URL.Path, time.Since(start))
+
+		// #nosec G706 -- request method and path are sanitized for CR/LF/TAB before logging
+		log.Printf("📡 [REQ] %s %s took %v", method, path, time.Since(start))
 	}
 }
 
@@ -136,7 +184,9 @@ func checkAddressHandler(w http.ResponseWriter, r *http.Request) {
 	jsonStr += `}`
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(jsonStr))
+	if _, err := w.Write([]byte(jsonStr)); err != nil {
+		log.Printf("⚠️ [ENGINE] Check response write failed: %v", err)
+	}
 }
 
 // --- SYNC ENGINE ---
@@ -169,7 +219,7 @@ func shouldUpdate() bool {
 		log.Printf("⚠️ [SYNC] Could not check remote headers: %v", err)
 		return true // Fail open
 	}
-	defer resp.Body.Close()
+	defer closeWithLog("head response body", resp.Body)
 
 	remoteLastMod := resp.Header.Get("Last-Modified")
 	return localLastMod != remoteLastMod
@@ -177,13 +227,13 @@ func shouldUpdate() bool {
 
 // --- XML STRUCTURES ---
 
-// Flattened Reference Value
+// FeatureTypeValue represents a flattened reference value from the OFAC XML feed.
 type FeatureTypeValue struct {
 	ID    string `xml:"ID,attr"`
 	Value string `xml:",chardata"`
 }
 
-// Distinct Party (The Sanctioned Person)
+// DistinctParty represents a sanctioned party entry in the OFAC XML feed.
 type DistinctParty struct {
 	Profile []Profile `xml:"Profile"`
 }
@@ -208,7 +258,7 @@ func downloadAndParseOFAC() error {
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer closeWithLog("download response body", resp.Body)
 
 	lastMod := resp.Header.Get("Last-Modified")
 	log.Printf("🔹 [SYNC] Header Last-Modified: %s", lastMod)
@@ -243,10 +293,12 @@ func downloadAndParseOFAC() error {
 
 	stmt, err := tx.Prepare("INSERT OR REPLACE INTO sanctioned_addresses(address, currency, source, updated_at) VALUES(?, ?, 'OFAC', ?)")
 	if err != nil {
-		tx.Rollback()
+		if rbErr := tx.Rollback(); rbErr != nil {
+			log.Printf("⚠️ [SYNC] rollback failed after prepare error: %v", rbErr)
+		}
 		return err
 	}
-	defer stmt.Close()
+	defer closeWithLog("prepared statement", stmt)
 
 	now := time.Now()
 	count := 0
@@ -255,9 +307,15 @@ func downloadAndParseOFAC() error {
 	log.Println("🔹 [SYNC] Parsing XML Stream...")
 
 	for {
-		t, _ := decoder.Token()
-		if t == nil {
-			break
+		t, err := decoder.Token()
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				break
+			}
+			if rbErr := tx.Rollback(); rbErr != nil {
+				log.Printf("⚠️ [SYNC] rollback failed after token error: %v", rbErr)
+			}
+			return err
 		}
 
 		switch se := t.(type) {
@@ -300,8 +358,9 @@ func downloadAndParseOFAC() error {
 								for _, d := range v.VersionDetail {
 									addr := strings.TrimSpace(d.Value)
 									if len(addr) > 10 {
-										_, err = stmt.Exec(addr, currency, now)
-										if err == nil {
+										if _, err := stmt.Exec(addr, currency, now); err != nil {
+											log.Printf("⚠️ [SYNC] insert failed for %s: %v", sanitizeLogField(addr), err)
+										} else {
 											loaded++
 										}
 									}

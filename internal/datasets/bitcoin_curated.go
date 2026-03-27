@@ -98,6 +98,9 @@ func LoadBitcoinCuratedLayer1Case(path string) (*BitcoinCuratedLayer1Case, error
 	if err := json.Unmarshal(raw, &cc); err != nil {
 		return nil, err
 	}
+	if err := requireCuratedIdentity("Bitcoin Layer 1", cc.CaseID, cc.Address, cc.Chain, "BITCOIN"); err != nil {
+		return nil, err
+	}
 
 	return &cc, nil
 }

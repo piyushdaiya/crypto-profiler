@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  build-test:
+  build-test-security:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,14 +20,23 @@ jobs:
           cache: true
 
       - name: Build
-        run: go build ./...
+        run: make build
 
       - name: Test
-        run: go test ./...
+        run: make test
+
+      - name: Install Security Tools
+        run: make security-tools
+
+      - name: govulncheck
+        run: make govulncheck
+
+      - name: gosec
+        run: make gosec
 
   docker-smoke:
     runs-on: ubuntu-latest
-    needs: build-test
+    needs: build-test-security
 
     steps:
       - name: Checkout

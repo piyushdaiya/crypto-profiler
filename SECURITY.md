@@ -20,6 +20,9 @@ Phase 1 focuses on practical safeguards for:
 - safe failure on network / parsing errors
 - end-to-end sanctions decisioning
 - basic API security and configuration hygiene
+- curated dataset loader validation for local JSON artifacts
+- local-file safety checks for dataset and trace-summary paths
+- reproducible dependency and static-analysis scans via `govulncheck` and `gosec`
 
 This baseline is informed by:
 
@@ -51,6 +54,10 @@ Current security-focused testing covers:
 - sanctions short-circuit behavior
 - contextual risk-scoring safety checks
 - CLI handling of invalid wallet input
+- dataset-mode routing across Ethereum, Solana, Bitcoin, and ERC-20 curated cases
+- curated dataset loader handling for malformed JSON and missing required fields
+- trace-summary path traversal regression coverage
+- CI and local security scanning through `make govulncheck` and `make gosec`
 
 ## Out of Scope for Phase 1
 
@@ -62,7 +69,8 @@ The following are not claimed as complete in Phase 1:
 - external-facing deployment hardening
 - full threat modeling
 - fuzzing
-- SAST / dependency scanning in CI
+- secret scanning
+- SBOM generation
 - formal ASVS control verification
 
 ## Security Notes

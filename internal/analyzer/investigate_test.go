@@ -26,8 +26,9 @@ package analyzer
 
 import (
 	"encoding/json"
+	"errors"
+	"net"
 	"net/http"
-	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"testing"
@@ -40,6 +41,17 @@ type watchlistResponse struct {
 	Sanctioned bool   `json:"sanctioned"`
 	Currency   string `json:"currency"`
 	Source     string `json:"source"`
+}
+
+type localWatchlistServer struct {
+	URL   string
+	close func() error
+}
+
+func (s *localWatchlistServer) Close() {
+	if s != nil && s.close != nil {
+		_ = s.close()
+	}
 }
 
 func writeBootstrapLabelsForTest(t *testing.T) string {
@@ -88,7 +100,7 @@ func writeBootstrapLabelsForTest(t *testing.T) string {
 	return path
 }
 
-func newWatchlistServer(t *testing.T, response watchlistResponse) *httptest.Server {
+func newWatchlistServer(t *testing.T, response watchlistResponse) *localWatchlistServer {
 	t.Helper()
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -102,7 +114,32 @@ func newWatchlistServer(t *testing.T, response watchlistResponse) *httptest.Serv
 		}
 	})
 
-	return httptest.NewServer(handler)
+	listener, err := net.Listen("tcp4", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("failed to listen on local test port: %v", err)
+	}
+
+	server := &http.Server{
+		Handler: handler,
+	}
+
+	go func() {
+		if err := server.Serve(listener); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			t.Errorf("watchlist test server stopped unexpectedly: %v", err)
+		}
+	}()
+
+	ts := &localWatchlistServer{
+		URL: "http://" + listener.Addr().String(),
+		close: func() error {
+			defer listener.Close()
+			return server.Close()
+		},
+	}
+
+	t.Cleanup(ts.Close)
+
+	return ts
 }
 
 func TestInvestigate_DirectSanctionedWalletShortCircuits(t *testing.T) {

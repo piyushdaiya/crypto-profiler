@@ -50,7 +50,7 @@ func main() {
 		fail("load case manifest", err)
 	}
 
-	if err := os.MkdirAll(*outDir, 0o755); err != nil {
+	if err := os.MkdirAll(*outDir, 0o750); err != nil {
 		fail("create output dir", err)
 	}
 
@@ -69,7 +69,7 @@ func main() {
 			fail("marshal curated case", err)
 		}
 
-		if err := os.WriteFile(outFile, raw, 0o644); err != nil {
+		if err := os.WriteFile(outFile, raw, 0o600); err != nil {
 			fail("write curated case", err)
 		}
 

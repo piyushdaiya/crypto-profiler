@@ -31,6 +31,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -44,24 +45,88 @@ type EngineResponse struct {
 // CLIENT: Check Watchlist (HTTP)
 // ---------------------------------------------------------
 
-func CheckWatchlist(address string) (*EngineResponse, error) {
+func allowedWatchlistHosts() map[string]struct{} {
+	raw := os.Getenv("WATCHLIST_ENGINE_ALLOWED_HOSTS")
+	if raw == "" {
+		raw = "localhost,127.0.0.1,::1"
+	}
+
+	allowed := make(map[string]struct{})
+	for _, part := range strings.Split(raw, ",") {
+		host := strings.ToLower(strings.TrimSpace(part))
+		if host == "" {
+			continue
+		}
+		allowed[host] = struct{}{}
+	}
+
+	return allowed
+}
+
+func validatedEngineBaseURL() (*url.URL, error) {
 	engineURL := os.Getenv("WATCHLIST_ENGINE_URL")
 	if engineURL == "" {
 		engineURL = "http://localhost:8080"
 	}
 
-	client := &http.Client{Timeout: 2 * time.Second}
-	checkURL := fmt.Sprintf("%s/check?address=%s", engineURL, url.QueryEscape(address))
+	parsed, err := url.Parse(engineURL)
+	if err != nil {
+		return nil, fmt.Errorf("invalid watchlist engine url")
+	}
 
-	resp, err := client.Get(checkURL)
+	if parsed.Scheme != "http" && parsed.Scheme != "https" {
+		return nil, fmt.Errorf("invalid watchlist engine url")
+	}
+
+	if parsed.User != nil {
+		return nil, fmt.Errorf("invalid watchlist engine url")
+	}
+
+	host := strings.ToLower(strings.TrimSpace(parsed.Hostname()))
+	if host == "" {
+		return nil, fmt.Errorf("invalid watchlist engine url")
+	}
+
+	if _, ok := allowedWatchlistHosts()[host]; !ok {
+		return nil, fmt.Errorf("watchlist engine host not allowed")
+	}
+
+	return parsed, nil
+}
+
+func buildCheckURL(base *url.URL, address string) *url.URL {
+	u := *base
+	u.Path = strings.TrimRight(base.Path, "/") + "/check"
+
+	q := u.Query()
+	q.Set("address", address)
+	u.RawQuery = q.Encode()
+
+	return &u
+}
+
+func CheckWatchlist(address string) (*EngineResponse, error) {
+	baseURL, err := validatedEngineBaseURL()
 	if err != nil {
 		return nil, fmt.Errorf("connection refused")
 	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
 
-		}
+	client := &http.Client{Timeout: 2 * time.Second}
+	checkURL := buildCheckURL(baseURL, address)
+
+	req := &http.Request{
+		Method: http.MethodGet,
+		URL:    checkURL,
+		Header: make(http.Header),
+	}
+	req.Header.Set("Accept", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("connection refused")
+	}
+	defer func(body io.ReadCloser) {
+		_ = body.Close()
 	}(resp.Body)
 
 	if resp.StatusCode != http.StatusOK {
@@ -72,5 +137,6 @@ func CheckWatchlist(address string) (*EngineResponse, error) {
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return nil, err
 	}
+
 	return &result, nil
 }

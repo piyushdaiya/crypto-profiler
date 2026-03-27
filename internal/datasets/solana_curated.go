@@ -127,6 +127,9 @@ func LoadSolanaCuratedStablecoinCase(path string) (*SolanaCuratedStablecoinCase,
 	if err := json.Unmarshal(raw, &cc); err != nil {
 		return nil, err
 	}
+	if err := requireCuratedIdentity("Solana stablecoin", cc.CaseID, cc.Address, cc.Chain, "SOLANA"); err != nil {
+		return nil, err
+	}
 
 	return &cc, nil
 }

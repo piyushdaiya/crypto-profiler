@@ -25,37 +25,21 @@
 package datasets
 
 import (
-	"encoding/json"
-	"os"
-	"path/filepath"
+	"fmt"
+	"strings"
 )
 
-func LoadCuratedCase(path string) (*CuratedCase, error) {
-	raw, err := os.ReadFile(filepath.Clean(path))
-	if err != nil {
-		return nil, err
+func requireCuratedIdentity(kind, caseID, address, chain, wantChain string) error {
+	switch {
+	case strings.TrimSpace(caseID) == "":
+		return fmt.Errorf("invalid curated %s case: missing case_id", kind)
+	case strings.TrimSpace(address) == "":
+		return fmt.Errorf("invalid curated %s case: missing address", kind)
+	case strings.TrimSpace(chain) == "":
+		return fmt.Errorf("invalid curated %s case: missing chain", kind)
+	case !strings.EqualFold(strings.TrimSpace(chain), wantChain):
+		return fmt.Errorf("invalid curated %s case: expected chain %s, got %s", kind, wantChain, chain)
+	default:
+		return nil
 	}
-
-	var cc CuratedCase
-	if err := json.Unmarshal(raw, &cc); err != nil {
-		return nil, err
-	}
-	return &cc, nil
-}
-
-func WriteCuratedCase(path string, cc *CuratedCase) error {
-	if err := os.MkdirAll(filepath.Dir(path), 0o750); err != nil {
-		return err
-	}
-
-	f, err := os.Create(filepath.Clean(path))
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	enc := json.NewEncoder(f)
-	enc.SetIndent("", "  ")
-	enc.SetEscapeHTML(false)
-	return enc.Encode(cc)
 }

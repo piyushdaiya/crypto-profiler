@@ -150,9 +150,8 @@ The following remain for future phases:
 - authn/authz model for engine endpoints
 - structured audit logging
 - fuzz testing
-- CI security scanning
 - dependency / SBOM scanning
-- SAST / secret scanning
+- secret scanning beyond the current Go-focused checks
 - threat model document
 - ASVS control-by-control checklist
 
@@ -161,6 +160,7 @@ The following remain for future phases:
 Phase 1 is considered complete for Day 1 when:
 
 - core unit and integration-style tests pass
+- govulncheck and gosec pass in CI and locally
 - watchlist client input handling is hardened
 - sanctioned and contextual risk cases are documented
 - the OWASP Phase 1 baseline is documented in-repo

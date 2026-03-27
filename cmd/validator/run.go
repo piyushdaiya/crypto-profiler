@@ -31,6 +31,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -123,7 +124,8 @@ func run(args []string, out io.Writer, errOut io.Writer, strategies []address.Ch
 func runDatasetMode(path string, out io.Writer, errOut io.Writer) int {
 	fmt.Fprintf(errOut, "🔍 Analyzing curated dataset %s...\n", path)
 
-	raw, err := os.ReadFile(path)
+	// #nosec G304 -- validator dataset mode intentionally reads an explicit local curated-case path provided by the operator.
+	raw, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
 		fmt.Fprintf(errOut, "Error loading dataset: %v\n", err)
 		return 1

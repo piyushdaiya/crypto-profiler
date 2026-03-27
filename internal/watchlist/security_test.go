@@ -27,7 +27,6 @@ package watchlist
 import (
 	"encoding/json"
 	"net/http"
-	"net/http/httptest"
 	"strings"
 	"testing"
 )
@@ -35,7 +34,7 @@ import (
 func TestCheckWatchlist_QueryEscapesAddress(t *testing.T) {
 	rawAddress := `0xabc123&debug=true`
 
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := newLocalHTTPTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		got := r.URL.Query().Get("address")
 		if got != rawAddress {
 			t.Fatalf("expected escaped address %q, got %q", rawAddress, got)
@@ -50,7 +49,6 @@ func TestCheckWatchlist_QueryEscapesAddress(t *testing.T) {
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(resp)
 	}))
-	defer server.Close()
 
 	setEnvForTest(t, "WATCHLIST_ENGINE_URL", server.URL)
 

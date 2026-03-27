@@ -250,7 +250,9 @@ The repo includes:
 
 - a watchlist / sanctions engine
 - malformed-input and validator safety tests
-- initial OWASP-oriented security coverage
+- focused dataset-loader and dataset-mode regression tests
+- reproducible `govulncheck` and `gosec` checks in CI and locally
+- practical OWASP-oriented security coverage
 
 See:
 
@@ -264,9 +266,33 @@ See:
 Run locally:
 
 ```bash
-go test ./...
-go build ./...
+make test
+make test-verbose
+make build
+make security
 ```
+
+Direct commands also work after `make security-tools` or when `./.tools/bin` is on your `PATH`:
+
+```bash
+go test ./... -v
+govulncheck ./...
+gosec ./...
+```
+
+What the current automated coverage emphasizes:
+
+- validator dataset-mode routing across Ethereum, Solana, Bitcoin, and ERC-20 curated cases
+- curated loader failure modes for malformed JSON and missing required fields
+- chain-specific Solana, Bitcoin, and ERC-20 dataset scoring thresholds and differentiated reason generation
+- file/path safety regressions around local trace-summary lookups
+- watchlist, label-loading, and malformed-input CLI safety checks already in the repo
+
+What it does not claim yet:
+
+- fuzzing across the extraction scripts
+- full secret scanning / SBOM generation
+- deployment hardening or external service penetration testing
 
 Dataset-mode validation examples:
 

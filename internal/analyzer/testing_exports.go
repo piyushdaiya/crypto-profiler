@@ -22,40 +22,12 @@
  *
  */
 
-package datasets
+package analyzer
 
-import (
-	"encoding/json"
-	"os"
-	"path/filepath"
-)
+import "sync"
 
-func LoadCuratedCase(path string) (*CuratedCase, error) {
-	raw, err := os.ReadFile(filepath.Clean(path))
-	if err != nil {
-		return nil, err
-	}
-
-	var cc CuratedCase
-	if err := json.Unmarshal(raw, &cc); err != nil {
-		return nil, err
-	}
-	return &cc, nil
-}
-
-func WriteCuratedCase(path string, cc *CuratedCase) error {
-	if err := os.MkdirAll(filepath.Dir(path), 0o750); err != nil {
-		return err
-	}
-
-	f, err := os.Create(filepath.Clean(path))
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	enc := json.NewEncoder(f)
-	enc.SetIndent("", "  ")
-	enc.SetEscapeHTML(false)
-	return enc.Encode(cc)
+// ResetKnownEntitiesCacheForTesting clears the cached bootstrap labels between package-level tests.
+func ResetKnownEntitiesCacheForTesting() {
+	knownEntities = nil
+	knownEntitiesOnce = sync.Once{}
 }

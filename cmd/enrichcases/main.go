@@ -55,7 +55,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := os.MkdirAll(*outDir, 0o755); err != nil {
+	if err := os.MkdirAll(*outDir, 0o750); err != nil {
 		fmt.Fprintf(os.Stderr, "error: create output dir: %v\n", err)
 		os.Exit(1)
 	}

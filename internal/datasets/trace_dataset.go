@@ -30,6 +30,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"unicode"
 )
 
 type TraceSummary struct {
@@ -99,5 +100,13 @@ func LoadExtractedTraceDatasetByAddress(dir, address string) (*ExtractedTraceDat
 func normalizeTraceDatasetFilename(address string) string {
 	s := strings.ToLower(strings.TrimSpace(address))
 	s = strings.TrimPrefix(s, "0x")
+	if len(s) != 40 {
+		return ""
+	}
+	for _, r := range s {
+		if !unicode.IsDigit(r) && (r < 'a' || r > 'f') {
+			return ""
+		}
+	}
 	return s
 }

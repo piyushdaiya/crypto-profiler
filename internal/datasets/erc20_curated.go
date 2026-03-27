@@ -130,6 +130,9 @@ func LoadERC20CuratedLayer1Case(path string) (*ERC20CuratedLayer1Case, error) {
 	if err := json.Unmarshal(raw, &cc); err != nil {
 		return nil, err
 	}
+	if err := requireCuratedIdentity("ERC-20 Layer 1", cc.CaseID, cc.Address, cc.Chain, "EVM"); err != nil {
+		return nil, err
+	}
 
 	return &cc, nil
 }

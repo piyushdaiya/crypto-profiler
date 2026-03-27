@@ -10,3 +10,4 @@ scripts/__pycache__/
 data/cases/extracted-solana-stablecoin/
 data/cases/extracted-erc20/
 data/cases/solana-extracted/
+.tools/

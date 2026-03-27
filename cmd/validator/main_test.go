@@ -34,6 +34,7 @@ import (
 	"time"
 
 	"github.com/piyushdaiya/crypto-profiler/internal/address"
+	"github.com/piyushdaiya/crypto-profiler/internal/analyzer"
 	"github.com/piyushdaiya/crypto-profiler/internal/model"
 )
 
@@ -371,6 +372,7 @@ func setEnvForTest(t *testing.T, key, value string) {
 	if err := os.Setenv(key, value); err != nil {
 		t.Fatalf("failed to set env %s: %v", key, err)
 	}
+	analyzer.ResetKnownEntitiesCacheForTesting()
 
 	t.Cleanup(func() {
 		var err error
@@ -382,5 +384,6 @@ func setEnvForTest(t *testing.T, key, value string) {
 		if err != nil {
 			t.Fatalf("failed to restore env %s: %v", key, err)
 		}
+		analyzer.ResetKnownEntitiesCacheForTesting()
 	})
 }

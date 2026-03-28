@@ -233,6 +233,24 @@ func renderReport(profile *model.WalletProfile, ctx *reportContext) string {
 		fmt.Sprintf("Review Recommended: %s", yesNo(profile.ReviewRecommended)),
 	)
 
+	if profile.Attribution != nil {
+		lines = append(lines, "", "Attribution:")
+		lines = append(lines, fmt.Sprintf("Resolved Label: %s", blankFallback(profile.Attribution.Label, "unknown")))
+		if profile.Attribution.Actor != "" {
+			lines = append(lines, fmt.Sprintf("Actor: %s", profile.Attribution.Actor))
+		}
+		lines = append(lines,
+			fmt.Sprintf("Category: %s", blankFallback(string(profile.Attribution.Category), "UNKNOWN")),
+			fmt.Sprintf("Risk Class: %s", blankFallback(string(profile.Attribution.RiskClass), "UNKNOWN")),
+			fmt.Sprintf("Confidence: %.2f", profile.Attribution.Confidence),
+			fmt.Sprintf("Source: %s (%s / %s)", profile.Attribution.SourceName, profile.Attribution.SourceTier, profile.Attribution.SourceType),
+			fmt.Sprintf("Disposition: %s", attributionDisposition(profile.Attribution)),
+		)
+		if len(profile.Attribution.SupportingSources) > 1 {
+			lines = append(lines, fmt.Sprintf("Supporting Sources: %s", joinSupportingSources(profile.Attribution.SupportingSources)))
+		}
+	}
+
 	if reasons := topRiskReasons(profile.RiskReasons, 5); len(reasons) > 0 {
 		lines = append(lines, "", "Top Reasons:")
 		for idx, reason := range reasons {
@@ -408,4 +426,25 @@ func offsetPrefix(offset float64) string {
 		return "-"
 	}
 	return "+"
+}
+
+func attributionDisposition(resolved *model.ResolvedAttribution) string {
+	if resolved == nil {
+		return "unknown"
+	}
+	if resolved.Escalating {
+		return "risk-escalating"
+	}
+	if resolved.Contextual {
+		return "contextual / benign"
+	}
+	return "informational"
+}
+
+func joinSupportingSources(sources []model.ResolvedAttributionSource) string {
+	parts := make([]string, 0, len(sources))
+	for _, source := range sources {
+		parts = append(parts, fmt.Sprintf("%s [%s]", source.Name, source.Tier))
+	}
+	return strings.Join(parts, ", ")
 }

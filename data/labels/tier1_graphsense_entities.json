@@ -1,0 +1,50 @@
+[
+  {
+    "address": "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b",
+    "network": "EVM",
+    "label": "Tornado Cash Router",
+    "actor": "Tornado Cash",
+    "category": "MIXER",
+    "risk_class": "ILLICIT_SERVICE",
+    "confidence": 0.99,
+    "contextual": false,
+    "risk_escalating": true,
+    "notes": "GraphSense-style structured actor attribution for known mixer routing infrastructure."
+  },
+  {
+    "address": "0xe592427a0aece92de3edee1f18e0157c05861564",
+    "network": "EVM",
+    "label": "Uniswap V3 Router",
+    "actor": "Uniswap",
+    "category": "PROTOCOL",
+    "risk_class": "TRUSTED_SERVICE",
+    "confidence": 0.98,
+    "contextual": true,
+    "risk_escalating": false,
+    "notes": "GraphSense-style structured attribution for trusted protocol router activity."
+  },
+  {
+    "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+    "network": "EVM",
+    "label": "Uniswap V2 Router",
+    "actor": "Uniswap",
+    "category": "PROTOCOL",
+    "risk_class": "TRUSTED_SERVICE",
+    "confidence": 0.98,
+    "contextual": true,
+    "risk_escalating": false,
+    "notes": "GraphSense-style structured attribution for trusted protocol router activity."
+  },
+  {
+    "address": "0xf977814e90da44bfa03b6295a0616a897441acec",
+    "network": "EVM",
+    "label": "Binance Wallet",
+    "actor": "Binance",
+    "category": "EXCHANGE",
+    "risk_class": "EXCHANGE",
+    "confidence": 0.97,
+    "contextual": true,
+    "risk_escalating": false,
+    "notes": "GraphSense-style structured exchange attribution."
+  }
+]

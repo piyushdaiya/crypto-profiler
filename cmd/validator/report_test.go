@@ -57,6 +57,20 @@ func TestRenderReport_IncludesAnalystFacingSections(t *testing.T) {
 				Offset:      14.0,
 			},
 		},
+		Attribution: &model.ResolvedAttribution{
+			Address:    "0xtest",
+			Network:    "EVM",
+			Label:      "Sample Exchange Wallet",
+			Actor:      "Sample Exchange",
+			Category:   model.LabelCategoryExchange,
+			RiskClass:  model.AttributionRiskClassExchange,
+			Confidence: 0.93,
+			Contextual: true,
+			Escalating: false,
+			SourceName: "graphsense_structured_labels",
+			SourceTier: model.AttributionSourceTierPrimaryStructured,
+			SourceType: model.AttributionSourceTypeGraphSense,
+		},
 	}
 
 	context := &reportContext{
@@ -86,6 +100,10 @@ func TestRenderReport_IncludesAnalystFacingSections(t *testing.T) {
 		"Dataset Context: ERC-20 Layer 1 dataset",
 		"Case: ERC-20 Noisy Inbound Broad Token Surface (erc20-noisy-inbound)",
 		"Risk Score: 14.20",
+		"Attribution:",
+		"Resolved Label: Sample Exchange Wallet",
+		"Actor: Sample Exchange",
+		"Disposition: contextual / benign",
 		"Top Reasons:",
 		"Top Counterparties:",
 		"Interpretation:",
@@ -154,18 +172,22 @@ func TestRun_ReportModeUsesHumanReadableOutputForLiveProfile(t *testing.T) {
 
 func TestRun_DatasetModeReportIncludesChainSpecificContext(t *testing.T) {
 	setEnvForTest(t, "BOOTSTRAP_LABELS_PATH", repoPath("data", "labels", "bootstrap_entities.json"))
+	setEnvForTest(t, "GRAPHSENSE_LABELS_PATH", repoPath("data", "labels", "tier1_graphsense_entities.json"))
+	setEnvForTest(t, "BITCOIN_MINING_POOLS_PATH", repoPath("data", "labels", "tier1_bitcoin_mining_pools.json"))
 
 	tests := []struct {
 		name                string
 		args                []string
 		wantDetailSubstring string
 		wantCaseSubstring   string
+		wantAttribution     string
 	}{
 		{
 			name:                "ethereum curated report",
 			args:                []string{"--report", "--dataset", repoPath("data", "cases", "curated-enriched", "tornado-router-high-risk.json")},
 			wantDetailSubstring: "Trace activity:",
 			wantCaseSubstring:   "Case: High-Risk Mixer Infrastructure (tornado-router-high-risk)",
+			wantAttribution:     "Resolved Label: Tornado Cash Router",
 		},
 		{
 			name:                "solana curated report",
@@ -184,6 +206,7 @@ func TestRun_DatasetModeReportIncludesChainSpecificContext(t *testing.T) {
 			args:                []string{"--report", "--dataset", repoPath("data", "cases", "curated-erc20", "erc20-uniswap-v2-router-trusted-token-hub.json")},
 			wantDetailSubstring: "Unique token contracts:",
 			wantCaseSubstring:   "Case: ERC-20 Trusted Protocol Token Hub (erc20-uniswap-v2-router-trusted-token-hub)",
+			wantAttribution:     "Resolved Label: Uniswap V2 Router",
 		},
 	}
 
@@ -206,6 +229,9 @@ func TestRun_DatasetModeReportIncludesChainSpecificContext(t *testing.T) {
 			}
 			if !strings.Contains(report, tt.wantDetailSubstring) {
 				t.Fatalf("expected report to contain chain-specific detail %q, got:\n%s", tt.wantDetailSubstring, report)
+			}
+			if tt.wantAttribution != "" && !strings.Contains(report, tt.wantAttribution) {
+				t.Fatalf("expected report to contain attribution detail %q, got:\n%s", tt.wantAttribution, report)
 			}
 		})
 	}

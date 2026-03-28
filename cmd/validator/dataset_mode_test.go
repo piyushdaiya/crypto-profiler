@@ -38,6 +38,8 @@ import (
 
 func TestRun_DatasetModeRoutesCuratedCasesAcrossChains(t *testing.T) {
 	setEnvForTest(t, "BOOTSTRAP_LABELS_PATH", repoPath("data", "labels", "bootstrap_entities.json"))
+	setEnvForTest(t, "GRAPHSENSE_LABELS_PATH", repoPath("data", "labels", "tier1_graphsense_entities.json"))
+	setEnvForTest(t, "BITCOIN_MINING_POOLS_PATH", repoPath("data", "labels", "tier1_bitcoin_mining_pools.json"))
 
 	tests := []struct {
 		name                string
@@ -45,6 +47,7 @@ func TestRun_DatasetModeRoutesCuratedCasesAcrossChains(t *testing.T) {
 		wantNetwork         string
 		wantDetailSubstring string
 		wantReasonCode      string
+		wantAttribution     model.LabelCategory
 	}{
 		{
 			name:                "ethereum trace-enriched curated path",
@@ -52,6 +55,7 @@ func TestRun_DatasetModeRoutesCuratedCasesAcrossChains(t *testing.T) {
 			wantNetwork:         "EVM",
 			wantDetailSubstring: "Trace Summary",
 			wantReasonCode:      "dataset_trace_activity_observed",
+			wantAttribution:     model.LabelCategoryMixer,
 		},
 		{
 			name:                "solana curated stablecoin path",
@@ -73,6 +77,7 @@ func TestRun_DatasetModeRoutesCuratedCasesAcrossChains(t *testing.T) {
 			wantNetwork:         "EVM",
 			wantDetailSubstring: "Loaded curated ERC-20 Layer 1 case",
 			wantReasonCode:      "erc20_trusted_protocol_token_hub",
+			wantAttribution:     model.LabelCategoryProtocol,
 		},
 	}
 
@@ -97,6 +102,14 @@ func TestRun_DatasetModeRoutesCuratedCasesAcrossChains(t *testing.T) {
 
 			if !hasRiskReasonCode(profile.RiskReasons, tt.wantReasonCode) {
 				t.Fatalf("expected risk reason %q, got %+v", tt.wantReasonCode, profile.RiskReasons)
+			}
+			if tt.wantAttribution != "" {
+				if profile.Attribution == nil {
+					t.Fatalf("expected resolved attribution on profile")
+				}
+				if profile.Attribution.Category != tt.wantAttribution {
+					t.Fatalf("expected attribution category %q, got %+v", tt.wantAttribution, profile.Attribution)
+				}
 			}
 		})
 	}
@@ -240,6 +253,8 @@ func TestApplyBitcoinCuratedLayer1Context_UsesSpecificLegacyRule(t *testing.T) {
 
 func TestApplyERC20CuratedLayer1Context_ThresholdsAndReasons(t *testing.T) {
 	setEnvForTest(t, "BOOTSTRAP_LABELS_PATH", repoPath("data", "labels", "bootstrap_entities.json"))
+	setEnvForTest(t, "GRAPHSENSE_LABELS_PATH", repoPath("data", "labels", "tier1_graphsense_entities.json"))
+	setEnvForTest(t, "BITCOIN_MINING_POOLS_PATH", repoPath("data", "labels", "tier1_bitcoin_mining_pools.json"))
 
 	t.Run("exchange-like case avoids generic inbound rule", func(t *testing.T) {
 		curated := &datasets.ERC20CuratedLayer1Case{

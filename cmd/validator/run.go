@@ -37,6 +37,7 @@ import (
 
 	"github.com/piyushdaiya/crypto-profiler/internal/address"
 	"github.com/piyushdaiya/crypto-profiler/internal/analyzer"
+	"github.com/piyushdaiya/crypto-profiler/internal/attribution"
 	"github.com/piyushdaiya/crypto-profiler/internal/datasets"
 	"github.com/piyushdaiya/crypto-profiler/internal/model"
 )
@@ -132,6 +133,7 @@ func run(args []string, out io.Writer, errOut io.Writer, strategies []address.Ch
 			ValidationDetails: "Invalid format or no matching chain strategy",
 		}
 	}
+	attribution.ApplyTier1Attribution(result)
 
 	return writeOutput(result, buildLiveReportContext(result), *reportMode, out, errOut)
 }
@@ -177,6 +179,7 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 
 		profile := buildWalletProfileFromSolanaCuratedStablecoinCase(cc)
 		applySolanaCuratedStablecoinContext(profile, cc)
+		attribution.ApplyTier1Attribution(profile)
 		return profile, buildReportContextFromSolanaCase(cc), nil
 	}
 
@@ -188,6 +191,7 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 
 		profile := buildWalletProfileFromBitcoinCuratedLayer1Case(cc)
 		applyBitcoinCuratedLayer1Context(profile, cc)
+		attribution.ApplyTier1Attribution(profile)
 		return profile, buildReportContextFromBitcoinCase(cc), nil
 	}
 
@@ -199,6 +203,7 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 
 		profile := buildWalletProfileFromERC20CuratedLayer1Case(cc)
 		applyERC20CuratedLayer1Context(profile, cc)
+		attribution.ApplyTier1Attribution(profile)
 		return profile, buildReportContextFromERC20Case(cc), nil
 	}
 
@@ -212,6 +217,7 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 
 	analyzer.Investigate(profile, txs)
 	applyCuratedTraceContext(profile, cc)
+	attribution.ApplyTier1Attribution(profile)
 
 	return profile, buildReportContextFromCuratedCase(cc), nil
 }

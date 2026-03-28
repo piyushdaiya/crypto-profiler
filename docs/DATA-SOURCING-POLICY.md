@@ -82,6 +82,7 @@ Examples:
 
 - compact extracted summary JSON files
 - small compressed extracted samples used as reference fixtures
+- small Tier 1 attribution fixture files
 - label/config files
 
 ### Documented benchmark addresses
@@ -91,6 +92,22 @@ Examples:
 - sanctioned deterministic test addresses
 - trusted router benchmarks
 - high-risk infrastructure used in curated case studies
+- mining-pool or trusted-service benchmark addresses used in attribution tests and demos
+
+### Tier 1 attribution fixtures
+
+The repo may also commit small intentional Tier 1 attribution fixtures such as:
+
+- `data/labels/tier1_graphsense_entities.json`
+- `data/labels/tier1_bitcoin_mining_pools.json`
+- `data/labels/bootstrap_entities.json`
+
+These are committed because they are:
+
+- small
+- testable
+- part of the implemented scoring story
+- useful for deterministic demos and regression coverage
 
 ### Small example candidate templates
 
@@ -143,6 +160,7 @@ Safe to commit when intentional:
 - trace-enriched curated case artifacts
 - compact trace summary fixtures
 - trusted and high-risk benchmark addresses used in tests and curated cases
+- small Tier 1 structured attribution fixtures used for scoring and report demos
 
 Keep local or external:
 
@@ -171,6 +189,7 @@ Safe to commit when intentional:
 - curated UTXO-flow cases
 - compact extracted Bitcoin summary fixtures
 - example candidate templates
+- small mining-pool attribution fixtures
 
 Keep local or external:
 
@@ -190,6 +209,7 @@ Safe to commit when intentional:
 - small token reference/config files
 - curated ERC-20 case artifacts under `data/cases/curated-erc20/`
 - committed example candidate templates such as `data/candidates/erc20_addresses.example.txt`
+- small Tier 1 label fixtures that support trusted protocol or exchange-style contextualization
 
 Keep local or external:
 
@@ -220,6 +240,7 @@ When committing a new benchmark artifact, update the docs that explain it:
 - `ARCHITECTURE.md`
 - `docs/TYPOLOGIES.md`
 - `docs/SCORING.md`
+- `docs/LABEL-SOURCE-HIERARCHY.md`
 - the relevant chain-specific data model doc
 
 This keeps the repo story aligned with the actual committed data.
@@ -232,6 +253,7 @@ This keeps the repo story aligned with the actual committed data.
 - [`ARCHITECTURE.md`](../ARCHITECTURE.md)
 - [`docs/TYPOLOGIES.md`](TYPOLOGIES.md)
 - [`docs/SCORING.md`](SCORING.md)
+- [`docs/LABEL-SOURCE-HIERARCHY.md`](LABEL-SOURCE-HIERARCHY.md)
 - [`docs/ETHEREUM-DATA-MODEL.md`](ETHEREUM-DATA-MODEL.md)
 - [`docs/ERC20-DATA-MODEL.md`](ERC20-DATA-MODEL.md)
 - [`docs/SOLANA-DATA-MODEL.md`](SOLANA-DATA-MODEL.md)

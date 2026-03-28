@@ -17,6 +17,7 @@ Current status:
 - ERC-20 Layer 1 scoring is implemented in validator dataset mode.
 - Solana stablecoin-flow scoring is implemented in validator dataset mode.
 - Bitcoin UTXO-flow scoring is implemented in validator dataset mode.
+- Tier 1 attribution-aware modifiers are implemented across live and dataset-mode outputs.
 
 ---
 
@@ -29,6 +30,18 @@ Sanctions and direct labeled high-risk exposure should dominate weaker heuristic
 ### Explainability-first
 
 Every meaningful score change should produce a visible reason code and evidence count when possible.
+
+### Behavior first, attribution second
+
+Wave 5A keeps the behavioral model intact.
+
+The current ordering is:
+
+1. behavior or dataset context is scored first
+2. Tier 1 attribution is resolved second
+3. a bounded attribution modifier is applied
+
+This means labels improve precision, but they do not replace the underlying behavior model.
 
 ### Practical MVP weighting
 
@@ -63,6 +76,7 @@ Sanctions short-circuit to:
 | Area                                 | Implemented now | Notes                                                             |
 |--------------------------------------|-----------------|-------------------------------------------------------------------|
 | Shared live analyzer                 | Yes             | Used for EVM live profiling and curated EVM cases.                |
+| Tier 1 attribution-aware modifiers   | Yes             | Applied after behavior scoring across live and dataset-mode paths. |
 | Ethereum trace-aware context         | Yes             | Added in dataset mode as observational context, not live scoring. |
 | ERC-20 Layer 1 scoring               | Yes             | Curated dataset mode only.                                        |
 | Solana stablecoin-flow scoring       | Yes             | Curated dataset mode only.                                        |
@@ -84,9 +98,9 @@ Ethereum currently uses two layers:
 | Rule family                | Current reason codes                                                                                                | Implementation note                                                                     |
 |----------------------------|---------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
 | Sanctions                  | `direct_sanctions_match`, `direct_sanctions_exposure`                                                               | Direct match short-circuits; direct exposure is also scored.                            |
-| Direct high-risk exposure  | `profiled_address_high_risk_label`, `direct_mixer_interaction`, `direct_high_risk_entity`                           | Direct labeled contact is the main non-sanctions escalation path.                       |
+| Direct high-risk exposure  | `direct_mixer_interaction`, `direct_high_risk_entity`                                                               | Direct labeled contact is a major escalation path; profile-level attribution now applies afterward. |
 | Wallet age                 | `fresh_wallet`, `established_history`                                                                               | New wallets are escalated; old wallets can be mitigated.                                |
-| Trusted context            | `profiled_address_trusted_label`, `exchange_interaction`, `trusted_or_protocol_interaction`                         | Trusted or exchange context reduces score but does not override stronger fraud signals. |
+| Trusted context            | `exchange_interaction`, `trusted_or_protocol_interaction`, `contextual_infrastructure_interaction`                  | Trusted or exchange context reduces score but does not override stronger fraud signals. |
 | Activity burst             | `high_velocity_behavior`                                                                                            | Tx-rate threshold heuristic.                                                            |
 | Repeated high-risk contact | `repeated_flagged_counterparty_interaction`                                                                         | Category-aware repeated-contact scoring.                                                |
 | Service concentration      | `high_risk_service_concentration`, `exchange_concentration`, `single_service_concentration`                         | Count-based concentration to the top labeled service.                                   |
@@ -98,16 +112,15 @@ Ethereum currently uses two layers:
 These are the important current offsets, as implemented:
 
 - `direct_sanctions_match`: `+100` and short-circuit
-- `profiled_address_high_risk_label`: `+45`
 - `direct_high_risk_entity`: `+45`
 - `direct_mixer_interaction`: `+20`
 - `fresh_wallet`: `+35`
 - `high_velocity_behavior`: `+25`
 - `high_risk_service_concentration`: `+18`
 - `established_history`: `-10`
-- `profiled_address_trusted_label`: `-10`
 - `exchange_interaction`: `-5`
 - `trusted_or_protocol_interaction`: `-5`
+- `contextual_infrastructure_interaction`: `-5`
 - `exchange_concentration`: `-4`
 - `single_service_concentration`: `-4`
 - `noisy_inbound_activity`: `+2`
@@ -142,12 +155,32 @@ This means curated EVM cases can say:
 
 without pretending the repo already has mature trace-driven behavioral scoring.
 
+### Tier 1 attribution modifiers
+
+After the shared analyzer or dataset-mode scoring runs, the resolver applies a bounded attribution modifier when a Tier 1 label is available.
+
+Current modifier families:
+
+| Attribution shape                             | Current reason code                    | Current effect      |
+|-----------------------------------------------|----------------------------------------|---------------------|
+| Sanctioned actor attribution                  | `tier1_profile_sanctioned_attribution` | `FRAUD +60`         |
+| Illicit service, exploit, or scam attribution | `tier1_profile_risky_attribution`      | `FRAUD +45`         |
+| Trusted protocol or exchange attribution      | `tier1_profile_contextual_attribution` | `REPUTATION -10`    |
+| Mining pool or treasury attribution           | `tier1_profile_contextual_attribution` | `REPUTATION -8`     |
+
+Important implementation notes:
+
+- direct watchlist sanctions still short-circuit first
+- Tier 1 attribution adds one resolved modifier rather than dumping all source labels into the score
+- contextual labels are meant to reduce false positives, not guarantee a low-risk outcome
+
 ### What is not implemented yet for Ethereum
 
 - trace-driven pass-through or U-turn detection
 - value-weighted concentration from traces
 - hop-based exposure
 - graph-aware path scoring
+- corroborating-source conflict resolution beyond Tier 1
 
 ---
 
@@ -178,6 +211,7 @@ Today, ERC-20 dataset-mode scoring is trying to answer questions like:
 - is the activity inbound-noisy across many counterparties and tokens?
 - is there repeated counterparty structure worth highlighting?
 - is token activity mixed across many contracts or heavily concentrated to one asset?
+- does Tier 1 attribution explain a broad token surface as trusted infrastructure instead of generic noise?
 
 ### What is not implemented yet for ERC-20
 
@@ -185,6 +219,7 @@ Today, ERC-20 dataset-mode scoring is trying to answer questions like:
 - swap-aware or protocol-intent interpretation
 - trace-aware ERC-20 pass-through or U-turn detection
 - hop-based or graph-aware token exposure
+- corroborating-source attribution beyond Tier 1
 
 ---
 
@@ -213,6 +248,7 @@ Today, Solana dataset-mode scoring is trying to answer questions like:
 - is this wallet authority-heavy in a way that looks operational or reviewable?
 - is the stablecoin surface broad enough to warrant attention?
 - is there unusual concentration to a single repeated counterparty?
+- does Tier 1 attribution provide contextual operator or service identity for a curated case?
 
 ### What is not implemented yet for Solana
 
@@ -220,6 +256,7 @@ Today, Solana dataset-mode scoring is trying to answer questions like:
 - instruction-aware or program-aware scoring
 - non-stablecoin Layer 1 coverage
 - bridge-aware or graph-aware scoring
+- corroborating-source attribution beyond Tier 1
 
 ---
 
@@ -250,6 +287,7 @@ Today, Bitcoin dataset-mode scoring is trying to answer questions like:
 - is the counterparty surface unusually broad?
 - is this more like an operational hub than a normal wallet?
 - is there extreme repeated interaction with one counterparty?
+- does mining-pool context explain a broad operational-looking address more safely?
 
 ### What is not implemented yet for Bitcoin
 
@@ -258,6 +296,33 @@ Today, Bitcoin dataset-mode scoring is trying to answer questions like:
 - peel-chain logic
 - change-aware or cluster-aware modeling
 - hop-based exposure scoring
+- WalletExplorer or other corroborating attribution sources
+
+---
+
+## What Tier 1 Attribution Changes Today
+
+Wave 5A improves score precision in three ways:
+
+1. risky actors can escalate scores without replacing behavioral reasons
+2. contextual infrastructure can reduce false positives for broad-surface or high-volume wallets
+3. reports can explain why a label mattered, including actor, confidence, and source tier
+
+This is deliberately narrower than a full attribution platform.
+
+Tier 1 today means:
+
+- GraphSense-style structured labels
+- Bitcoin mining-pool context
+- repo-local bootstrap overrides
+
+Deferred to later waves:
+
+- WalletExplorer
+- secondary or corroborating-source ingestion
+- cluster-aware actor reasoning
+- graph-aware attribution paths
+- WalletExplorer or other corroborating attribution sources
 
 ---
 

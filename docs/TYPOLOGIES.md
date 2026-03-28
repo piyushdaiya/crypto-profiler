@@ -86,8 +86,10 @@ Not implemented today:
 | Typology                                                    | Where it exists today  | Current implementation shape                                                                                                                                                                                                |
 |-------------------------------------------------------------|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Sanctions / watchlist hit                                   | Shared analyzer        | `direct_sanctions_match` short-circuits to a critical result.                                                                                                                                                               |
-| Direct high-risk wallet or counterparty exposure            | Shared analyzer        | `profiled_address_high_risk_label`, `direct_mixer_interaction`, `direct_high_risk_entity`, `direct_sanctions_exposure`.                                                                                                     |
-| Trusted / exchange contextual mitigation                    | Shared analyzer        | `profiled_address_trusted_label`, `exchange_interaction`, `trusted_or_protocol_interaction`.                                                                                                                                |
+| Direct high-risk wallet or counterparty exposure            | Shared analyzer        | `direct_mixer_interaction`, `direct_high_risk_entity`, and `direct_sanctions_exposure` remain part of the live behavior layer.                                                                                              |
+| Trusted / exchange contextual mitigation                    | Shared analyzer        | `exchange_interaction`, `trusted_or_protocol_interaction`, and `contextual_infrastructure_interaction` provide behavior-level mitigation before Tier 1 profile attribution is applied.                                       |
+| Tier 1 risky actor attribution                              | Attribution layer      | `tier1_profile_sanctioned_attribution` and `tier1_profile_risky_attribution` now apply deterministic post-behavior escalation from Tier 1 labels.                                                                          |
+| Tier 1 contextual infrastructure suppression                | Attribution layer      | `tier1_profile_contextual_attribution` reduces false positives for trusted protocols, exchanges, mining pools, or treasury-like infrastructure.                                                                            |
 | Established-history mitigation                              | Shared analyzer        | `established_history` reduces score for older wallets.                                                                                                                                                                      |
 | Fresh wallet                                                | Shared analyzer        | `fresh_wallet` is implemented as an age-based escalation.                                                                                                                                                                   |
 | Velocity burst                                              | Shared analyzer        | `high_velocity_behavior` is threshold-based on txs per active hour.                                                                                                                                                         |
@@ -123,7 +125,8 @@ These have real code support or data groundwork, but not a complete end-to-end d
 | ERC-20 trace-aware routing interpretation           | ERC-20 transfer-row scoring exists, but traces are not yet used to distinguish swaps, pass-throughs, or U-turns.    |
 | U-turn / round-trip behavior                        | Trace depth and counterparty context exist, but no inbound-then-back-out detector is implemented.                   |
 | Value-weighted service concentration                | Concentration works on interaction count today, not value-weighted flow.                                            |
-| Entity-aware concentration and repeated interaction | Exact-address labels work today; cluster-level or entity-merged scoring does not.                                   |
+| Entity-aware concentration and repeated interaction | Exact-address Tier 1 attribution works today; cluster-level or entity-merged scoring does not.                      |
+| Multi-source corroborated attribution               | Tier 1 resolution exists, but corroborating-source ingestion and richer conflict handling are deferred.              |
 | Bitcoin rapid spend / dormant reactivation          | The UTXO data model supports these concepts, but the validator does not score them yet.                             |
 | Solana protocol or instruction semantics            | Stablecoin-flow role scoring exists, but full instruction-aware or program-aware Solana semantics do not.           |
 | Trace-aware Ethereum scoring                        | Trace context is visible in dataset mode, but the shared analyzer still scores from top-level transfers and labels. |
@@ -162,6 +165,7 @@ If you want the current repo story in one sentence:
 - [`ARCHITECTURE.md`](../ARCHITECTURE.md)
 - [`docs/SCORING.md`](SCORING.md)
 - [`docs/EVM-CALLS-INTEGRATION.md`](EVM-CALLS-INTEGRATION.md)
+- [`docs/LABEL-SOURCE-HIERARCHY.md`](LABEL-SOURCE-HIERARCHY.md)
 - [`docs/ERC20-DATA-MODEL.md`](ERC20-DATA-MODEL.md)
 - [`docs/SOLANA-DATA-MODEL.md`](SOLANA-DATA-MODEL.md)
 - [`docs/BITCOIN-DATA-MODEL.md`](BITCOIN-DATA-MODEL.md)

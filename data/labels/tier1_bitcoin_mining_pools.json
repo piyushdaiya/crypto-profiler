@@ -1,0 +1,14 @@
+[
+  {
+    "address": "bc1qcp6fr7gtyukympl6unr7uv78h3vprycwj455zx",
+    "network": "BITCOIN",
+    "label": "Foundry USA Pool Payout",
+    "actor": "Foundry USA Pool",
+    "category": "MINING_POOL",
+    "risk_class": "MINING_POOL",
+    "confidence": 0.96,
+    "contextual": true,
+    "risk_escalating": false,
+    "notes": "Tier 1 mining-pool context fixture used for contextual false-positive suppression."
+  }
+]

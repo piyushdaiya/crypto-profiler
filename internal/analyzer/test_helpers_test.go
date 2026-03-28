@@ -28,6 +28,8 @@ import (
 	"os"
 	"sync"
 	"testing"
+
+	"github.com/piyushdaiya/crypto-profiler/internal/attribution"
 )
 
 func resetKnownEntitiesCacheForTest(t *testing.T) {
@@ -35,6 +37,7 @@ func resetKnownEntitiesCacheForTest(t *testing.T) {
 
 	knownEntities = nil
 	knownEntitiesOnce = sync.Once{}
+	attribution.ResetDefaultResolverForTesting()
 }
 
 func setEnvForTest(t *testing.T, key, value string) {

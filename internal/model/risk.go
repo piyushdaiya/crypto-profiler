@@ -27,14 +27,16 @@ package model
 type LabelCategory string
 
 const (
-	LabelCategorySanctions LabelCategory = "SANCTIONS"
-	LabelCategoryMixer     LabelCategory = "MIXER"
-	LabelCategoryExploit   LabelCategory = "EXPLOIT"
-	LabelCategoryScam      LabelCategory = "SCAM"
-	LabelCategoryExchange  LabelCategory = "EXCHANGE"
-	LabelCategoryProtocol  LabelCategory = "PROTOCOL"
-	LabelCategoryTrusted   LabelCategory = "TRUSTED"
-	LabelCategoryUnknown   LabelCategory = "UNKNOWN"
+	LabelCategorySanctions  LabelCategory = "SANCTIONS"
+	LabelCategoryMixer      LabelCategory = "MIXER"
+	LabelCategoryExploit    LabelCategory = "EXPLOIT"
+	LabelCategoryScam       LabelCategory = "SCAM"
+	LabelCategoryExchange   LabelCategory = "EXCHANGE"
+	LabelCategoryProtocol   LabelCategory = "PROTOCOL"
+	LabelCategoryTrusted    LabelCategory = "TRUSTED"
+	LabelCategoryMiningPool LabelCategory = "MINING_POOL"
+	LabelCategoryTreasury   LabelCategory = "TREASURY"
+	LabelCategoryUnknown    LabelCategory = "UNKNOWN"
 )
 
 type LabelSeverity string
@@ -55,14 +57,20 @@ const (
 )
 
 type EntityLabel struct {
-	Address    string          `json:"address"`
-	Name       string          `json:"name"`
-	Category   LabelCategory   `json:"category"`
-	Severity   LabelSeverity   `json:"severity"`
-	Confidence LabelConfidence `json:"confidence"`
-	Source     string          `json:"source"`
-	Trusted    bool            `json:"trusted,omitempty"`
-	Notes      string          `json:"notes,omitempty"`
+	Address    string                `json:"address"`
+	Name       string                `json:"name"`
+	Actor      string                `json:"actor,omitempty"`
+	Category   LabelCategory         `json:"category"`
+	RiskClass  AttributionRiskClass  `json:"risk_class,omitempty"`
+	Severity   LabelSeverity         `json:"severity"`
+	Confidence LabelConfidence       `json:"confidence"`
+	Source     string                `json:"source"`
+	SourceTier AttributionSourceTier `json:"source_tier,omitempty"`
+	SourceType AttributionSourceType `json:"source_type,omitempty"`
+	Trusted    bool                  `json:"trusted,omitempty"`
+	Contextual bool                  `json:"contextual,omitempty"`
+	Escalating bool                  `json:"risk_escalating,omitempty"`
+	Notes      string                `json:"notes,omitempty"`
 }
 
 // Backward-compatible: keep existing fields, add optional metadata.

@@ -14,6 +14,7 @@ The repository currently combines:
 - shared live scoring for EVM wallets
 - curated dataset-mode scoring for ERC-20, Solana, and Bitcoin Layer 1
 - trace-aware Ethereum case enrichment
+- Tier 1 attribution-aware scoring and report context
 - a watchlist-driven sanctions path
 
 The current next-step roadmap is deeper behavior scoring on top of the now-aligned multi-chain Layer 1 base.
@@ -50,6 +51,7 @@ It demonstrates:
 
 - multi-chain Layer 1 thinking without pretending every chain should share one identical data model
 - explainable risk scoring through visible `risk_reasons`, evidence counts, and review-oriented grades
+- attribution-aware contextualization that can escalate illicit actors or suppress false positives for trusted infrastructure
 - a practical curated-case workflow from extraction to analyst-facing report output
 - disciplined repository storytelling through aligned docs, curated artifacts, tests, and CI security checks
 
@@ -89,11 +91,13 @@ Crypto Profiler deliberately separates:
 - live EVM scoring via a shared analyzer
 - curated dataset-mode scoring for ERC-20, Solana, and Bitcoin Layer 1
 - trace-aware Ethereum enrichment for cases where internal call context materially improves the story
+- Tier 1 attribution resolution that is applied after behavior scoring
 
 That choice keeps the implementation honest:
 
 - Ethereum is the most mature live path
 - Solana, Bitcoin, and ERC-20 are real Layer 1 slices, but currently delivered through curated dataset mode
+- Tier 1 attribution improves precision without pretending the repo already has full entity-resolution or graph analytics
 - the shared output contract stays consistent even when the ingestion and scoring path differs by chain
 
 ---
@@ -128,19 +132,49 @@ This mode is meant to make the repo easy to demo in interviews and portfolio rev
 
 ---
 
+## Tier 1 Attribution
+
+Wave 5A adds a normalized attribution layer on top of the existing behavioral model.
+
+Implemented now:
+
+- GraphSense-style structured attribution fixtures
+- Bitcoin mining-pool context
+- repo-local bootstrap labels as deterministic local overrides
+- resolved attribution in JSON output and `--report`
+- controlled post-behavior scoring modifiers
+
+What this means in practice:
+
+- sanctions, mixers, and other illicit actors can escalate scores more precisely
+- trusted protocols, exchanges, mining pools, and treasury-like infrastructure can suppress false positives
+- attribution improves interpretation, but it does not replace behavior-based reasoning
+
+What it does not claim yet:
+
+- WalletExplorer support
+- broad corroborating-source ingestion
+- full cluster-aware entity resolution
+- graph-aware actor scoring
+
+See [`docs/LABEL-SOURCE-HIERARCHY.md`](docs/LABEL-SOURCE-HIERARCHY.md) for the exact Tier 1 model.
+
+---
+
 ## Current Implementation Status
 
-| Area                               | Status today                | Notes                                                                                                                                            |
-|------------------------------------|-----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| EVM live wallet profiling          | Implemented                 | Uses Etherscan transaction history, watchlist checks, bootstrap labels, and the shared analyzer.                                                 |
-| Ethereum curated Layer 1 cases     | Implemented                 | Built from extracted address-scoped native and ERC-20 transfer activity.                                                                         |
-| Ethereum trace integration         | Implemented                 | Address-scoped traces can be extracted, merged into curated cases, and surfaced in dataset mode.                                                 |
-| ERC-20 Layer 1                     | Implemented in dataset mode | Address-scoped ERC-20 transfer summaries, curated cases, and validator dataset scoring are now in place.                                         |
-| Solana Layer 1                     | Implemented in dataset mode | Current Solana layer is stablecoin-flow based and curated from large-value USDC/USDT summaries.                                                  |
-| Bitcoin Layer 1                    | Implemented in dataset mode | Current Bitcoin layer is address-level UTXO-flow based.                                                                                          |
-| Solana live Layer 1 scoring        | Not implemented             | Live Solana strategy currently provides address validation and basic activity/balance lookup only.                                               |
-| Bitcoin live Layer 1 scoring       | Not implemented             | Live Bitcoin strategy currently provides address validation and basic activity/balance lookup only.                                              |
-| ERC-20 live or graph-aware scoring | Not implemented             | Current ERC-20 support is curated dataset mode only; live token scoring, swap-aware interpretation, and graph-aware exposure remain future work. |
+| Area                               | Status today                | Notes                                                                                                                                             |
+|------------------------------------|-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| EVM live wallet profiling          | Implemented                 | Uses Etherscan transaction history, watchlist checks, Tier 1 attribution, and the shared analyzer.                                               |
+| Ethereum curated Layer 1 cases     | Implemented                 | Built from extracted address-scoped native and ERC-20 transfer activity.                                                                          |
+| Ethereum trace integration         | Implemented                 | Address-scoped traces can be extracted, merged into curated cases, and surfaced in dataset mode.                                                  |
+| Tier 1 attribution layer           | Implemented                 | GraphSense-style labels, Bitcoin mining-pool context, and repo-local overrides now feed scoring and report output.                               |
+| ERC-20 Layer 1                     | Implemented in dataset mode | Address-scoped ERC-20 transfer summaries, curated cases, validator dataset scoring, and Tier 1 attribution-aware contextualization are in place. |
+| Solana Layer 1                     | Implemented in dataset mode | Current Solana layer is stablecoin-flow based and curated from large-value USDC/USDT summaries.                                                   |
+| Bitcoin Layer 1                    | Implemented in dataset mode | Current Bitcoin layer is address-level UTXO-flow based, with mining-pool context available through Tier 1 attribution.                           |
+| Solana live Layer 1 scoring        | Not implemented             | Live Solana strategy currently provides address validation and basic activity/balance lookup only.                                                |
+| Bitcoin live Layer 1 scoring       | Not implemented             | Live Bitcoin strategy currently provides address validation and basic activity/balance lookup only.                                               |
+| ERC-20 live or graph-aware scoring | Not implemented             | Current ERC-20 support is curated dataset mode only; live token scoring, swap-aware interpretation, and graph-aware exposure remain future work.  |
 
 ---
 
@@ -156,6 +190,7 @@ Implemented now:
 - curated EVM case generation from extracted address-scoped transfer data
 - optional trace enrichment for curated cases
 - validator dataset mode that surfaces trace-aware internal-call context
+- Tier 1 attribution-aware contextualization for named actors and infrastructure
 
 Not implemented yet:
 
@@ -172,6 +207,7 @@ Implemented now:
 - address-scoped ERC-20 extraction with raw subset artifacts and summary JSON
 - curated ERC-20 cases under `data/cases/curated-erc20/`
 - validator dataset-mode scoring for trusted protocol hubs, noisy inbound token surfaces, broad token surfaces, mixed token activity, repeated counterparties, and token concentration
+- Tier 1 attribution-aware contextual suppression for trusted protocol and exchange-style cases
 
 Not implemented yet:
 
@@ -189,6 +225,7 @@ Implemented now:
 - extracted stablecoin summaries from local whale-flow exports
 - curated Solana cases under `data/cases/curated-solana/`
 - validator dataset-mode scoring for role-heavy and broad-surface stablecoin behavior
+- Tier 1 attribution-aware reporting when a curated case resolves to a known actor or contextual label
 
 Not implemented yet:
 
@@ -205,6 +242,7 @@ Implemented now:
 - extracted address-scoped Bitcoin summaries from local Blockchair inputs/outputs
 - curated Bitcoin cases under `data/cases/curated-bitcoin/`
 - validator dataset-mode scoring for spend-heavy, inbound-heavy, mixed-flow, and broad-surface behavior
+- Tier 1 mining-pool context for analyst interpretation and false-positive reduction
 
 Not implemented yet:
 
@@ -241,6 +279,7 @@ Dataset mode is the current delivery path for:
 - ERC-20 Layer 1 token-surface scoring
 - Solana Layer 1 stablecoin-flow scoring
 - Bitcoin Layer 1 UTXO-flow scoring
+- Tier 1 attribution-aware analyst reports
 
 ---
 
@@ -345,6 +384,7 @@ The repo includes an intentionally lightweight extract-and-curate workflow.
 - [`docs/TYPOLOGIES.md`](docs/TYPOLOGIES.md)
 - [`docs/SCORING.md`](docs/SCORING.md)
 - [`docs/EVM-CALLS-INTEGRATION.md`](docs/EVM-CALLS-INTEGRATION.md)
+- [`docs/LABEL-SOURCE-HIERARCHY.md`](docs/LABEL-SOURCE-HIERARCHY.md)
 - [`docs/ETHEREUM-DATA-MODEL.md`](docs/ETHEREUM-DATA-MODEL.md)
 - [`docs/SOLANA-DATA-MODEL.md`](docs/SOLANA-DATA-MODEL.md)
 - [`docs/BITCOIN-DATA-MODEL.md`](docs/BITCOIN-DATA-MODEL.md)
@@ -426,6 +466,7 @@ go run ./cmd/validator --dataset ./data/cases/curated-bitcoin/bitcoin-noisy-inbo
 
 The next major items after the current implementation are:
 
+- Tier 1 expansion with corroborating or secondary sources
 - 1-hop and 2-hop exposure summaries
 - pass-through and U-turn behavior
 - fresh-wallet plus immediate large-flow reasoning

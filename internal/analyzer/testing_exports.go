@@ -24,10 +24,15 @@
 
 package analyzer
 
-import "sync"
+import (
+	"sync"
+
+	"github.com/piyushdaiya/crypto-profiler/internal/attribution"
+)
 
 // ResetKnownEntitiesCacheForTesting clears the cached bootstrap labels between package-level tests.
 func ResetKnownEntitiesCacheForTesting() {
 	knownEntities = nil
 	knownEntitiesOnce = sync.Once{}
+	attribution.ResetDefaultResolverForTesting()
 }

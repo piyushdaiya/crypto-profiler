@@ -32,6 +32,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/piyushdaiya/crypto-profiler/internal/attribution"
 	"github.com/piyushdaiya/crypto-profiler/internal/model"
 )
 
@@ -97,7 +98,5 @@ func candidateBootstrapLabelPaths() []string {
 }
 
 func LookupEntityLabel(address string) (model.EntityLabel, bool) {
-	addr := strings.ToLower(strings.TrimSpace(address))
-	label, ok := GetKnownEntities()[addr]
-	return label, ok
+	return attribution.LookupEntityLabel(address, "")
 }

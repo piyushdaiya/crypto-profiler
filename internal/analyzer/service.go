@@ -82,57 +82,6 @@ func Investigate(profile *model.WalletProfile, txs []model.Transaction) {
 	}
 
 	// ---------------------------------------------------------
-	// 1B. DIRECT LABEL ON PROFILED ADDRESS
-	// ---------------------------------------------------------
-	if label, ok := LookupEntityLabel(profile.Address); ok {
-		switch label.Category {
-		case model.LabelCategoryMixer:
-			addHit(
-				&hits,
-				"FRAUD",
-				"profiled_address_high_risk_label",
-				fmt.Sprintf("Profiled address labeled as high-risk entity: %s", label.Name),
-				45.0,
-				&label,
-				1,
-			)
-
-		case model.LabelCategoryExploit, model.LabelCategoryScam:
-			addHit(
-				&hits,
-				"FRAUD",
-				"profiled_address_high_risk_label",
-				fmt.Sprintf("Profiled address labeled as high-risk entity: %s", label.Name),
-				45.0,
-				&label,
-				1,
-			)
-
-		case model.LabelCategoryExchange:
-			addHit(
-				&hits,
-				"REPUTATION",
-				"profiled_address_trusted_label",
-				fmt.Sprintf("Profiled address labeled as known exchange: %s", label.Name),
-				-10.0,
-				&label,
-				1,
-			)
-
-		case model.LabelCategoryTrusted, model.LabelCategoryProtocol:
-			addHit(
-				&hits,
-				"REPUTATION",
-				"profiled_address_trusted_label",
-				fmt.Sprintf("Profiled address labeled as trusted protocol: %s", label.Name),
-				-10.0,
-				&label,
-				1,
-			)
-		}
-	}
-
-	// ---------------------------------------------------------
 	// 2. AGE / HISTORY SIGNALS
 	// ---------------------------------------------------------
 	if profile.FirstSeen != nil {
@@ -235,6 +184,17 @@ func Investigate(profile *model.WalletProfile, txs []model.Transaction) {
 				)
 				directTrustedSeen = true
 			}
+
+		case model.LabelCategoryMiningPool, model.LabelCategoryTreasury:
+			addHit(
+				&hits,
+				"REPUTATION",
+				"contextual_infrastructure_interaction",
+				fmt.Sprintf("Interaction with contextual infrastructure: %s", label.Name),
+				-5.0,
+				&label,
+				1,
+			)
 		}
 	}
 
@@ -628,13 +588,13 @@ func applyServiceConcentrationHeuristic(profile *model.WalletProfile, txs []mode
 			)
 		}
 
-	case model.LabelCategoryTrusted, model.LabelCategoryProtocol:
+	case model.LabelCategoryTrusted, model.LabelCategoryProtocol, model.LabelCategoryMiningPool, model.LabelCategoryTreasury:
 		if ratio >= 0.60 {
 			addHit(
 				hits,
 				"REPUTATION",
 				"single_service_concentration",
-				fmt.Sprintf("High interaction concentration to known protocol/trusted service: %s (%.1f%% of observed activity)", top.Label.Name, percent),
+				fmt.Sprintf("High interaction concentration to contextual service: %s (%.1f%% of observed activity)", top.Label.Name, percent),
 				-4.0,
 				&top.Label,
 				top.Count,
@@ -651,7 +611,9 @@ func isConcentrationServiceCategory(category model.LabelCategory) bool {
 		model.LabelCategorySanctions,
 		model.LabelCategoryExchange,
 		model.LabelCategoryTrusted,
-		model.LabelCategoryProtocol:
+		model.LabelCategoryProtocol,
+		model.LabelCategoryMiningPool,
+		model.LabelCategoryTreasury:
 		return true
 	default:
 		return false

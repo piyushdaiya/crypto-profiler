@@ -23,7 +23,7 @@ If you have 3 to 5 minutes:
 
 1. Start with Ethereum to establish the shared report format and the trace-aware story.
 2. Show Solana or Bitcoin next to prove the repo uses chain-specific Layer 1 modeling rather than generic EVM language everywhere.
-3. End with ERC-20 to show contextual token-surface scoring and the Wave 2 maturity jump.
+3. End with ERC-20 to show contextual token-surface scoring and the broader multi-chain dataset-mode story.
 
 If you have 60 to 90 seconds:
 
@@ -101,7 +101,7 @@ Talk track:
 
 1. Start with the Ethereum case to establish the shared output contract and trace-aware story.
 2. Show Solana or Bitcoin next to prove the repo is genuinely multi-chain rather than Ethereum-only.
-3. End with ERC-20 to show Wave 2 maturity and the move toward richer analyst-facing output.
+3. End with ERC-20 to show the token-surface model and the move toward richer analyst-facing output.
 
 ## What To Capture For Screenshots Or A Short Demo Video
 

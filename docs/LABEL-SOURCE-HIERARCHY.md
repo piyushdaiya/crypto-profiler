@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document explains the attribution layer implemented across Wave 5A, Wave 5B, and Wave 5C.
+This document explains the attribution layer implemented in the repository today.
 
 The goal is practical precision:
 
@@ -21,27 +21,27 @@ Tier 1 in Crypto Profiler means high-trust attribution inputs that are treated a
 
 Primary attribution in this repo means Tier 1 sources that can anchor the resolved decision.
 
-Wave 5A established:
+Primary attribution currently includes:
 
 - GraphSense-style structured entity labels
 - Bitcoin mining-pool context
 - repo-local bootstrap labels used as local continuity and demo overrides
 
-Wave 5B adds:
+Secondary corroboration currently includes:
 
 - WalletExplorer-style secondary attribution support
 - repo-safe corroborating fixture inputs
 - confidence boosts from corroboration
 - conflict visibility in resolved attribution and report output
 
-Wave 5C adds:
+The current actor/exposure layer adds:
 
 - actor-aware repeated-interaction and concentration refinement
 - practical cluster-aware grouping when multiple sampled addresses resolve to the same actor
 - direct and near exposure summaries tied to attributed actors
 - bounded pass-through and U-turn findings from sampled Layer 1 flows
 
-Waves 5A through 5C still do not include:
+The current implementation still does not include:
 
 - broad corroborating-source ingestion
 - large-scale conflict arbitration across many providers
@@ -95,7 +95,7 @@ Local override can suppress or replace a primary structured label when the repo 
 
 Primary structured sources are high-trust, structured attribution inputs.
 
-Current Wave 5A sources:
+Current primary sources:
 
 - `data/labels/tier1_graphsense_entities.json`
 - `data/labels/tier1_bitcoin_mining_pools.json`
@@ -106,7 +106,7 @@ These are the first non-demo attribution inputs used by the resolver.
 
 Secondary corroborating sources sit below Tier 1.
 
-Current Wave 5B sources:
+Current secondary sources:
 
 - `data/labels/tier2_wallet_explorer_entities.json`
 - `data/labels/tier2_corroborating_entities.json`
@@ -122,7 +122,7 @@ They do not override a stronger Tier 1 result on their own.
 
 ---
 
-## Source Types In Waves 5A And 5B
+## Current Source Types
 
 ### GraphSense-style structured labels
 
@@ -191,7 +191,7 @@ The resolver returns:
 
 This means the project does not collapse all labels into one generic “known entity” flag.
 
-Wave 5B behavior is intentionally bounded:
+Secondary-source behavior is intentionally bounded:
 
 - a lone secondary source can resolve, but remains low-confidence
 - a secondary source can corroborate a Tier 1 result and raise confidence modestly
@@ -202,7 +202,7 @@ Wave 5B behavior is intentionally bounded:
 
 ## Contextual vs Risk-Escalating Labels
 
-This distinction is central to Wave 5A.
+This distinction is central to the current scoring design.
 
 Risk-escalating examples:
 
@@ -225,7 +225,7 @@ The scoring layer uses that distinction to avoid a common false-positive problem
 
 ## How Attribution Affects Scoring
 
-Waves 5A through 5C keep the existing behavioral model intact.
+The existing behavioral model remains intact.
 
 The order is:
 
@@ -248,9 +248,9 @@ Current practical effects:
 
 ---
 
-## What Remains Deferred After Wave 5C
+## What Remains Future Work
 
-Wave 5C ships a practical MVP, not a full graph platform.
+The current attribution layer is a practical MVP, not a full graph platform.
 
 Still deferred:
 

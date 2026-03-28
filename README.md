@@ -14,10 +14,10 @@ The repository currently combines:
 - shared live scoring for EVM wallets
 - curated dataset-mode scoring for ERC-20, Solana, and Bitcoin Layer 1
 - trace-aware Ethereum case enrichment
-- Tier 1 attribution-aware scoring, bounded secondary corroboration, and practical Wave 5C actor/exposure refinement
+- attribution-aware scoring with bounded corroboration and actor-aware report context
 - a watchlist-driven sanctions path
 
-The current next-step roadmap is deeper value-aware and live-path behavior scoring on top of the now-attribution-aware multi-chain Layer 1 base.
+Near-term future work is deeper value-aware and live-path behavior scoring on top of the current multi-chain Layer 1 base.
 
 ---
 
@@ -62,9 +62,11 @@ A short demo reel and static screenshots are included in the repository.
 
 - [74-second demo video](docs/media/video/crypto-profiler-demo.mp4)
 - [Sample analyst reports](docs/sample-reports/README.md)
+- [Release notes](docs/RELEASE-NOTES.md)
+
 
 <p align="center">
-  <img src="docs/media/screenshots/01-demo-overview.png" alt="Crypto Profiler demo overview" width="900">
+  <img src="data/media/screenshots/01-demo-overview.png" alt="Crypto Profiler demo overview" width="900">
 </p>
 
 <p align="center">
@@ -135,7 +137,7 @@ This mode is meant to make the repo easy to demo in interviews and portfolio rev
 
 ## Attribution Layer
 
-Waves 5A through 5C add a normalized attribution and actor-aware refinement layer on top of the existing behavioral model.
+Crypto Profiler adds a normalized attribution layer on top of the behavioral model.
 
 Implemented now:
 
@@ -176,7 +178,7 @@ See [`docs/LABEL-SOURCE-HIERARCHY.md`](docs/LABEL-SOURCE-HIERARCHY.md) for the e
 | EVM live wallet profiling          | Implemented                 | Uses Etherscan transaction history, watchlist checks, Tier 1 attribution, and the shared analyzer.                                               |
 | Ethereum curated Layer 1 cases     | Implemented                 | Built from extracted address-scoped native and ERC-20 transfer activity.                                                                          |
 | Ethereum trace integration         | Implemented                 | Address-scoped traces can be extracted, merged into curated cases, and surfaced in dataset mode.                                                  |
-| Attribution layer                  | Implemented                 | Tier 1 sources, bounded secondary corroboration, and Wave 5C actor/exposure refinement now feed scoring confidence and report output.              |
+| Attribution layer                  | Implemented                 | Tier 1 sources, bounded secondary corroboration, and actor/exposure refinement now feed scoring confidence and report output.                      |
 | ERC-20 Layer 1                     | Implemented in dataset mode | Address-scoped ERC-20 transfer summaries, curated cases, validator dataset scoring, and Tier 1 attribution-aware contextualization are in place. |
 | Solana Layer 1                     | Implemented in dataset mode | Current Solana layer is stablecoin-flow based and curated from large-value USDC/USDT summaries.                                                   |
 | Bitcoin Layer 1                    | Implemented in dataset mode | Current Bitcoin layer is address-level UTXO-flow based, with mining-pool context and bounded WalletExplorer-style corroboration in attribution.   |

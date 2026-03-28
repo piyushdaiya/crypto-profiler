@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document is the Wave 1 typology cleanup for the current repository state.
+This document catalogs the typologies represented in the current repository.
 
 It separates:
 
@@ -137,7 +137,7 @@ These have real code support or data groundwork, but not a complete end-to-end d
 
 ## Backlog-Only Typologies
 
-These are explicitly part of the roadmap, but are not implemented in this repo today.
+These are future-work areas, but they are not implemented in this repo today.
 
 | Typology                                               | Current status |
 |--------------------------------------------------------|----------------|

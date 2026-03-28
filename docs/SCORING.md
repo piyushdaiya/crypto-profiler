@@ -34,7 +34,7 @@ Every meaningful score change should produce a visible reason code and evidence 
 
 ### Behavior first, attribution second
 
-Wave 5A keeps the behavioral model intact.
+The behavioral model remains the primary scoring engine.
 
 The current ordering is:
 
@@ -179,7 +179,7 @@ Important implementation notes:
 
 ### Secondary corroboration behavior
 
-Wave 5B adds bounded secondary-source behavior on top of Tier 1.
+Secondary corroboration adds a bounded layer on top of Tier 1.
 
 Current practical rules:
 
@@ -202,9 +202,9 @@ The design goal is deliberate:
 - secondary sources can improve analyst explanation
 - secondary sources must not create large hard jumps on their own
 
-### Wave 5C actor/exposure refinements
+### Actor and Exposure Refinements
 
-Wave 5C adds a bounded refinement layer after attribution resolution.
+The current actor/exposure layer adds a bounded refinement step after attribution resolution.
 
 Current practical reason codes:
 
@@ -217,7 +217,7 @@ Current practical reason codes:
 | Pass-through exposure to risky actor        | `actor_pass_through_risky_exposure`     | `FRAUD +4`         |
 | U-turn through risky actor                  | `actor_u_turn_risky_service`            | `FRAUD +3`         |
 
-Wave 5C also adds `attribution_insights` for:
+The current actor/exposure layer also adds `attribution_insights` for:
 
 - direct exposure to attributed actors
 - near exposure to risky actors through an intermediary
@@ -227,7 +227,7 @@ Wave 5C also adds `attribution_insights` for:
 Guardrails:
 
 - stronger score changes require strong, non-secondary attribution support
-- secondary-only attribution can still appear in analyst-facing insights, but does not drive the stronger Wave 5C score modifiers
+- secondary-only attribution can still appear in analyst-facing insights, but does not drive the stronger actor/exposure score modifiers
 - the goal is explainable refinement, not a second opaque scoring engine
 
 ### What is not implemented yet for Ethereum
@@ -357,7 +357,7 @@ Today, Bitcoin dataset-mode scoring is trying to answer questions like:
 
 ## What Attribution Changes Today
 
-Waves 5A through 5C improve score precision in four ways:
+The current attribution and actor/exposure layer improves score precision in four ways:
 
 1. risky actors can escalate scores without replacing behavioral reasons
 2. contextual infrastructure can reduce false positives for broad-surface or high-volume wallets
@@ -372,19 +372,19 @@ Tier 1 today means:
 - Bitcoin mining-pool context
 - repo-local bootstrap overrides
 
-Wave 5B adds:
+Secondary corroboration adds:
 
 - WalletExplorer-style secondary attribution support
 - repo-safe corroborating fixture sources
 - explicit corroborating vs conflicting source handling
 
-Wave 5C adds:
+The current actor/exposure layer adds:
 
 - actor-aware repeated-interaction and concentration refinement
 - practical direct and near exposure summaries
 - bounded pass-through and U-turn findings tied to attributed actors
 
-Deferred to later waves:
+Still future work:
 
 - generalized graph-aware attribution paths
 - broader corroborating-source ingestion and conflict arbitration
@@ -421,7 +421,7 @@ It does not currently:
 
 ### Future live or graph-aware scoring
 
-The roadmap after Wave 5C is to add:
+Future work includes:
 
 - graph-aware 1-hop and 2-hop exposure
 - fresh-wallet plus immediate large-flow reasoning

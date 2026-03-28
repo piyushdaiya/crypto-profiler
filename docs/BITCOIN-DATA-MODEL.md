@@ -4,7 +4,7 @@
 
 This document describes the Bitcoin model that is actually implemented in the repository today.
 
-Wave 1 clarification:
+Current implementation summary:
 
 - the current Bitcoin Layer 1 is address-scoped and UTXO-flow based
 - it is delivered through curated dataset mode
@@ -199,7 +199,7 @@ The current Bitcoin implementation is best described as:
 - strong enough for curated benchmark cases
 - intentionally limited before graph-aware expansion
 
-That is the correct Wave 1-aligned repo story.
+That is the correct public description of the current Bitcoin model in this repo.
 
 ---
 

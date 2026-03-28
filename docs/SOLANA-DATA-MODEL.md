@@ -4,7 +4,7 @@
 
 This document describes the Solana model that is actually implemented in the repository today.
 
-Wave 1 clarification:
+Current implementation summary:
 
 - the current Solana Layer 1 is stablecoin-flow based
 - it is delivered through curated dataset mode
@@ -192,9 +192,9 @@ The live Solana strategy in `internal/address/solana.go` is currently a basic va
 
 ---
 
-## Wave 2 and Beyond
+## Future Work
 
-Logical follow-on work after Wave 1:
+Logical follow-on work:
 
 - expand beyond stablecoin-only Solana coverage
 - add richer program-aware and instruction-aware summaries

@@ -43,7 +43,7 @@ go run ./cmd/validator --report --dataset ./data/cases/curated-bitcoin/bitcoin-b
 ### ERC-20
 
 - [`erc20-uniswap-v2-router.txt`](erc20-uniswap-v2-router.txt)
-- Demonstrates: token-surface breadth, trusted protocol context, repeated counterparty activity, and Wave 5C actor-aware contextual findings in ERC-20 Layer 1 reporting.
+- Demonstrates: token-surface breadth, trusted protocol context, repeated counterparty activity, and actor-aware contextual findings in ERC-20 Layer 1 reporting.
 - Demo command:
 
 ```bash

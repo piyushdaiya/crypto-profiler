@@ -1,4 +1,6 @@
 .env
+.idea/
+.vscode/
 .DS_Store
 data/.DS_Store
 data/transactions/
@@ -11,6 +13,6 @@ data/cases/extracted-solana-stablecoin/
 data/cases/extracted-erc20/
 data/cases/solana-extracted/
 .tools/
-
-docs/INTERVIEW-TALK-TRACK.md
 **/.DS_Store
+docs/INTERVIEW-TALK-TRACK.md
+*.iml

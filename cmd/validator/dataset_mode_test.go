@@ -50,6 +50,7 @@ func TestRun_DatasetModeRoutesCuratedCasesAcrossChains(t *testing.T) {
 		wantDetailSubstring string
 		wantReasonCode      string
 		wantAttribution     model.LabelCategory
+		wantInsightType     model.AttributionInsightType
 	}{
 		{
 			name:                "ethereum trace-enriched curated path",
@@ -80,6 +81,7 @@ func TestRun_DatasetModeRoutesCuratedCasesAcrossChains(t *testing.T) {
 			wantDetailSubstring: "Loaded curated ERC-20 Layer 1 case",
 			wantReasonCode:      "erc20_trusted_protocol_token_hub",
 			wantAttribution:     model.LabelCategoryProtocol,
+			wantInsightType:     model.AttributionInsightClusterGrouping,
 		},
 	}
 
@@ -112,6 +114,9 @@ func TestRun_DatasetModeRoutesCuratedCasesAcrossChains(t *testing.T) {
 				if profile.Attribution.Category != tt.wantAttribution {
 					t.Fatalf("expected attribution category %q, got %+v", tt.wantAttribution, profile.Attribution)
 				}
+			}
+			if tt.wantInsightType != "" && !hasInsightType(profile.AttributionInsights, tt.wantInsightType) {
+				t.Fatalf("expected attribution insight %q, got %+v", tt.wantInsightType, profile.AttributionInsights)
 			}
 		})
 	}
@@ -347,6 +352,15 @@ func runDatasetModeForTest(t *testing.T, datasetPath string) (*model.WalletProfi
 	}
 
 	return &profile, errOut.String(), code
+}
+
+func hasInsightType(insights []model.AttributionInsight, want model.AttributionInsightType) bool {
+	for _, insight := range insights {
+		if insight.Type == want {
+			return true
+		}
+	}
+	return false
 }
 
 func repoPath(parts ...string) string {

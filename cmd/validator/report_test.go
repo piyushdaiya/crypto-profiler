@@ -90,6 +90,27 @@ func TestRenderReport_IncludesAnalystFacingSections(t *testing.T) {
 				},
 			},
 		},
+		AttributionInsights: []model.AttributionInsight{
+			{
+				Code:          "cluster_grouping",
+				Type:          model.AttributionInsightClusterGrouping,
+				Summary:       "Cluster-aware grouping links 2 attributed addresses to actor Sample Exchange in the sampled Layer 1 activity.",
+				Actor:         "Sample Exchange",
+				Category:      model.LabelCategoryExchange,
+				Confidence:    0.93,
+				EvidenceCount: 2,
+			},
+			{
+				Code:          "near_risky_actor_exposure",
+				Type:          model.AttributionInsightNearExposure,
+				Summary:       "Near exposure to risky actor Tornado Cash is visible through an intermediary pass-through path.",
+				Actor:         "Tornado Cash",
+				Category:      model.LabelCategoryMixer,
+				HopDepth:      2,
+				Confidence:    0.81,
+				EvidenceCount: 2,
+			},
+		},
 	}
 
 	context := &reportContext{
@@ -128,6 +149,8 @@ func TestRenderReport_IncludesAnalystFacingSections(t *testing.T) {
 		"Conflicting Sources:",
 		"Disposition: contextual / benign",
 		"Top Reasons:",
+		"Actor / Exposure Findings:",
+		"Near exposure to risky actor Tornado Cash is visible through an intermediary pass-through path.",
 		"Top Counterparties:",
 		"Interpretation:",
 		"Layer 1 Context:",

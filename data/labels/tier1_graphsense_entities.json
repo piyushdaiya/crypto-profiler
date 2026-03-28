@@ -36,6 +36,18 @@
     "notes": "GraphSense-style structured attribution for trusted protocol router activity."
   },
   {
+    "address": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+    "network": "EVM",
+    "label": "Uniswap V2 USDC/WETH Pair",
+    "actor": "Uniswap",
+    "category": "PROTOCOL",
+    "risk_class": "TRUSTED_SERVICE",
+    "confidence": 0.94,
+    "contextual": true,
+    "risk_escalating": false,
+    "notes": "GraphSense-style structured attribution for a Uniswap V2 pool contract used for actor-aware contextual clustering."
+  },
+  {
     "address": "0xf977814e90da44bfa03b6295a0616a897441acec",
     "network": "EVM",
     "label": "Binance Wallet",

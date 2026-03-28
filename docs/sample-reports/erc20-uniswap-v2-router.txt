@@ -5,12 +5,13 @@ Network: EVM
 Mode: Dataset
 Dataset Context: ERC-20 Layer 1 dataset
 Case: ERC-20 Trusted Protocol Token Hub (erc20-uniswap-v2-router-trusted-token-hub)
-Risk Score: 9.30
+Risk Score: 8.85
 Risk Grade: LOW (Reviewable)
 Review Recommended: Yes
 
 Attribution:
 Resolved Label: Uniswap V2 Router
+Actor: Uniswap
 Category: PROTOCOL
 Risk Class: TRUSTED_SERVICE
 Confidence: 0.99
@@ -25,6 +26,11 @@ Top Reasons:
 3. [FRAUD] Broad ERC-20 counterparty surface observed (54478 counterparties across 19325 tokens) (offset +8.0)
 4. [REPUTATION] Mixed ERC-20 activity observed across 19325 token contracts (offset +4.0)
 5. [FRAUD] Repeated ERC-20 counterparty activity observed (top counterparty interactions=118744, repeated counterparties=30580) (offset +4.0)
+
+Actor / Exposure Findings:
+1. Direct exposure to attributed contextual actor Uniswap across 19844 interactions. (confidence 0.94, 1-hop)
+2. Repeated interaction remains inside contextual actor Uniswap (19844 interactions). (confidence 0.94)
+3. Cluster-aware grouping links 2 attributed addresses to actor Uniswap in the sampled Layer 1 activity. (confidence 0.94)
 
 Top Counterparties:
 1. 0xb8713bd23c33b15236af67e5badceb8e49cb0244 - 118744 interactions across 2 tokens

@@ -14,10 +14,10 @@ The repository currently combines:
 - shared live scoring for EVM wallets
 - curated dataset-mode scoring for ERC-20, Solana, and Bitcoin Layer 1
 - trace-aware Ethereum case enrichment
-- Tier 1 attribution-aware scoring plus bounded secondary corroboration
+- Tier 1 attribution-aware scoring, bounded secondary corroboration, and practical Wave 5C actor/exposure refinement
 - a watchlist-driven sanctions path
 
-The current next-step roadmap is deeper behavior scoring on top of the now-aligned multi-chain Layer 1 base.
+The current next-step roadmap is deeper value-aware and live-path behavior scoring on top of the now-attribution-aware multi-chain Layer 1 base.
 
 ---
 
@@ -51,7 +51,7 @@ It demonstrates:
 
 - multi-chain Layer 1 thinking without pretending every chain should share one identical data model
 - explainable risk scoring through visible `risk_reasons`, evidence counts, and review-oriented grades
-- attribution-aware contextualization that can escalate illicit actors, suppress false positives for trusted infrastructure, and surface corroboration or conflicts cleanly
+- attribution-aware contextualization that can escalate illicit actors, suppress false positives for trusted infrastructure, surface corroboration or conflicts cleanly, and add bounded actor-aware or hop-aware interpretation where the data supports it
 - a practical curated-case workflow from extraction to analyst-facing report output
 - disciplined repository storytelling through aligned docs, curated artifacts, tests, and CI security checks
 
@@ -135,7 +135,7 @@ This mode is meant to make the repo easy to demo in interviews and portfolio rev
 
 ## Attribution Layer
 
-Waves 5A and 5B add a normalized attribution layer on top of the existing behavioral model.
+Waves 5A through 5C add a normalized attribution and actor-aware refinement layer on top of the existing behavioral model.
 
 Implemented now:
 
@@ -146,6 +146,8 @@ Implemented now:
 - repo-safe corroborating fixtures for confidence uplift and conflict visibility
 - resolved attribution in JSON output and `--report`
 - controlled post-behavior scoring modifiers
+- actor-aware repeated-interaction and concentration refinement when attribution support is strong
+- practical cluster-aware grouping, direct or near exposure summaries, and bounded pass-through or U-turn findings in dataset-mode reports
 
 What this means in practice:
 
@@ -153,13 +155,15 @@ What this means in practice:
 - trusted protocols, exchanges, mining pools, and treasury-like infrastructure can suppress false positives
 - corroborating secondary sources can raise confidence and modestly reinforce a result
 - conflicting secondary sources are visible to analysts without overriding a stronger Tier 1 source
+- actor-aware rollups only apply stronger score refinements when attribution confidence is strong enough
+- pass-through, U-turn, and hop-aware findings improve explanation without pretending the repo already has a full graph platform
 - attribution improves interpretation, but it does not replace behavior-based reasoning
 
 What it does not claim yet:
 
-- full cluster-aware entity resolution
-- graph-aware actor scoring
-- hop-aware attribution paths or actor-level scoring refinement
+- full entity-resolution or generalized clustering across arbitrary graph neighborhoods
+- value-weighted graph scoring across arbitrary paths
+- comprehensive live-path actor rollups outside the current EVM live analyzer
 
 See [`docs/LABEL-SOURCE-HIERARCHY.md`](docs/LABEL-SOURCE-HIERARCHY.md) for the exact hierarchy.
 
@@ -172,7 +176,7 @@ See [`docs/LABEL-SOURCE-HIERARCHY.md`](docs/LABEL-SOURCE-HIERARCHY.md) for the e
 | EVM live wallet profiling          | Implemented                 | Uses Etherscan transaction history, watchlist checks, Tier 1 attribution, and the shared analyzer.                                               |
 | Ethereum curated Layer 1 cases     | Implemented                 | Built from extracted address-scoped native and ERC-20 transfer activity.                                                                          |
 | Ethereum trace integration         | Implemented                 | Address-scoped traces can be extracted, merged into curated cases, and surfaced in dataset mode.                                                  |
-| Attribution layer                  | Implemented                 | Tier 1 sources plus bounded secondary corroboration now feed scoring confidence and report output.                                                |
+| Attribution layer                  | Implemented                 | Tier 1 sources, bounded secondary corroboration, and Wave 5C actor/exposure refinement now feed scoring confidence and report output.              |
 | ERC-20 Layer 1                     | Implemented in dataset mode | Address-scoped ERC-20 transfer summaries, curated cases, validator dataset scoring, and Tier 1 attribution-aware contextualization are in place. |
 | Solana Layer 1                     | Implemented in dataset mode | Current Solana layer is stablecoin-flow based and curated from large-value USDC/USDT summaries.                                                   |
 | Bitcoin Layer 1                    | Implemented in dataset mode | Current Bitcoin layer is address-level UTXO-flow based, with mining-pool context and bounded WalletExplorer-style corroboration in attribution.   |
@@ -195,11 +199,12 @@ Implemented now:
 - optional trace enrichment for curated cases
 - validator dataset mode that surfaces trace-aware internal-call context
 - attribution-aware contextualization for named actors and infrastructure, with bounded corroborating-source support
+- sampled actor-aware direct exposure, near-exposure, and pass-through/U-turn reporting where attributed counterparties exist
 
 Not implemented yet:
 
 - trace-driven live scoring
-- hop-based or graph-aware exposure
+- generalized graph-aware exposure beyond the current sampled actor/exposure layer
 
 ### ERC-20 Layer 1
 
@@ -212,13 +217,14 @@ Implemented now:
 - curated ERC-20 cases under `data/cases/curated-erc20/`
 - validator dataset-mode scoring for trusted protocol hubs, noisy inbound token surfaces, broad token surfaces, mixed token activity, repeated counterparties, and token concentration
 - attribution-aware contextual suppression for trusted protocol and exchange-style cases, plus secondary corroboration in reports
+- actor-aware contextual clustering and repeated-interaction interpretation when counterparties resolve to the same actor
 
 Not implemented yet:
 
 - live ERC-20 scoring inside the EVM address strategy
 - swap-aware decoding or protocol-intent interpretation
-- trace-aware pass-through or U-turn scoring for ERC-20 flows
-- hop-based or graph-aware token exposure
+- trace-aware ERC-20 swap decoding
+- generalized hop-based or graph-aware token exposure beyond the current sampled actor/exposure layer
 
 ### Solana Layer 1
 
@@ -247,12 +253,13 @@ Implemented now:
 - curated Bitcoin cases under `data/cases/curated-bitcoin/`
 - validator dataset-mode scoring for spend-heavy, inbound-heavy, mixed-flow, and broad-surface behavior
 - Tier 1 mining-pool context plus secondary WalletExplorer-style context for analyst interpretation and false-positive reduction
+- bounded actor-aware cluster grouping when WalletExplorer-style context links multiple sampled addresses to the same service actor
 
 Not implemented yet:
 
-- cluster-aware modeling
+- generalized cluster-aware modeling
 - change detection
-- graph-aware peel-chain or pass-through scoring
+- graph-aware peel-chain or richer pass-through scoring
 
 ---
 

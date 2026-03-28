@@ -134,6 +134,7 @@ func run(args []string, out io.Writer, errOut io.Writer, strategies []address.Ch
 		}
 	}
 	attribution.ApplyTier1Attribution(result)
+	attribution.ApplyWave5CContext(result, attribution.Wave5CInput{Network: result.Network})
 
 	return writeOutput(result, buildLiveReportContext(result), *reportMode, out, errOut)
 }
@@ -180,6 +181,7 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 		profile := buildWalletProfileFromSolanaCuratedStablecoinCase(cc)
 		applySolanaCuratedStablecoinContext(profile, cc)
 		attribution.ApplyTier1Attribution(profile)
+		attribution.ApplyWave5CContext(profile, buildWave5CInputFromSolanaCase(cc))
 		return profile, buildReportContextFromSolanaCase(cc), nil
 	}
 
@@ -192,6 +194,7 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 		profile := buildWalletProfileFromBitcoinCuratedLayer1Case(cc)
 		applyBitcoinCuratedLayer1Context(profile, cc)
 		attribution.ApplyTier1Attribution(profile)
+		attribution.ApplyWave5CContext(profile, buildWave5CInputFromBitcoinCase(cc))
 		return profile, buildReportContextFromBitcoinCase(cc), nil
 	}
 
@@ -204,6 +207,7 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 		profile := buildWalletProfileFromERC20CuratedLayer1Case(cc)
 		applyERC20CuratedLayer1Context(profile, cc)
 		attribution.ApplyTier1Attribution(profile)
+		attribution.ApplyWave5CContext(profile, buildWave5CInputFromERC20Case(cc))
 		return profile, buildReportContextFromERC20Case(cc), nil
 	}
 
@@ -218,6 +222,7 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 	analyzer.Investigate(profile, txs)
 	applyCuratedTraceContext(profile, cc)
 	attribution.ApplyTier1Attribution(profile)
+	attribution.ApplyWave5CContext(profile, buildWave5CInputFromCuratedCase(cc))
 
 	return profile, buildReportContextFromCuratedCase(cc), nil
 }

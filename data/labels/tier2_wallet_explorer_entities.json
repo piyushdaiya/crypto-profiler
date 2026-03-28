@@ -10,5 +10,29 @@
     "contextual": true,
     "risk_escalating": false,
     "notes": "WalletExplorer-style secondary attribution fixture used for bounded contextual corroboration."
+  },
+  {
+    "address": "bc1qlfvc8l4ueq49nr35tppqakee72wpu8nqclkhct",
+    "network": "BITCOIN",
+    "label": "WalletExplorer-style Exchange Cluster Payout",
+    "actor": "Sample Exchange Cluster",
+    "category": "EXCHANGE",
+    "risk_class": "EXCHANGE",
+    "confidence": 0.54,
+    "contextual": true,
+    "risk_escalating": false,
+    "notes": "Secondary exchange-cluster fixture used to demonstrate bounded cluster-aware contextual rollup."
+  },
+  {
+    "address": "bc1pk38g9jzmevq7c7ex6uwf6y7pzucmggjh8y644e75x9sqj77dscwsgs06e5",
+    "network": "BITCOIN",
+    "label": "WalletExplorer-style Exchange Cluster Deposit",
+    "actor": "Sample Exchange Cluster",
+    "category": "EXCHANGE",
+    "risk_class": "EXCHANGE",
+    "confidence": 0.53,
+    "contextual": true,
+    "risk_escalating": false,
+    "notes": "Secondary exchange-cluster fixture used to surface actor-aware cluster grouping in sampled Bitcoin flows."
   }
 ]

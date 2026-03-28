@@ -24,6 +24,10 @@ Top Reasons:
 3. [FRAUD] Broad Bitcoin counterparty surface observed (1906 counterparties) (offset +6.0)
 4. [REPUTATION] Secondary corroborating source suggests contextual service attribution: WalletExplorer-style Exchange Cluster (offset -2.0)
 
+Actor / Exposure Findings:
+1. Direct exposure to attributed contextual actor Sample Exchange Cluster across 672177 interactions. (confidence 0.54, 1-hop)
+2. Cluster-aware grouping links 2 attributed addresses to actor Sample Exchange Cluster in the sampled Layer 1 activity. (confidence 0.54)
+
 Top Counterparties:
 1. bc1qlfvc8l4ueq49nr35tppqakee72wpu8nqclkhct - 672177 interactions (0 inbound / 672177 outbound)
 2. bc1pc0p0rg3qdyzewz6s3f43l8udvdpjnjh5yssdyyn0tjl925ryfxeslvcszp - 971 interactions (971 inbound / 0 outbound)

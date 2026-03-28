@@ -11,6 +11,7 @@ Review Recommended: Yes
 
 Attribution:
 Resolved Label: Tornado Cash Router
+Actor: Tornado Cash
 Category: MIXER
 Risk Class: ILLICIT_SERVICE
 Confidence: 0.99

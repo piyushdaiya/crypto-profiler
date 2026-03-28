@@ -9,7 +9,7 @@ The current implementation picture is that Crypto Profiler has:
 - one shared live analyzer used primarily for EVM
 - chain-specific dataset-mode scoring adapters for ERC-20, Solana, and Bitcoin
 - trace-aware Ethereum case enrichment
-- an attribution resolver with Tier 1 precedence and bounded secondary corroboration
+- an attribution resolver with Tier 1 precedence, bounded secondary corroboration, and Wave 5C actor/exposure refinement
 - an analyst-facing report layer on top of the validator output
 
 It does not yet have one fully unified graph-aware engine across all chains.
@@ -26,8 +26,9 @@ If you only skim one section, this is the story:
 4. behavioral scoring produces a shared `WalletProfile`
 5. Tier 1 attribution resolves actor and label context
 6. secondary sources can corroborate or conflict without overriding Tier 1
-7. `cmd/validator --report` turns that profile into a concise analyst-facing brief
-8. future behavior layers will sit on top of that shared output contract rather than replacing it
+7. Wave 5C applies bounded actor-aware, hop-aware, and pass-through/U-turn refinement where attribution support is strong
+8. `cmd/validator --report` turns that profile into a concise analyst-facing brief
+9. future behavior layers will sit on top of that shared output contract rather than replacing it
 
 This is why the project works well as both an engineering artifact and a portfolio demo.
 
@@ -50,6 +51,10 @@ Tier 1 labels can sharpen a score or suppress a false positive, but they do not 
 ### Secondary sources stay bounded
 
 Corroborating sources can raise confidence, add modest bounded adjustments, or surface conflicts, but they do not get to dominate scoring on their own.
+
+### Actor-aware refinement stays bounded
+
+Wave 5C can roll repeated interaction and concentration up to actor level, but only when attribution confidence is strong enough to justify it.
 
 ### Practical multi-chain realism
 
@@ -132,9 +137,10 @@ flowchart LR
     C --> E["Chain-Specific Dataset Contexts<br/>cmd/validator/dataset_*_context.go"]
     D --> F["Attribution Resolver<br/>Tier 1 + Secondary Corroboration<br/>internal/attribution"]
     E --> F
-    F --> G["WalletProfile"]
-    G --> H["JSON Output"]
-    G --> I["Analyst Report Output<br/>--report"]
+    F --> G["Wave 5C Refinement<br/>Actor-aware / hop-aware / pass-through<br/>internal/attribution"]
+    G --> H["WalletProfile"]
+    H --> I["JSON Output"]
+    H --> J["Analyst Report Output<br/>--report"]
 ```
 
 ## Artifact Lifecycle
@@ -147,10 +153,11 @@ flowchart TD
     D --> E["Validator Dataset Mode<br/>cmd/validator --dataset"]
     E --> F["Behavior Scoring"]
     F --> G["Attribution Resolution<br/>Tier 1 anchor + secondary corroboration"]
-    G --> H["WalletProfile"]
-    H --> I["JSON Output"]
-    H --> J["Analyst Report Output<br/>cmd/validator --report"]
-    H --> K["Future Behavioral Layer<br/>hop-aware exposure / fresh-wallet / U-turns"]
+    G --> H["Wave 5C Actor/Exposure Refinement<br/>actor rollups / direct+near exposure / pass-through / U-turn"]
+    H --> I["WalletProfile"]
+    I --> J["JSON Output"]
+    I --> K["Analyst Report Output<br/>cmd/validator --report"]
+    I --> L["Future Behavioral Layer<br/>value-weighted graph scoring / fresh-wallet large-flow / richer live paths"]
 ```
 
 ### End-to-end data flow in practice
@@ -161,7 +168,8 @@ flowchart TD
 4. chain-specific or shared behavior scoring produces a baseline `WalletProfile`
 5. Tier 1 attribution resolves contextual or risk-escalating actor information
 6. secondary corroboration can raise confidence or surface conflicts
-7. the output is rendered either as JSON or as an analyst-facing report
+7. Wave 5C can add actor-aware repeated-interaction or concentration refinement, plus bounded exposure findings
+8. the output is rendered either as JSON or as an analyst-facing report
 
 ### What a reviewer should take away
 
@@ -169,6 +177,7 @@ flowchart TD
 - curated artifacts are a deliberate product surface, not throwaway fixtures
 - Tier 1 attribution improves precision without pretending the repo already has full graph intelligence
 - secondary corroboration improves analyst confidence without turning weak sources into hard risk jumps
+- Wave 5C adds real investigative nuance without claiming full graph reconstruction
 - report mode is a presentation layer on top of real scoring, not a mock demo veneer
 - future behavior work is staged as an additive layer, not something the docs pretend already exists
 
@@ -202,7 +211,7 @@ Today this is the strongest live-scoring path for EVM.
 
 ### `internal/attribution`
 
-Responsible for the Wave 5A and 5B attribution layer:
+Responsible for the Wave 5A through 5C attribution layer:
 
 - loading Tier 1 structured label fixtures
 - loading Bitcoin mining-pool context
@@ -210,6 +219,9 @@ Responsible for the Wave 5A and 5B attribution layer:
 - loading secondary corroborating sources
 - resolving a final attribution decision
 - applying controlled post-behavior score modifiers
+- rolling repeated interaction or concentration up to actor level when attribution support is strong
+- surfacing direct or near actor exposure summaries
+- detecting bounded pass-through or U-turn patterns from sampled Layer 1 flows
 
 This package intentionally stops short of full cluster or graph resolution.
 
@@ -244,6 +256,7 @@ The report layer adds:
 - resolved attribution and source context
 - concise risk-summary framing
 - chain-specific Layer 1 context lines
+- actor-aware or hop-aware findings when they materially improve interpretation
 - top-counterparty presentation for demos and portfolio review
 
 It does not change the underlying scoring model.
@@ -254,10 +267,10 @@ It does not change the underlying scoring model.
 
 | Chain    | Current source path                                                                  | Current scoring path                                        | Current limit                                                                      |
 |----------|--------------------------------------------------------------------------------------|-------------------------------------------------------------|------------------------------------------------------------------------------------|
-| Ethereum | Etherscan live txs, extracted EVM datasets, optional trace summaries                 | Shared analyzer, Tier 1 attribution, bounded secondary corroboration, plus trace-aware dataset context | No trace-driven live scoring, no hop-aware graph scoring                           |
-| ERC-20   | Local Blockchair ERC-20 shards, latest token metadata snapshot, curated ERC-20 cases | Dataset-mode ERC-20 Layer 1 scoring adapter plus attribution hierarchy | No live token scoring, no swap-aware decoding, no trace-aware pass-through scoring |
+| Ethereum | Etherscan live txs, extracted EVM datasets, optional trace summaries                 | Shared analyzer, Tier 1 attribution, bounded secondary corroboration, plus trace-aware dataset context | No trace-driven live scoring, no generalized graph scoring                        |
+| ERC-20   | Local Blockchair ERC-20 shards, latest token metadata snapshot, curated ERC-20 cases | Dataset-mode ERC-20 Layer 1 scoring adapter plus attribution hierarchy and Wave 5C actor/exposure refinement | No live token scoring, no swap-aware decoding, no generalized token graph scoring |
 | Solana   | Local stablecoin-flow Parquet exports and curated cases                              | Dataset-mode stablecoin scoring adapter plus attribution hierarchy     | No general instruction-aware live scoring                                          |
-| Bitcoin  | Local Blockchair inputs/outputs and curated cases                                    | Dataset-mode UTXO-flow scoring adapter plus attribution hierarchy      | No cluster-aware or graph-aware scoring                                            |
+| Bitcoin  | Local Blockchair inputs/outputs and curated cases                                    | Dataset-mode UTXO-flow scoring adapter plus attribution hierarchy and bounded Wave 5C cluster-aware interpretation | No generalized cluster graph scoring                                               |
 
 ---
 
@@ -336,12 +349,13 @@ ERC-20 Layer 1 is now transfer-event first.
 - repeated counterparty interaction scoring
 - token diversity and single-token concentration observation
 - trusted protocol or exchange-style contextual reasoning when Tier 1 attribution exists
+- bounded actor-aware refinement when counterparties resolve to the same actor
 
 ### Current ERC-20 limitation
 
 This is ERC-20 transfer-row Layer 1 scoring, not full DeFi intent decoding.
 
-It does not yet reconstruct swaps, decode protocol semantics, or use traces for pass-through scoring.
+It does not yet reconstruct swaps, decode protocol semantics, or use traces for full pass-through scoring.
 
 ---
 
@@ -390,13 +404,20 @@ Wave 5B adds:
 - repo-safe corroborating fixture inputs
 - supporting and conflicting source visibility
 
+Wave 5C adds:
+
+- actor-aware repeated-interaction and concentration refinement
+- practical direct and near exposure summaries
+- bounded pass-through and U-turn findings tied to attributed actors
+
 The important architectural choice is ordering:
 
 1. behavior is scored first
 2. Tier 1 attribution is resolved second
 3. secondary corroboration can raise confidence or register a conflict
-4. a controlled modifier is applied
-5. the report surfaces the resolved attribution concisely
+4. Wave 5C actor/exposure refinement is applied when attribution support is strong enough
+5. a controlled modifier is applied
+6. the report surfaces the resolved attribution concisely
 
 This keeps the system useful for investigations without pretending the repo already has full cluster-aware entity resolution.
 
@@ -416,6 +437,7 @@ Every current scoring path converges on the same high-level output shape:
 - `risk_breakdown`
 - `risk_reasons`
 - `attribution` when available
+- `attribution_insights` when actor-aware or exposure-aware refinement adds value
 
 This shared output contract is why the repo can mix:
 
@@ -461,10 +483,10 @@ The repo deliberately keeps the committed artifacts small enough to support demo
 
 The architecture is set up so the next wave can add:
 
-- trace-aware pass-through or U-turn rules
-- 1-hop / 2-hop exposure summaries
+- value-weighted graph scoring
 - fresh-wallet plus immediate large-flow reasoning
-- more graph-aware scoring
+- richer Solana and Bitcoin live-path reasoning
+- generalized multi-hop exposure beyond the current sampled Wave 5C layer
 
 Those are next-stage additions, not claims about the current implementation.
 

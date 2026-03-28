@@ -119,6 +119,7 @@ These are allowed when they are:
 - clearly labeled as secondary or corroborating
 - small enough for tests and demos
 - used to demonstrate bounded confidence uplift or conflict handling
+- or used to demonstrate bounded Wave 5C actor-aware clustering, exposure, or pass-through interpretation in curated cases
 
 ### Small example candidate templates
 

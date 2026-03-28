@@ -33,8 +33,8 @@ Implemented today:
 Not implemented today:
 
 - trace-driven live scoring
-- hop-based exposure
-- pass-through or U-turn detection
+- generalized graph-aware exposure
+- trace-native pass-through or U-turn detection
 
 ### ERC-20 Layer 1
 
@@ -49,7 +49,7 @@ Not implemented today:
 - live ERC-20 scoring inside the EVM strategy
 - swap-aware or protocol-intent interpretation
 - trace-aware ERC-20 pass-through or U-turn detection
-- hop-based token exposure
+- generalized graph-aware token exposure
 
 ### Solana Layer 1
 
@@ -75,7 +75,7 @@ Implemented today:
 
 Not implemented today:
 
-- cluster-aware Bitcoin modeling
+- generalized cluster-aware Bitcoin modeling
 - change detection
 - graph-aware peel-chain or pass-through scoring
 
@@ -106,6 +106,10 @@ Not implemented today:
 | ERC-20 noisy inbound or broad token surface                 | Validator dataset mode | `erc20_noisy_token_inbound_surface` and `erc20_broad_token_counterparty_surface` score large inbound-heavy or very broad token surfaces.                                                                                    |
 | ERC-20 repeated token counterparty activity                 | Validator dataset mode | `erc20_repeated_counterparty_activity` scores repeated interaction with the same counterparty set.                                                                                                                          |
 | ERC-20 mixed token activity and concentration               | Validator dataset mode | `erc20_mixed_token_activity` and `erc20_single_token_operational_concentration` capture token diversity and dominant-token concentration.                                                                                   |
+| Actor-aware repeated interaction and concentration          | Attribution layer      | `actor_repeated_risky_interaction`, `actor_risky_concentration`, `actor_contextual_repeated_interaction`, and `actor_contextual_concentration` refine scoring when counterparties resolve to the same actor with strong support. |
+| Practical hop-aware exposure summaries                      | Attribution layer      | `attribution_insights` now include direct and near exposure summaries tied to attributed actors when sampled Layer 1 flow order supports them.                                                                              |
+| Pass-through and U-turn attribution                         | Attribution layer      | `actor_pass_through_risky_exposure`, `actor_u_turn_risky_service`, and the matching report insights now surface bounded routing findings where actor support is strong enough.                                             |
+| Cluster-aware attribution refinement                        | Attribution layer      | `cluster_grouping` insights now highlight sampled multi-address actor groupings when attribution links multiple addresses to the same actor.                                                                                 |
 | Bitcoin spend-heavy operational hub                         | Validator dataset mode | `bitcoin_spend_heavy_operational_hub` covers outbound-dominant operational behavior.                                                                                                                                        |
 | Bitcoin noisy inbound broad surface                         | Validator dataset mode | `bitcoin_noisy_inbound_broad_surface` covers receive-heavy broad-surface behavior.                                                                                                                                          |
 | Bitcoin mixed-flow broad-value legacy wallet                | Validator dataset mode | `bitcoin_legacy_mixed_flow_broad_value` covers high-volume mixed legacy-format activity.                                                                                                                                    |
@@ -121,12 +125,10 @@ These have real code support or data groundwork, but not a complete end-to-end d
 |-----------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
 | Mixer / tumbler exposure beyond direct contact      | Direct mixer interaction is implemented, but hop-based or weighted mixer exposure is not.                           |
 | Newly created wallet with immediate large flow      | `fresh_wallet` exists, but there is no explicit large-value or immediate cash-out rule yet.                         |
-| Contract-mediated pass-through behavior             | Ethereum traces are extracted and surfaced in dataset mode, but no pass-through rule consumes them yet.             |
-| ERC-20 trace-aware routing interpretation           | ERC-20 transfer-row scoring exists, but traces are not yet used to distinguish swaps, pass-throughs, or U-turns.    |
-| U-turn / round-trip behavior                        | Trace depth and counterparty context exist, but no inbound-then-back-out detector is implemented.                   |
+| Contract-mediated trace-native pass-through behavior | Ethereum traces are extracted and surfaced in dataset mode, but the current pass-through logic still works from sampled Layer 1 flow order rather than full trace semantics. |
+| ERC-20 trace-aware routing interpretation           | ERC-20 transfer-row scoring and sampled actor-aware routing insight exist, but traces are not yet used to distinguish swaps or protocol intent. |
 | Value-weighted service concentration                | Concentration works on interaction count today, not value-weighted flow.                                            |
-| Entity-aware concentration and repeated interaction | Exact-address Tier 1 attribution works today; cluster-level or entity-merged scoring does not.                      |
-| Multi-source corroborated attribution               | Tier 1 resolution exists, but corroborating-source ingestion and richer conflict handling are deferred.              |
+| Generalized entity-wide concentration and repeated interaction | Actor-aware refinement exists for sampled, strongly attributed actors, but not as a generalized graph-wide entity engine. |
 | Bitcoin rapid spend / dormant reactivation          | The UTXO data model supports these concepts, but the validator does not score them yet.                             |
 | Solana protocol or instruction semantics            | Stablecoin-flow role scoring exists, but full instruction-aware or program-aware Solana semantics do not.           |
 | Trace-aware Ethereum scoring                        | Trace context is visible in dataset mode, but the shared analyzer still scores from top-level transfers and labels. |
@@ -139,8 +141,8 @@ These are explicitly part of the roadmap, but are not implemented in this repo t
 
 | Typology                                               | Current status |
 |--------------------------------------------------------|----------------|
-| 1-hop / 2-hop exposure                                 | Backlog only.  |
 | Peel-chain behavior                                    | Backlog only.  |
+| Graph-aware 1-hop / 2-hop exposure                     | Backlog only.  |
 | Graph-aware pass-through or layering                   | Backlog only.  |
 | Cross-chain / bridge-aware obfuscation                 | Backlog only.  |
 | Stablecoin corridor or sanctions-evasion path modeling | Backlog only.  |

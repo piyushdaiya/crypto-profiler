@@ -13,7 +13,7 @@ They are useful for:
 ### Ethereum
 
 - [`ethereum-tornado-router.txt`](ethereum-tornado-router.txt)
-- Demonstrates: trace-aware Ethereum Layer 1 reporting, labeled high-risk infrastructure, and corroborating secondary attribution in the report surface.
+- Demonstrates: trace-aware Ethereum Layer 1 reporting, labeled high-risk infrastructure, and corroborating attribution with explicit actor context in the report surface.
 - Demo command:
 
 ```bash
@@ -33,7 +33,7 @@ go run ./cmd/validator --report --dataset ./data/cases/curated-solana/solana-sta
 ### Bitcoin
 
 - [`bitcoin-operational-hub.txt`](bitcoin-operational-hub.txt)
-- Demonstrates: UTXO-flow language, spend-heavy operational behavior, broad but structured Bitcoin counterparty surfaces, and bounded WalletExplorer-style secondary context.
+- Demonstrates: UTXO-flow language, spend-heavy operational behavior, broad but structured Bitcoin counterparty surfaces, and bounded WalletExplorer-style actor grouping in the report.
 - Demo command:
 
 ```bash
@@ -43,7 +43,7 @@ go run ./cmd/validator --report --dataset ./data/cases/curated-bitcoin/bitcoin-b
 ### ERC-20
 
 - [`erc20-uniswap-v2-router.txt`](erc20-uniswap-v2-router.txt)
-- Demonstrates: token-surface breadth, trusted protocol context, repeated counterparty activity, and corroborating attribution in ERC-20 Layer 1 reporting.
+- Demonstrates: token-surface breadth, trusted protocol context, repeated counterparty activity, and Wave 5C actor-aware contextual findings in ERC-20 Layer 1 reporting.
 - Demo command:
 
 ```bash

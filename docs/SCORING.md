@@ -202,12 +202,39 @@ The design goal is deliberate:
 - secondary sources can improve analyst explanation
 - secondary sources must not create large hard jumps on their own
 
+### Wave 5C actor/exposure refinements
+
+Wave 5C adds a bounded refinement layer after attribution resolution.
+
+Current practical reason codes:
+
+| Refinement shape                            | Current reason code                     | Current effect     |
+|---------------------------------------------|-----------------------------------------|--------------------|
+| Actor-aware repeated risky interaction      | `actor_repeated_risky_interaction`      | `FRAUD +4` to `+6` |
+| Actor-aware risky concentration             | `actor_risky_concentration`             | `FRAUD +5`         |
+| Actor-aware repeated contextual interaction | `actor_contextual_repeated_interaction` | `REPUTATION -1.5`  |
+| Actor-aware contextual concentration        | `actor_contextual_concentration`        | `REPUTATION -3`    |
+| Pass-through exposure to risky actor        | `actor_pass_through_risky_exposure`     | `FRAUD +4`         |
+| U-turn through risky actor                  | `actor_u_turn_risky_service`            | `FRAUD +3`         |
+
+Wave 5C also adds `attribution_insights` for:
+
+- direct exposure to attributed actors
+- near exposure to risky actors through an intermediary
+- cluster-aware grouping when multiple sampled addresses resolve to the same actor
+- pass-through and U-turn findings where sampled Layer 1 flow order supports them
+
+Guardrails:
+
+- stronger score changes require strong, non-secondary attribution support
+- secondary-only attribution can still appear in analyst-facing insights, but does not drive the stronger Wave 5C score modifiers
+- the goal is explainable refinement, not a second opaque scoring engine
+
 ### What is not implemented yet for Ethereum
 
-- trace-driven pass-through or U-turn detection
+- trace-driven live pass-through or U-turn detection
 - value-weighted concentration from traces
-- hop-based exposure
-- graph-aware path scoring
+- generalized graph-aware path scoring
 - corroborating-source conflict resolution beyond Tier 1
 
 ---
@@ -245,9 +272,9 @@ Today, ERC-20 dataset-mode scoring is trying to answer questions like:
 
 - live ERC-20 scoring inside the EVM address strategy
 - swap-aware or protocol-intent interpretation
-- trace-aware ERC-20 pass-through or U-turn detection
-- hop-based or graph-aware token exposure
-- corroborating-source attribution beyond Tier 1
+- trace-aware ERC-20 swap or protocol-intent decoding
+- generalized hop-based or graph-aware token exposure
+- generalized corroborating-source attribution beyond Tier 1
 
 ---
 
@@ -284,7 +311,7 @@ Today, Solana dataset-mode scoring is trying to answer questions like:
 - instruction-aware or program-aware scoring
 - non-stablecoin Layer 1 coverage
 - bridge-aware or graph-aware scoring
-- corroborating-source attribution beyond Tier 1
+- generalized corroborating-source attribution beyond Tier 1
 
 ---
 
@@ -323,18 +350,19 @@ Today, Bitcoin dataset-mode scoring is trying to answer questions like:
 - dormant-output reactivation
 - peel-chain logic
 - change-aware or cluster-aware modeling
-- hop-based exposure scoring
+- generalized hop-based exposure scoring
 - broader corroborating attribution coverage beyond the current bounded fixtures
 
 ---
 
-## What Tier 1 Attribution Changes Today
+## What Attribution Changes Today
 
-Wave 5A improves score precision in three ways:
+Waves 5A through 5C improve score precision in four ways:
 
 1. risky actors can escalate scores without replacing behavioral reasons
 2. contextual infrastructure can reduce false positives for broad-surface or high-volume wallets
 3. reports can explain why a label mattered, including actor, confidence, and source tier
+4. strong actor support can refine repeated interaction, concentration, and sampled exposure narratives
 
 This is deliberately narrower than a full attribution platform.
 
@@ -350,10 +378,15 @@ Wave 5B adds:
 - repo-safe corroborating fixture sources
 - explicit corroborating vs conflicting source handling
 
+Wave 5C adds:
+
+- actor-aware repeated-interaction and concentration refinement
+- practical direct and near exposure summaries
+- bounded pass-through and U-turn findings tied to attributed actors
+
 Deferred to later waves:
 
-- cluster-aware actor reasoning
-- graph-aware attribution paths
+- generalized graph-aware attribution paths
 - broader corroborating-source ingestion and conflict arbitration
 
 ---
@@ -382,16 +415,15 @@ That makes it good for:
 It does not currently:
 
 - recompute chain history live from the full raw source
-- build 1-hop or 2-hop exposure graphs
-- merge cluster identities
+- build generalized 1-hop or 2-hop exposure graphs
+- merge cluster identities across arbitrary address sets
 - compute value-aware path risk across protocols
 
 ### Future live or graph-aware scoring
 
-The roadmap after the current ERC-20 implementation is to add:
+The roadmap after Wave 5C is to add:
 
 - graph-aware 1-hop and 2-hop exposure
-- trace-aware pass-through and U-turn logic
 - fresh-wallet plus immediate large-flow reasoning
 - value-weighted concentration
 - richer Solana and Bitcoin live-flow reasoning

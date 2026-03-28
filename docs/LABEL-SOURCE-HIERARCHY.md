@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document explains the attribution layer implemented across Wave 5A and Wave 5B.
+This document explains the attribution layer implemented across Wave 5A, Wave 5B, and Wave 5C.
 
 The goal is practical precision:
 
@@ -11,6 +11,7 @@ The goal is practical precision:
 - allow bounded secondary corroboration without letting weak sources dominate
 - distinguish risk-escalating labels from contextual or benign labels
 - improve analyst explanations without pretending the repo already has full entity resolution
+- add bounded actor-aware and exposure-aware refinement where attribution support is strong
 
 ---
 
@@ -33,11 +34,18 @@ Wave 5B adds:
 - confidence boosts from corroboration
 - conflict visibility in resolved attribution and report output
 
-Wave 5B still does not include:
+Wave 5C adds:
+
+- actor-aware repeated-interaction and concentration refinement
+- practical cluster-aware grouping when multiple sampled addresses resolve to the same actor
+- direct and near exposure summaries tied to attributed actors
+- bounded pass-through and U-turn findings from sampled Layer 1 flows
+
+Waves 5A through 5C still do not include:
 
 - broad corroborating-source ingestion
 - large-scale conflict arbitration across many providers
-- cluster-wide entity resolution
+- generalized cluster-wide entity resolution
 
 ---
 
@@ -217,15 +225,16 @@ The scoring layer uses that distinction to avoid a common false-positive problem
 
 ## How Attribution Affects Scoring
 
-Wave 5A and 5B keep the existing behavioral model intact.
+Waves 5A through 5C keep the existing behavioral model intact.
 
 The order is:
 
 1. analyze behavior
 2. resolve Tier 1 attribution
 3. consider bounded secondary corroboration or conflicts
-4. apply a controlled attribution modifier
-5. render a report that shows both behavior and attribution context
+4. apply bounded actor-aware or exposure-aware refinement when attribution support is strong
+5. apply a controlled attribution modifier
+6. render a report that shows both behavior and attribution context
 
 Current practical effects:
 
@@ -233,17 +242,21 @@ Current practical effects:
 - trusted protocol, exchange, mining-pool, or treasury Tier 1 attribution reduces false positives
 - corroborating secondary sources can slightly raise confidence or add modest bounded adjustments
 - conflicting secondary sources can surface note-level caution without overriding Tier 1
+- actor-aware rollups can merge repeated interaction or concentration to the actor level when attribution confidence is strong enough
+- pass-through or U-turn findings remain bounded and explanation-first
 - attribution does not replace behavioral reasoning or remove visible risk reasons
 
 ---
 
-## What Is Deferred To Wave 5C
+## What Remains Deferred After Wave 5C
 
-Wave 5C is still deferred and will handle:
+Wave 5C ships a practical MVP, not a full graph platform.
 
-- cluster-aware or actor-aware graph scoring
-- path-aware exposure, pass-through, or U-turn attribution
-- richer actor-level behavioral refinement
+Still deferred:
+
+- generalized actor-aware graph scoring across arbitrary hops
+- large-scale cluster resolution beyond the current sampled actor grouping
+- richer value-aware path scoring and protocol-intent reconstruction
 - broader conflict arbitration beyond the current bounded source rules
 
 ---

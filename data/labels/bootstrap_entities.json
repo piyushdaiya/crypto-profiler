@@ -2,6 +2,7 @@
   "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b": {
     "address": "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b",
     "name": "Tornado Cash Router",
+    "actor": "Tornado Cash",
     "category": "MIXER",
     "severity": "HIGH",
     "confidence": "HIGH",
@@ -12,6 +13,7 @@
   "0xe592427a0aece92de3edee1f18e0157c05861564": {
     "address": "0xe592427a0aece92de3edee1f18e0157c05861564",
     "name": "Uniswap V3 Router",
+    "actor": "Uniswap",
     "category": "PROTOCOL",
     "severity": "LOW",
     "confidence": "HIGH",
@@ -22,6 +24,7 @@
   "0x7a250d5630b4cf539739df2c5dacb4c659f2488d": {
     "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
     "name": "Uniswap V2 Router",
+    "actor": "Uniswap",
     "category": "PROTOCOL",
     "severity": "LOW",
     "confidence": "HIGH",
@@ -32,6 +35,7 @@
   "0xf977814e90da44bfa03b6295a0616a897441acec": {
     "address": "0xf977814e90da44bfa03b6295a0616a897441acec",
     "name": "Binance Wallet",
+    "actor": "Binance",
     "category": "EXCHANGE",
     "severity": "LOW",
     "confidence": "HIGH",

@@ -273,6 +273,13 @@ func renderReport(profile *model.WalletProfile, ctx *reportContext) string {
 		}
 	}
 
+	if insights := topAttributionInsights(profile.AttributionInsights, 4); len(insights) > 0 {
+		lines = append(lines, "", "Actor / Exposure Findings:")
+		for idx, insight := range insights {
+			lines = append(lines, fmt.Sprintf("%d. %s", idx+1, renderAttributionInsight(insight)))
+		}
+	}
+
 	if ctx != nil && len(ctx.TopCounterparties) > 0 {
 		lines = append(lines, "", "Top Counterparties:")
 		for idx, cp := range limitCounterparties(ctx.TopCounterparties, 5) {
@@ -334,6 +341,31 @@ func limitCounterparties(counterparties []reportCounterparty, limit int) []repor
 		return counterparties[:limit]
 	}
 	return counterparties
+}
+
+func topAttributionInsights(insights []model.AttributionInsight, limit int) []model.AttributionInsight {
+	if len(insights) == 0 {
+		return nil
+	}
+
+	sorted := append([]model.AttributionInsight(nil), insights...)
+	sort.SliceStable(sorted, func(i, j int) bool {
+		if insightPriority(sorted[i]) != insightPriority(sorted[j]) {
+			return insightPriority(sorted[i]) < insightPriority(sorted[j])
+		}
+		if sorted[i].Confidence != sorted[j].Confidence {
+			return sorted[i].Confidence > sorted[j].Confidence
+		}
+		if sorted[i].EvidenceCount != sorted[j].EvidenceCount {
+			return sorted[i].EvidenceCount > sorted[j].EvidenceCount
+		}
+		return sorted[i].Summary < sorted[j].Summary
+	})
+
+	if limit > 0 && len(sorted) > limit {
+		sorted = sorted[:limit]
+	}
+	return sorted
 }
 
 func renderEVMCounterparties(counterparties []datasets.CounterpartySummary) []reportCounterparty {
@@ -460,4 +492,35 @@ func joinAttributionSources(sources []model.ResolvedAttributionSource) string {
 		parts = append(parts, fmt.Sprintf("%s [%s: %s / %s]", source.Name, source.Tier, description, blankFallback(string(source.Category), "UNKNOWN")))
 	}
 	return strings.Join(parts, ", ")
+}
+
+func renderAttributionInsight(insight model.AttributionInsight) string {
+	suffix := make([]string, 0, 2)
+	if insight.Confidence > 0 {
+		suffix = append(suffix, fmt.Sprintf("confidence %.2f", insight.Confidence))
+	}
+	if insight.HopDepth > 0 {
+		suffix = append(suffix, fmt.Sprintf("%d-hop", insight.HopDepth))
+	}
+	if len(suffix) == 0 {
+		return insight.Summary
+	}
+	return fmt.Sprintf("%s (%s)", insight.Summary, strings.Join(suffix, ", "))
+}
+
+func insightPriority(insight model.AttributionInsight) int {
+	switch insight.Type {
+	case model.AttributionInsightPassThrough, model.AttributionInsightUTurn:
+		return 0
+	case model.AttributionInsightNearExposure:
+		return 1
+	case model.AttributionInsightDirectExposure:
+		return 2
+	case model.AttributionInsightActorConcentration, model.AttributionInsightActorRepeated:
+		return 3
+	case model.AttributionInsightClusterGrouping:
+		return 4
+	default:
+		return 5
+	}
 }

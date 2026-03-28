@@ -3,7 +3,7 @@
 Portfolio-grade multi-chain crypto risk profiling for AML, sanctions, fraud, and regtech-style wallet review.
 
 [![CI](https://github.com/piyushdaiya/crypto-profiler/actions/workflows/ci.yml/badge.svg)](https://github.com/piyushdaiya/crypto-profiler/actions/workflows/ci.yml)
-[![Go Version](https://img.shields.io/badge/Go-1.23+-00ADD8)](#tech-stack)
+[![Go Version](https://img.shields.io/badge/Go-1.25+-00ADD8)](#tech-stack)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-active%20mvp-blue)](#current-implementation-status)
 
@@ -54,7 +54,34 @@ It demonstrates:
 - disciplined repository storytelling through aligned docs, curated artifacts, tests, and CI security checks
 
 ---
+## Demo
 
+A short demo reel and static screenshots are included in the repository.
+
+- [74-second demo video](docs/media/video/crypto-profiler-demo.mp4)
+- [Sample analyst reports](docs/sample-reports/README.md)
+
+<p align="center">
+  <img src="docs/media/screenshots/01-demo-overview.png" alt="Crypto Profiler demo overview" width="900">
+</p>
+
+<p align="center">
+  <img src="docs/media/screenshots/02-ethereum-curated-report.png" alt="Ethereum curated analyst report" width="900">
+</p>
+
+<p align="center">
+  <img src="docs/media/screenshots/03-solana-curated-report.png" alt="Solana curated analyst report" width="900">
+</p>
+
+<p align="center">
+  <img src="docs/media/screenshots/04-bitcoin-curated-report.png" alt="Bitcoin curated analyst report" width="900">
+</p>
+
+<p align="center">
+  <img src="docs/media/screenshots/05-erc20-curated-report.png" alt="ERC-20 curated analyst report" width="900">
+</p>
+
+---
 ## Why The Architecture Looks Like This
 
 Crypto Profiler deliberately separates:
@@ -68,37 +95,6 @@ That choice keeps the implementation honest:
 - Ethereum is the most mature live path
 - Solana, Bitcoin, and ERC-20 are real Layer 1 slices, but currently delivered through curated dataset mode
 - the shared output contract stays consistent even when the ingestion and scoring path differs by chain
-
----
-
-## Demo Entry Points
-
-If you only have a few minutes, start here:
-
-```bash
-go run ./cmd/validator --report --dataset ./data/cases/curated-enriched/tornado-router-high-risk.json
-go run ./cmd/validator --report --dataset ./data/cases/curated-solana/solana-stablecoin-authority-operator.json
-go run ./cmd/validator --report --dataset ./data/cases/curated-bitcoin/bitcoin-broad-spend-heavy-operational-hub.json
-go run ./cmd/validator --report --dataset ./data/cases/curated-erc20/erc20-uniswap-v2-router-trusted-token-hub.json
-```
-
-Use these for:
-
-- a trace-aware Ethereum risk case
-- a Solana authority-driven stablecoin-flow case
-- a Bitcoin spend-heavy UTXO-flow case
-- an ERC-20 trusted protocol token-surface case
-
-Walkthrough notes live in [`docs/DEMO-WALKTHROUGH.md`](docs/DEMO-WALKTHROUGH.md).
-Interview framing notes live in [`docs/INTERVIEW-TALK-TRACK.md`](docs/INTERVIEW-TALK-TRACK.md).
-Sample report notes live in [`docs/sample-reports/README.md`](docs/sample-reports/README.md).
-
-Static sample outputs live in:
-
-- [`docs/sample-reports/ethereum-tornado-router.txt`](docs/sample-reports/ethereum-tornado-router.txt)
-- [`docs/sample-reports/solana-authority-operator.txt`](docs/sample-reports/solana-authority-operator.txt)
-- [`docs/sample-reports/bitcoin-operational-hub.txt`](docs/sample-reports/bitcoin-operational-hub.txt)
-- [`docs/sample-reports/erc20-uniswap-v2-router.txt`](docs/sample-reports/erc20-uniswap-v2-router.txt)
 
 ---
 
@@ -145,24 +141,6 @@ This mode is meant to make the repo easy to demo in interviews and portfolio rev
 | Solana live Layer 1 scoring        | Not implemented             | Live Solana strategy currently provides address validation and basic activity/balance lookup only.                                               |
 | Bitcoin live Layer 1 scoring       | Not implemented             | Live Bitcoin strategy currently provides address validation and basic activity/balance lookup only.                                              |
 | ERC-20 live or graph-aware scoring | Not implemented             | Current ERC-20 support is curated dataset mode only; live token scoring, swap-aware interpretation, and graph-aware exposure remain future work. |
-
----
-
-## Quickest Demo Path
-
-For a short live walkthrough:
-
-1. Start with Ethereum to show the strongest end-to-end path and trace-aware enrichment.
-2. Jump to Solana or Bitcoin to prove the repo is genuinely multi-chain.
-3. End on ERC-20 to show token-surface reasoning and contextual scoring.
-
-If you only show one command, use:
-
-```bash
-go run ./cmd/validator --report --dataset ./data/cases/curated-enriched/tornado-router-high-risk.json
-```
-
-That example shows the strongest combination of curated data, trace context, differentiated reasons, and analyst-facing output.
 
 ---
 
@@ -363,8 +341,6 @@ The repo includes an intentionally lightweight extract-and-curate workflow.
 ## Documentation Map
 
 - [`ARCHITECTURE.md`](ARCHITECTURE.md)
-- [`docs/DEMO-WALKTHROUGH.md`](docs/DEMO-WALKTHROUGH.md)
-- [`docs/INTERVIEW-TALK-TRACK.md`](docs/INTERVIEW-TALK-TRACK.md)
 - [`docs/sample-reports/README.md`](docs/sample-reports/README.md)
 - [`docs/TYPOLOGIES.md`](docs/TYPOLOGIES.md)
 - [`docs/SCORING.md`](docs/SCORING.md)

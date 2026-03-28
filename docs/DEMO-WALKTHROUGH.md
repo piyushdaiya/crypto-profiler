@@ -131,3 +131,8 @@ Static sample analyst reports live in:
 - [`docs/sample-reports/bitcoin-operational-hub.txt`](sample-reports/bitcoin-operational-hub.txt)
 - [`docs/sample-reports/erc20-uniswap-v2-router.txt`](sample-reports/erc20-uniswap-v2-router.txt)
 - [`docs/sample-reports/README.md`](sample-reports/README.md)
+
+Generated screenshots and the demo reel live in:
+
+- [`docs/media/README.md`](media/README.md)
+- [`docs/DEMO-SHOT-LIST.md`](DEMO-SHOT-LIST.md)

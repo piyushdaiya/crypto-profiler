@@ -15,6 +15,21 @@ It does not yet have one fully unified graph-aware engine across all chains.
 
 ---
 
+## Architecture At A Glance
+
+If you only skim one section, this is the story:
+
+1. chain-specific Layer 1 data is extracted into address-scoped summaries outside git
+2. small, high-signal curated case artifacts are committed into `data/cases/...`
+3. `cmd/validator --dataset` probes the case shape and routes to the right chain adapter
+4. chain-specific scoring produces a shared `WalletProfile`
+5. `cmd/validator --report` turns that profile into a concise analyst-facing brief
+6. future behavior layers will sit on top of that shared output contract rather than replacing it
+
+This is why the project works well as both an engineering artifact and a portfolio demo.
+
+---
+
 ## Design Principles
 
 ### Deterministic first
@@ -110,6 +125,20 @@ flowchart LR
     F --> H["Analyst Report Output<br/>--report"]
 ```
 
+## Artifact Lifecycle
+
+```mermaid
+flowchart TD
+    A["Chain-Specific Inputs<br/>Etherscan / Blockchair / Solana stablecoin exports / traces"] --> B["Extraction + Candidate Mining"]
+    B --> C["Address-Scoped Summaries"]
+    C --> D["Curated Case Artifacts<br/>data/cases/..."]
+    D --> E["Validator Dataset Mode<br/>cmd/validator --dataset"]
+    E --> F["WalletProfile"]
+    F --> G["JSON Output"]
+    F --> H["Analyst Report Output<br/>cmd/validator --report"]
+    F --> I["Future Behavioral Layer<br/>hop-aware exposure / fresh-wallet / U-turns"]
+```
+
 ### End-to-end data flow in practice
 
 1. raw chain data is extracted into address-scoped summaries outside git
@@ -117,6 +146,13 @@ flowchart LR
 3. `cmd/validator --dataset` probes the case shape and chooses the right chain adapter
 4. chain-specific scoring produces a `WalletProfile`
 5. the output is rendered either as JSON or as an analyst-facing report
+
+### What a reviewer should take away
+
+- the repo is multi-chain, but not falsely chain-agnostic
+- curated artifacts are a deliberate product surface, not throwaway fixtures
+- report mode is a presentation layer on top of real scoring, not a mock demo veneer
+- future behavior work is staged as an additive layer, not something the docs pretend already exists
 
 ---
 
@@ -340,6 +376,14 @@ without losing coherence for the user.
 
 On top of that contract, report mode adds a human-readable presentation layer without changing the JSON schema.
 
+### Why that matters for portfolio review
+
+This is the architectural choice that keeps the project legible:
+
+- engineers can inspect JSON, tests, and chain-specific adapters
+- analysts can read the same result in brief form with `--report`
+- recruiters and hiring managers can follow the system without first reading internal code
+
 ---
 
 ## Data Storage Model
@@ -373,6 +417,15 @@ The architecture is set up so the next wave can add:
 - more graph-aware scoring
 
 Those are next-stage additions, not claims about the current implementation.
+
+## Review Path
+
+For the fastest architecture review:
+
+1. read the portfolio snapshot in [`README.md`](README.md)
+2. scan the two Mermaid diagrams in this file
+3. run one curated report command from [`docs/DEMO-WALKTHROUGH.md`](docs/DEMO-WALKTHROUGH.md)
+4. compare the output with the static examples in [`docs/sample-reports/README.md`](docs/sample-reports/README.md)
 
 ---
 

@@ -17,6 +17,20 @@ It demonstrates how to:
 - practical dataset-mode benchmarking for demos, case studies, and regression testing
 - a path from raw chain data to curated analyst-facing outputs
 
+## Best Demo Path
+
+If you have 3 to 5 minutes:
+
+1. Start with Ethereum to establish the shared report format and the trace-aware story.
+2. Show Solana or Bitcoin next to prove the repo uses chain-specific Layer 1 modeling rather than generic EVM language everywhere.
+3. End with ERC-20 to show contextual token-surface scoring and the Wave 2 maturity jump.
+
+If you have 60 to 90 seconds:
+
+- run the Ethereum report only
+- point out the curated case, trace context, top reasons, and analyst-facing narrative
+- mention that the same CLI/report surface also supports Solana, Bitcoin, and ERC-20 curated cases
+
 ## Recommended Demo Commands
 
 ### 1. Ethereum trace-aware curated case
@@ -89,6 +103,25 @@ Talk track:
 2. Show Solana or Bitcoin next to prove the repo is genuinely multi-chain rather than Ethereum-only.
 3. End with ERC-20 to show Wave 2 maturity and the move toward richer analyst-facing output.
 
+## What To Capture For Screenshots Or A Short Demo Video
+
+Recommended shots:
+
+1. the top section of the Ethereum report showing score, grade, and top reasons
+2. the Solana report area that highlights dominant role and authority-linked counterparties
+3. the Bitcoin report area that shows spend-heavy UTXO context
+4. the ERC-20 report area that shows token breadth plus trusted protocol context
+5. the README demo-entry section or architecture diagram as the opening frame
+
+Good sequence for a short screen recording:
+
+1. open the README and point at the demo entry points
+2. run the Ethereum report command
+3. run one non-Ethereum report command
+4. end on the architecture diagram or sample-report index
+
+The goal is to show that the project is both technically real and easy to explain.
+
 ## Sample Outputs
 
 Static sample analyst reports live in:
@@ -97,3 +130,4 @@ Static sample analyst reports live in:
 - [`docs/sample-reports/solana-authority-operator.txt`](sample-reports/solana-authority-operator.txt)
 - [`docs/sample-reports/bitcoin-operational-hub.txt`](sample-reports/bitcoin-operational-hub.txt)
 - [`docs/sample-reports/erc20-uniswap-v2-router.txt`](sample-reports/erc20-uniswap-v2-router.txt)
+- [`docs/sample-reports/README.md`](sample-reports/README.md)

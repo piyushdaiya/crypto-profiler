@@ -1,5 +1,7 @@
 # Crypto Profiler
 
+Portfolio-grade multi-chain crypto risk profiling for AML, sanctions, fraud, and regtech-style wallet review.
+
 [![CI](https://github.com/piyushdaiya/crypto-profiler/actions/workflows/ci.yml/badge.svg)](https://github.com/piyushdaiya/crypto-profiler/actions/workflows/ci.yml)
 [![Go Version](https://img.shields.io/badge/Go-1.23+-00ADD8)](#tech-stack)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -14,15 +16,29 @@ The repository currently combines:
 - trace-aware Ethereum case enrichment
 - a watchlist-driven sanctions path
 
-The immediate roadmap after this Wave 2 implementation is deeper behavior scoring on top of the now-aligned multi-chain Layer 1 base.
+The current next-step roadmap is deeper behavior scoring on top of the now-aligned multi-chain Layer 1 base.
 
 ---
 
-## Overview
+## Portfolio Snapshot
+
+- Built to demonstrate multi-chain Layer 1 reasoning without pretending Ethereum, Solana, Bitcoin, and ERC-20 all share the same data model.
+- Produces explainable risk output with visible reasons, review recommendations, and an analyst-facing report mode for demos.
+- Packages the engineering story end to end: extraction patterns, curated case artifacts, validator dataset mode, CI, security checks, docs, and sample outputs.
+
+---
+
+## Target Problem Space
 
 Crypto Profiler is built for KYW, AML, fraud, sanctions, and investigative-style wallet review.
 
 The goal is not to be a full chain warehouse. The goal is to make practical wallet profiling explainable and reproducible, with realistic case artifacts and scoring that can be reviewed rule by rule.
+
+Why this matters for crypto-risk and regtech work:
+
+- analysts and compliance reviewers need evidence they can inspect, not just opaque scores
+- different chains expose different useful primitives, so the modeling layer should reflect reality
+- curated benchmark cases are useful for demos, interviews, and regression testing when live data is noisy or unstable
 
 ---
 
@@ -74,6 +90,8 @@ Use these for:
 - an ERC-20 trusted protocol token-surface case
 
 Walkthrough notes live in [`docs/DEMO-WALKTHROUGH.md`](docs/DEMO-WALKTHROUGH.md).
+Interview framing notes live in [`docs/INTERVIEW-TALK-TRACK.md`](docs/INTERVIEW-TALK-TRACK.md).
+Sample report notes live in [`docs/sample-reports/README.md`](docs/sample-reports/README.md).
 
 Static sample outputs live in:
 
@@ -110,6 +128,8 @@ Report mode is designed to surface:
 - short interpretation
 - chain-specific Layer 1 context
 
+This mode is meant to make the repo easy to demo in interviews and portfolio reviews without changing the underlying JSON contract used by tests and engineering workflows.
+
 ---
 
 ## Current Implementation Status
@@ -125,6 +145,24 @@ Report mode is designed to surface:
 | Solana live Layer 1 scoring        | Not implemented             | Live Solana strategy currently provides address validation and basic activity/balance lookup only.                                               |
 | Bitcoin live Layer 1 scoring       | Not implemented             | Live Bitcoin strategy currently provides address validation and basic activity/balance lookup only.                                              |
 | ERC-20 live or graph-aware scoring | Not implemented             | Current ERC-20 support is curated dataset mode only; live token scoring, swap-aware interpretation, and graph-aware exposure remain future work. |
+
+---
+
+## Quickest Demo Path
+
+For a short live walkthrough:
+
+1. Start with Ethereum to show the strongest end-to-end path and trace-aware enrichment.
+2. Jump to Solana or Bitcoin to prove the repo is genuinely multi-chain.
+3. End on ERC-20 to show token-surface reasoning and contextual scoring.
+
+If you only show one command, use:
+
+```bash
+go run ./cmd/validator --report --dataset ./data/cases/curated-enriched/tornado-router-high-risk.json
+```
+
+That example shows the strongest combination of curated data, trace context, differentiated reasons, and analyst-facing output.
 
 ---
 
@@ -228,6 +266,19 @@ Dataset mode is the current delivery path for:
 
 ---
 
+## Curated Case Coverage By Chain
+
+The repo currently includes checked-in benchmark cases for:
+
+- Ethereum native Layer 1 and trace-enriched Ethereum cases under `data/cases/curated/` and `data/cases/curated-enriched/`
+- Solana stablecoin-flow Layer 1 cases under `data/cases/curated-solana/`
+- Bitcoin UTXO-flow Layer 1 cases under `data/cases/curated-bitcoin/`
+- ERC-20 Layer 1 token-surface cases under `data/cases/curated-erc20/`
+
+These are not toy fixtures. They are the primary way the repo demonstrates repeatable scoring behavior, report rendering, and chain-specific Layer 1 interpretation.
+
+---
+
 ## Live Validator Mode
 
 The live validator currently supports three chain strategies:
@@ -313,6 +364,8 @@ The repo includes an intentionally lightweight extract-and-curate workflow.
 
 - [`ARCHITECTURE.md`](ARCHITECTURE.md)
 - [`docs/DEMO-WALKTHROUGH.md`](docs/DEMO-WALKTHROUGH.md)
+- [`docs/INTERVIEW-TALK-TRACK.md`](docs/INTERVIEW-TALK-TRACK.md)
+- [`docs/sample-reports/README.md`](docs/sample-reports/README.md)
 - [`docs/TYPOLOGIES.md`](docs/TYPOLOGIES.md)
 - [`docs/SCORING.md`](docs/SCORING.md)
 - [`docs/EVM-CALLS-INTEGRATION.md`](docs/EVM-CALLS-INTEGRATION.md)
@@ -395,7 +448,7 @@ go run ./cmd/validator --dataset ./data/cases/curated-bitcoin/bitcoin-noisy-inbo
 
 ## Next Practical Work
 
-The next major items after the current Wave 2 ERC-20 implementation are:
+The next major items after the current implementation are:
 
 - 1-hop and 2-hop exposure summaries
 - pass-through and U-turn behavior

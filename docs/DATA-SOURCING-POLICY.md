@@ -109,6 +109,17 @@ These are committed because they are:
 - part of the implemented scoring story
 - useful for deterministic demos and regression coverage
 
+The repo may also commit small intentional secondary attribution fixtures such as:
+
+- `data/labels/tier2_wallet_explorer_entities.json`
+- `data/labels/tier2_corroborating_entities.json`
+
+These are allowed when they are:
+
+- clearly labeled as secondary or corroborating
+- small enough for tests and demos
+- used to demonstrate bounded confidence uplift or conflict handling
+
 ### Small example candidate templates
 
 Examples:
@@ -161,6 +172,7 @@ Safe to commit when intentional:
 - compact trace summary fixtures
 - trusted and high-risk benchmark addresses used in tests and curated cases
 - small Tier 1 structured attribution fixtures used for scoring and report demos
+- small secondary corroborating attribution fixtures used for report demos or regression tests
 
 Keep local or external:
 
@@ -190,6 +202,7 @@ Safe to commit when intentional:
 - compact extracted Bitcoin summary fixtures
 - example candidate templates
 - small mining-pool attribution fixtures
+- small WalletExplorer-style secondary attribution fixtures
 
 Keep local or external:
 
@@ -210,6 +223,7 @@ Safe to commit when intentional:
 - curated ERC-20 case artifacts under `data/cases/curated-erc20/`
 - committed example candidate templates such as `data/candidates/erc20_addresses.example.txt`
 - small Tier 1 label fixtures that support trusted protocol or exchange-style contextualization
+- small corroborating attribution fixtures that demonstrate bounded secondary support
 
 Keep local or external:
 

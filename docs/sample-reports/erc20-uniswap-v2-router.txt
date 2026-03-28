@@ -5,16 +5,26 @@ Network: EVM
 Mode: Dataset
 Dataset Context: ERC-20 Layer 1 dataset
 Case: ERC-20 Trusted Protocol Token Hub (erc20-uniswap-v2-router-trusted-token-hub)
-Risk Score: 12.90
+Risk Score: 9.30
 Risk Grade: LOW (Reviewable)
 Review Recommended: Yes
 
+Attribution:
+Resolved Label: Uniswap V2 Router
+Category: PROTOCOL
+Risk Class: TRUSTED_SERVICE
+Confidence: 0.99
+Primary Source: bootstrap_entities (LOCAL_OVERRIDE / BOOTSTRAP_LOCAL)
+Disposition: contextual / benign
+Confidence Basis: base 0.95, resolved 0.99
+Corroborating Sources: graphsense_structured_labels [PRIMARY_STRUCTURED: Uniswap V2 Router / PROTOCOL], repo_safe_corroborating_labels [SECONDARY_CORROBORATING: Uniswap V2 Router (Secondary) / PROTOCOL]
+
 Top Reasons:
 1. [REPUTATION] Trusted protocol ERC-20 hub observed (3747640 transfers across 54478 counterparties) (offset +16.0)
-2. [FRAUD] Broad ERC-20 counterparty surface observed (54478 counterparties across 19325 tokens) (offset +8.0)
-3. [REPUTATION] Mixed ERC-20 activity observed across 19325 token contracts (offset +4.0)
-4. [FRAUD] Repeated ERC-20 counterparty activity observed (top counterparty interactions=118744, repeated counterparties=30580) (offset +4.0)
-5. [REPUTATION] Dominant token concentration observed (WETH at 97.87% of transfers) (offset +3.0)
+2. [REPUTATION] Tier 1 attribution resolved profiled address to contextual service: Uniswap V2 Router (offset -10.0)
+3. [FRAUD] Broad ERC-20 counterparty surface observed (54478 counterparties across 19325 tokens) (offset +8.0)
+4. [REPUTATION] Mixed ERC-20 activity observed across 19325 token contracts (offset +4.0)
+5. [FRAUD] Repeated ERC-20 counterparty activity observed (top counterparty interactions=118744, repeated counterparties=30580) (offset +4.0)
 
 Top Counterparties:
 1. 0xb8713bd23c33b15236af67e5badceb8e49cb0244 - 118744 interactions across 2 tokens

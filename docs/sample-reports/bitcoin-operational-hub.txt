@@ -9,10 +9,20 @@ Risk Score: 17.00
 Risk Grade: LOW (Reviewable)
 Review Recommended: Yes
 
+Attribution:
+Resolved Label: WalletExplorer-style Exchange Cluster
+Actor: Sample Exchange Cluster
+Category: EXCHANGE
+Risk Class: EXCHANGE
+Confidence: 0.56
+Primary Source: wallet_explorer_style_labels (SECONDARY_CORROBORATING / WALLET_EXPLORER_STYLE)
+Disposition: contextual / benign
+
 Top Reasons:
 1. [FRAUD] Spend-heavy operational hub pattern observed (673118 outbound spends, 1906 counterparties) (offset +18.0)
 2. [FRAUD] Extreme repeated interaction with top counterparty (672177 interactions) (offset +10.0)
 3. [FRAUD] Broad Bitcoin counterparty surface observed (1906 counterparties) (offset +6.0)
+4. [REPUTATION] Secondary corroborating source suggests contextual service attribution: WalletExplorer-style Exchange Cluster (offset -2.0)
 
 Top Counterparties:
 1. bc1qlfvc8l4ueq49nr35tppqakee72wpu8nqclkhct - 672177 interactions (0 inbound / 672177 outbound)

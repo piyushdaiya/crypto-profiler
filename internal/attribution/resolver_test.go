@@ -58,6 +58,8 @@ func TestResolveAddress_LocalOverrideWinsOverPrimaryStructured(t *testing.T) {
 	  }
 	}`))
 	t.Setenv("BITCOIN_MINING_POOLS_PATH", writeFile(t, "mining.json", `[]`))
+	t.Setenv("WALLET_EXPLORER_LABELS_PATH", writeFile(t, "wallet-explorer.json", `[]`))
+	t.Setenv("CORROBORATING_LABELS_PATH", writeFile(t, "corroborating.json", `[]`))
 	ResetDefaultResolverForTesting()
 
 	resolved, ok := ResolveAddress("0xabc0000000000000000000000000000000000000", "EVM")
@@ -92,6 +94,8 @@ func TestResolveAddress_MiningPoolContextResolves(t *testing.T) {
 	    "risk_escalating": false
 	  }
 	]`))
+	t.Setenv("WALLET_EXPLORER_LABELS_PATH", writeFile(t, "wallet-explorer.json", `[]`))
+	t.Setenv("CORROBORATING_LABELS_PATH", writeFile(t, "corroborating.json", `[]`))
 	ResetDefaultResolverForTesting()
 
 	resolved, ok := ResolveAddress("bc1qcp6fr7gtyukympl6unr7uv78h3vprycwj455zx", "BITCOIN")
@@ -122,6 +126,8 @@ func TestApplyTier1Attribution_RiskyEscalation(t *testing.T) {
 	]`))
 	t.Setenv("BOOTSTRAP_LABELS_PATH", writeFile(t, "bootstrap.json", `{}`))
 	t.Setenv("BITCOIN_MINING_POOLS_PATH", writeFile(t, "mining.json", `[]`))
+	t.Setenv("WALLET_EXPLORER_LABELS_PATH", writeFile(t, "wallet-explorer.json", `[]`))
+	t.Setenv("CORROBORATING_LABELS_PATH", writeFile(t, "corroborating.json", `[]`))
 	ResetDefaultResolverForTesting()
 
 	profile := &model.WalletProfile{
@@ -160,6 +166,8 @@ func TestApplyTier1Attribution_ContextualSuppression(t *testing.T) {
 	]`))
 	t.Setenv("BOOTSTRAP_LABELS_PATH", writeFile(t, "bootstrap.json", `{}`))
 	t.Setenv("BITCOIN_MINING_POOLS_PATH", writeFile(t, "mining.json", `[]`))
+	t.Setenv("WALLET_EXPLORER_LABELS_PATH", writeFile(t, "wallet-explorer.json", `[]`))
+	t.Setenv("CORROBORATING_LABELS_PATH", writeFile(t, "corroborating.json", `[]`))
 	ResetDefaultResolverForTesting()
 
 	profile := &model.WalletProfile{
@@ -183,6 +191,196 @@ func TestApplyTier1Attribution_ContextualSuppression(t *testing.T) {
 	}
 	if profile.Attribution == nil || !profile.Attribution.Contextual {
 		t.Fatalf("expected contextual resolved attribution, got %+v", profile.Attribution)
+	}
+}
+
+func TestResolveAddress_SecondaryCorroborationBoostsConfidence(t *testing.T) {
+	t.Setenv("GRAPHSENSE_LABELS_PATH", writeFile(t, "graphsense.json", `[
+	  {
+	    "address": "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b",
+	    "network": "EVM",
+	    "label": "Tornado Cash Router",
+	    "actor": "Tornado Cash",
+	    "category": "MIXER",
+	    "risk_class": "ILLICIT_SERVICE",
+	    "confidence": 0.92,
+	    "contextual": false,
+	    "risk_escalating": true
+	  }
+	]`))
+	t.Setenv("BOOTSTRAP_LABELS_PATH", writeFile(t, "bootstrap.json", `{}`))
+	t.Setenv("BITCOIN_MINING_POOLS_PATH", writeFile(t, "mining.json", `[]`))
+	t.Setenv("WALLET_EXPLORER_LABELS_PATH", writeFile(t, "wallet-explorer.json", `[]`))
+	t.Setenv("CORROBORATING_LABELS_PATH", writeFile(t, "corroborating.json", `[
+	  {
+	    "address": "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b",
+	    "network": "EVM",
+	    "label": "Tornado Cash Router (Secondary)",
+	    "actor": "Tornado Cash",
+	    "category": "MIXER",
+	    "risk_class": "ILLICIT_SERVICE",
+	    "confidence": 0.60,
+	    "contextual": false,
+	    "risk_escalating": true
+	  }
+	]`))
+	ResetDefaultResolverForTesting()
+
+	resolved, ok := ResolveAddress("0xd90e2f925da726b50c4ed8d0fb90ad053324f31b", "EVM")
+	if !ok {
+		t.Fatalf("expected attribution resolution to succeed")
+	}
+	if len(resolved.CorroboratingSources) != 1 {
+		t.Fatalf("expected 1 corroborating source, got %+v", resolved.CorroboratingSources)
+	}
+	if resolved.Confidence <= resolved.BaseConfidence {
+		t.Fatalf("expected corroboration to raise confidence, got base=%v resolved=%v", resolved.BaseConfidence, resolved.Confidence)
+	}
+}
+
+func TestResolveAddress_LoneSecondarySourceRemainsBounded(t *testing.T) {
+	t.Setenv("GRAPHSENSE_LABELS_PATH", writeFile(t, "graphsense.json", `[]`))
+	t.Setenv("BOOTSTRAP_LABELS_PATH", writeFile(t, "bootstrap.json", `{}`))
+	t.Setenv("BITCOIN_MINING_POOLS_PATH", writeFile(t, "mining.json", `[]`))
+	t.Setenv("WALLET_EXPLORER_LABELS_PATH", writeFile(t, "wallet-explorer.json", `[
+	  {
+	    "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+	    "network": "BITCOIN",
+	    "label": "WalletExplorer-style Exchange Cluster",
+	    "actor": "Sample Exchange Cluster",
+	    "category": "EXCHANGE",
+	    "risk_class": "EXCHANGE",
+	    "confidence": 0.91,
+	    "contextual": true,
+	    "risk_escalating": false
+	  }
+	]`))
+	t.Setenv("CORROBORATING_LABELS_PATH", writeFile(t, "corroborating.json", `[]`))
+	ResetDefaultResolverForTesting()
+
+	resolved, ok := ResolveAddress("bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu", "BITCOIN")
+	if !ok {
+		t.Fatalf("expected secondary attribution resolution to succeed")
+	}
+	if !resolved.SecondaryOnly {
+		t.Fatalf("expected secondary-only attribution, got %+v", resolved)
+	}
+	if resolved.Confidence > 0.65 {
+		t.Fatalf("expected bounded secondary confidence, got %v", resolved.Confidence)
+	}
+
+	profile := &model.WalletProfile{
+		Address: "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+		Network: "BITCOIN",
+		IsValid: true,
+		RiskBreakdown: model.RiskCategory{
+			Reputation: 8,
+		},
+		RiskScore: 2.4,
+	}
+	ApplyAttributionContext(profile)
+
+	if !hasReasonCode(profile.RiskReasons, "secondary_profile_contextual_attribution") {
+		t.Fatalf("expected bounded secondary contextual reason, got %+v", profile.RiskReasons)
+	}
+	if profile.RiskScore >= 2.4 {
+		t.Fatalf("expected modest contextual reduction, got %v", profile.RiskScore)
+	}
+}
+
+func TestResolveAddress_Tier1PrecedenceOverSecondaryConflict(t *testing.T) {
+	t.Setenv("GRAPHSENSE_LABELS_PATH", writeFile(t, "graphsense.json", `[
+	  {
+	    "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+	    "network": "EVM",
+	    "label": "Uniswap V2 Router",
+	    "actor": "Uniswap",
+	    "category": "PROTOCOL",
+	    "risk_class": "TRUSTED_SERVICE",
+	    "confidence": 0.95,
+	    "contextual": true,
+	    "risk_escalating": false
+	  }
+	]`))
+	t.Setenv("BOOTSTRAP_LABELS_PATH", writeFile(t, "bootstrap.json", `{}`))
+	t.Setenv("BITCOIN_MINING_POOLS_PATH", writeFile(t, "mining.json", `[]`))
+	t.Setenv("WALLET_EXPLORER_LABELS_PATH", writeFile(t, "wallet-explorer.json", `[]`))
+	t.Setenv("CORROBORATING_LABELS_PATH", writeFile(t, "corroborating.json", `[
+	  {
+	    "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+	    "network": "EVM",
+	    "label": "Suspicious Mixer Router",
+	    "actor": "Unknown Mixer",
+	    "category": "MIXER",
+	    "risk_class": "ILLICIT_SERVICE",
+	    "confidence": 0.64,
+	    "contextual": false,
+	    "risk_escalating": true
+	  }
+	]`))
+	ResetDefaultResolverForTesting()
+
+	resolved, ok := ResolveAddress("0x7a250d5630b4cf539739df2c5dacb4c659f2488d", "EVM")
+	if !ok {
+		t.Fatalf("expected resolution to succeed")
+	}
+	if resolved.SourceTier != model.AttributionSourceTierPrimaryStructured {
+		t.Fatalf("expected Tier 1 precedence, got %q", resolved.SourceTier)
+	}
+	if resolved.RiskClass != model.AttributionRiskClassTrustedService {
+		t.Fatalf("expected trusted-service primary to win, got %q", resolved.RiskClass)
+	}
+	if len(resolved.ConflictingSources) != 1 {
+		t.Fatalf("expected 1 conflicting source, got %+v", resolved.ConflictingSources)
+	}
+}
+
+func TestApplyAttributionContext_ConflictAddsNoteOnlyReason(t *testing.T) {
+	t.Setenv("GRAPHSENSE_LABELS_PATH", writeFile(t, "graphsense.json", `[
+	  {
+	    "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+	    "network": "EVM",
+	    "label": "Uniswap V2 Router",
+	    "actor": "Uniswap",
+	    "category": "PROTOCOL",
+	    "risk_class": "TRUSTED_SERVICE",
+	    "confidence": 0.95,
+	    "contextual": true,
+	    "risk_escalating": false
+	  }
+	]`))
+	t.Setenv("BOOTSTRAP_LABELS_PATH", writeFile(t, "bootstrap.json", `{}`))
+	t.Setenv("BITCOIN_MINING_POOLS_PATH", writeFile(t, "mining.json", `[]`))
+	t.Setenv("WALLET_EXPLORER_LABELS_PATH", writeFile(t, "wallet-explorer.json", `[]`))
+	t.Setenv("CORROBORATING_LABELS_PATH", writeFile(t, "corroborating.json", `[
+	  {
+	    "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+	    "network": "EVM",
+	    "label": "Secondary Mixer Claim",
+	    "actor": "Unknown Mixer",
+	    "category": "MIXER",
+	    "risk_class": "ILLICIT_SERVICE",
+	    "confidence": 0.60,
+	    "contextual": false,
+	    "risk_escalating": true
+	  }
+	]`))
+	ResetDefaultResolverForTesting()
+
+	profile := &model.WalletProfile{
+		Address: "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+		Network: "EVM",
+		IsValid: true,
+		RiskBreakdown: model.RiskCategory{
+			Fraud:      12,
+			Reputation: 15,
+		},
+		RiskScore: 10.5,
+	}
+	ApplyAttributionContext(profile)
+
+	if !hasReasonCode(profile.RiskReasons, "attribution_source_conflict_observed") {
+		t.Fatalf("expected conflict note reason, got %+v", profile.RiskReasons)
 	}
 }
 

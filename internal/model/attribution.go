@@ -28,15 +28,18 @@ type AttributionSourceTier string
 
 const (
 	AttributionSourceTierPrimaryStructured AttributionSourceTier = "PRIMARY_STRUCTURED"
+	AttributionSourceTierSecondary         AttributionSourceTier = "SECONDARY_CORROBORATING"
 	AttributionSourceTierLocalOverride     AttributionSourceTier = "LOCAL_OVERRIDE"
 )
 
 type AttributionSourceType string
 
 const (
-	AttributionSourceTypeGraphSense    AttributionSourceType = "GRAPHSENSE_STRUCTURED"
-	AttributionSourceTypeMiningPool    AttributionSourceType = "BITCOIN_MINING_POOL"
-	AttributionSourceTypeBootstrapDemo AttributionSourceType = "BOOTSTRAP_LOCAL"
+	AttributionSourceTypeGraphSense          AttributionSourceType = "GRAPHSENSE_STRUCTURED"
+	AttributionSourceTypeMiningPool          AttributionSourceType = "BITCOIN_MINING_POOL"
+	AttributionSourceTypeBootstrapDemo       AttributionSourceType = "BOOTSTRAP_LOCAL"
+	AttributionSourceTypeWalletExplorerStyle AttributionSourceType = "WALLET_EXPLORER_STYLE"
+	AttributionSourceTypeSecondaryFixture    AttributionSourceType = "SECONDARY_FIXTURE"
 )
 
 type AttributionRiskClass string
@@ -75,23 +78,35 @@ type AttributionRecord struct {
 }
 
 type ResolvedAttributionSource struct {
-	Name string                `json:"name"`
-	Tier AttributionSourceTier `json:"tier"`
-	Type AttributionSourceType `json:"type"`
+	Name        string                `json:"name"`
+	Tier        AttributionSourceTier `json:"tier"`
+	Type        AttributionSourceType `json:"type"`
+	Label       string                `json:"label,omitempty"`
+	Actor       string                `json:"actor,omitempty"`
+	Category    LabelCategory         `json:"category,omitempty"`
+	RiskClass   AttributionRiskClass  `json:"risk_class,omitempty"`
+	Confidence  float64               `json:"confidence,omitempty"`
+	Contextual  bool                  `json:"contextual,omitempty"`
+	Escalating  bool                  `json:"risk_escalating,omitempty"`
+	Description string                `json:"description,omitempty"`
 }
 
 type ResolvedAttribution struct {
-	Address           string                      `json:"address"`
-	Network           string                      `json:"network,omitempty"`
-	Label             string                      `json:"label"`
-	Actor             string                      `json:"actor,omitempty"`
-	Category          LabelCategory               `json:"category"`
-	RiskClass         AttributionRiskClass        `json:"risk_class"`
-	Confidence        float64                     `json:"confidence"`
-	Contextual        bool                        `json:"contextual"`
-	Escalating        bool                        `json:"risk_escalating"`
-	SourceName        string                      `json:"source_name"`
-	SourceTier        AttributionSourceTier       `json:"source_tier"`
-	SourceType        AttributionSourceType       `json:"source_type"`
-	SupportingSources []ResolvedAttributionSource `json:"supporting_sources,omitempty"`
+	Address              string                      `json:"address"`
+	Network              string                      `json:"network,omitempty"`
+	Label                string                      `json:"label"`
+	Actor                string                      `json:"actor,omitempty"`
+	Category             LabelCategory               `json:"category"`
+	RiskClass            AttributionRiskClass        `json:"risk_class"`
+	BaseConfidence       float64                     `json:"base_confidence,omitempty"`
+	Confidence           float64                     `json:"confidence"`
+	Contextual           bool                        `json:"contextual"`
+	Escalating           bool                        `json:"risk_escalating"`
+	SourceName           string                      `json:"source_name"`
+	SourceTier           AttributionSourceTier       `json:"source_tier"`
+	SourceType           AttributionSourceType       `json:"source_type"`
+	SecondaryOnly        bool                        `json:"secondary_only,omitempty"`
+	SupportingSources    []ResolvedAttributionSource `json:"supporting_sources,omitempty"`
+	CorroboratingSources []ResolvedAttributionSource `json:"corroborating_sources,omitempty"`
+	ConflictingSources   []ResolvedAttributionSource `json:"conflicting_sources,omitempty"`
 }

@@ -1,0 +1,14 @@
+[
+  {
+    "address": "bc1q8ys49pxp3c6um7enemwdkl4ud5fwwg2rpdegxu",
+    "network": "BITCOIN",
+    "label": "WalletExplorer-style Exchange Cluster",
+    "actor": "Sample Exchange Cluster",
+    "category": "EXCHANGE",
+    "risk_class": "EXCHANGE",
+    "confidence": 0.56,
+    "contextual": true,
+    "risk_escalating": false,
+    "notes": "WalletExplorer-style secondary attribution fixture used for bounded contextual corroboration."
+  }
+]

@@ -243,11 +243,19 @@ func renderReport(profile *model.WalletProfile, ctx *reportContext) string {
 			fmt.Sprintf("Category: %s", blankFallback(string(profile.Attribution.Category), "UNKNOWN")),
 			fmt.Sprintf("Risk Class: %s", blankFallback(string(profile.Attribution.RiskClass), "UNKNOWN")),
 			fmt.Sprintf("Confidence: %.2f", profile.Attribution.Confidence),
-			fmt.Sprintf("Source: %s (%s / %s)", profile.Attribution.SourceName, profile.Attribution.SourceTier, profile.Attribution.SourceType),
+			fmt.Sprintf("Primary Source: %s (%s / %s)", profile.Attribution.SourceName, profile.Attribution.SourceTier, profile.Attribution.SourceType),
 			fmt.Sprintf("Disposition: %s", attributionDisposition(profile.Attribution)),
 		)
-		if len(profile.Attribution.SupportingSources) > 1 {
-			lines = append(lines, fmt.Sprintf("Supporting Sources: %s", joinSupportingSources(profile.Attribution.SupportingSources)))
+		if profile.Attribution.BaseConfidence > 0 && math.Abs(profile.Attribution.Confidence-profile.Attribution.BaseConfidence) >= 0.01 {
+			lines = append(lines, fmt.Sprintf("Confidence Basis: base %.2f, resolved %.2f", profile.Attribution.BaseConfidence, profile.Attribution.Confidence))
+		}
+		if len(profile.Attribution.CorroboratingSources) > 0 {
+			lines = append(lines, fmt.Sprintf("Corroborating Sources: %s", joinAttributionSources(profile.Attribution.CorroboratingSources)))
+		} else if len(profile.Attribution.SupportingSources) > 1 {
+			lines = append(lines, fmt.Sprintf("Supporting Sources: %s", joinAttributionSources(profile.Attribution.SupportingSources[1:])))
+		}
+		if len(profile.Attribution.ConflictingSources) > 0 {
+			lines = append(lines, fmt.Sprintf("Conflicting Sources: %s", joinAttributionSources(profile.Attribution.ConflictingSources)))
 		}
 	}
 
@@ -441,10 +449,15 @@ func attributionDisposition(resolved *model.ResolvedAttribution) string {
 	return "informational"
 }
 
-func joinSupportingSources(sources []model.ResolvedAttributionSource) string {
+func joinAttributionSources(sources []model.ResolvedAttributionSource) string {
 	parts := make([]string, 0, len(sources))
 	for _, source := range sources {
-		parts = append(parts, fmt.Sprintf("%s [%s]", source.Name, source.Tier))
+		description := blankFallback(source.Label, source.Actor)
+		if description == "" || description == "unknown" {
+			parts = append(parts, fmt.Sprintf("%s [%s]", source.Name, source.Tier))
+			continue
+		}
+		parts = append(parts, fmt.Sprintf("%s [%s: %s / %s]", source.Name, source.Tier, description, blankFallback(string(source.Category), "UNKNOWN")))
 	}
 	return strings.Join(parts, ", ")
 }

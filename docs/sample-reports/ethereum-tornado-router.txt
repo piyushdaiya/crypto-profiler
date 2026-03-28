@@ -5,16 +5,26 @@ Network: EVM
 Mode: Dataset
 Dataset Context: Ethereum curated Layer 1 dataset
 Case: High-Risk Mixer Infrastructure (tornado-router-high-risk)
-Risk Score: 22.50
+Risk Score: 24.00
 Risk Grade: ELEVATED
 Review Recommended: Yes
 
+Attribution:
+Resolved Label: Tornado Cash Router
+Category: MIXER
+Risk Class: ILLICIT_SERVICE
+Confidence: 0.99
+Primary Source: bootstrap_entities (LOCAL_OVERRIDE / BOOTSTRAP_LOCAL)
+Disposition: risk-escalating
+Confidence Basis: base 0.95, resolved 0.99
+Corroborating Sources: graphsense_structured_labels [PRIMARY_STRUCTURED: Tornado Cash Router / MIXER], repo_safe_corroborating_labels [SECONDARY_CORROBORATING: Tornado Cash Router (Secondary) / MIXER]
+
 Top Reasons:
-1. [FRAUD] Profiled address labeled as high-risk entity: Tornado Cash Router (offset +45.0)
+1. [FRAUD] Tier 1 attribution resolved profiled address to risky actor: Tornado Cash Router (offset +45.0)
 2. [REPUTATION] Established History (>1 Year) (offset -10.0)
-3. [REPUTATION] Observed 89 failed internal calls in trace dataset (offset +0.0)
-4. [REPUTATION] Trace dataset shows broad internal counterparty surface (2130 counterparties) (offset +0.0)
-5. [REPUTATION] Trace-aware dataset context loaded (62728 internal traces observed) (offset +0.0)
+3. [FRAUD] Secondary corroborating source supports risky attribution: Tornado Cash Router (offset +3.0)
+4. [REPUTATION] Observed 89 failed internal calls in trace dataset (offset +0.0)
+5. [REPUTATION] Trace dataset shows broad internal counterparty surface (2130 counterparties) (offset +0.0)
 
 Top Counterparties:
 1. 0xfe487df046a7e40da04a2b119d23f60987904571 - 315 interactions (315 inbound / 0 outbound)

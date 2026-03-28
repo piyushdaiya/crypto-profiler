@@ -137,35 +137,37 @@ func (r *Resolver) Resolve(address string, network string) (*model.ResolvedAttri
 	})
 
 	primary := filtered[0]
-	supporting := make([]model.ResolvedAttributionSource, 0, len(filtered))
-	seenSources := map[string]struct{}{}
-	for _, record := range filtered {
-		key := string(record.Source.Tier) + "|" + string(record.Source.Type) + "|" + record.Source.Name
-		if _, ok := seenSources[key]; ok {
-			continue
-		}
-		seenSources[key] = struct{}{}
-		supporting = append(supporting, model.ResolvedAttributionSource{
-			Name: record.Source.Name,
-			Tier: record.Source.Tier,
-			Type: record.Source.Type,
-		})
-	}
+	supporting := uniqueResolvedSources(filtered, func(record model.AttributionRecord) bool {
+		return corroborates(primary, record) || sameSourceRecord(primary, record)
+	})
+	corroborating := uniqueResolvedSources(filtered, func(record model.AttributionRecord) bool {
+		return !sameSourceRecord(primary, record) && corroborates(primary, record)
+	})
+	conflicting := uniqueResolvedSources(filtered, func(record model.AttributionRecord) bool {
+		return conflicts(primary, record)
+	})
+
+	baseConfidence := normalizedBaseConfidence(primary)
+	confidence := adjustedConfidence(baseConfidence, primary, corroborating, conflicting)
 
 	return &model.ResolvedAttribution{
-		Address:           primary.Address,
-		Network:           firstNonEmpty(primary.Network, strings.ToUpper(strings.TrimSpace(network))),
-		Label:             primary.Label,
-		Actor:             primary.Actor,
-		Category:          primary.Category,
-		RiskClass:         primary.RiskClass,
-		Confidence:        primary.Confidence,
-		Contextual:        primary.Contextual,
-		Escalating:        primary.Escalating,
-		SourceName:        primary.Source.Name,
-		SourceTier:        primary.Source.Tier,
-		SourceType:        primary.Source.Type,
-		SupportingSources: supporting,
+		Address:              primary.Address,
+		Network:              firstNonEmpty(primary.Network, strings.ToUpper(strings.TrimSpace(network))),
+		Label:                primary.Label,
+		Actor:                primary.Actor,
+		Category:             primary.Category,
+		RiskClass:            primary.RiskClass,
+		BaseConfidence:       baseConfidence,
+		Confidence:           confidence,
+		Contextual:           primary.Contextual,
+		Escalating:           primary.Escalating,
+		SourceName:           primary.Source.Name,
+		SourceTier:           primary.Source.Tier,
+		SourceType:           primary.Source.Type,
+		SecondaryOnly:        primary.Source.Tier == model.AttributionSourceTierSecondary,
+		SupportingSources:    supporting,
+		CorroboratingSources: corroborating,
+		ConflictingSources:   conflicting,
 	}, true
 }
 
@@ -181,6 +183,12 @@ func loadDefaultResolver() *Resolver {
 		resolver.addRecord(record)
 	}
 	for _, record := range loadBootstrapOverrideRecords() {
+		resolver.addRecord(record)
+	}
+	for _, record := range loadWalletExplorerStyleRecords() {
+		resolver.addRecord(record)
+	}
+	for _, record := range loadSecondaryFixtureRecords() {
 		resolver.addRecord(record)
 	}
 
@@ -227,6 +235,32 @@ func loadTier1MiningPoolRecords() []model.AttributionRecord {
 		Tier:        model.AttributionSourceTierPrimaryStructured,
 		Type:        model.AttributionSourceTypeMiningPool,
 		Description: "Tier 1 Bitcoin mining-pool context used for contextual false-positive suppression.",
+	})
+}
+
+func loadWalletExplorerStyleRecords() []model.AttributionRecord {
+	paths := candidatePaths("WALLET_EXPLORER_LABELS_PATH", []string{
+		"./data/labels/tier2_wallet_explorer_entities.json",
+		"data/labels/tier2_wallet_explorer_entities.json",
+	})
+	return loadStructuredRecords(paths, model.AttributionSourceMetadata{
+		Name:        "wallet_explorer_style_labels",
+		Tier:        model.AttributionSourceTierSecondary,
+		Type:        model.AttributionSourceTypeWalletExplorerStyle,
+		Description: "WalletExplorer-style corroborating labels used as secondary attribution input.",
+	})
+}
+
+func loadSecondaryFixtureRecords() []model.AttributionRecord {
+	paths := candidatePaths("CORROBORATING_LABELS_PATH", []string{
+		"./data/labels/tier2_corroborating_entities.json",
+		"data/labels/tier2_corroborating_entities.json",
+	})
+	return loadStructuredRecords(paths, model.AttributionSourceMetadata{
+		Name:        "repo_safe_corroborating_labels",
+		Tier:        model.AttributionSourceTierSecondary,
+		Type:        model.AttributionSourceTypeSecondaryFixture,
+		Description: "Repo-safe corroborating attribution fixture used for confidence uplift and conflict visibility.",
 	})
 }
 
@@ -347,6 +381,141 @@ func candidatePaths(envKey string, defaults []string) []string {
 	return out
 }
 
+func uniqueResolvedSources(records []model.AttributionRecord, keep func(model.AttributionRecord) bool) []model.ResolvedAttributionSource {
+	out := make([]model.ResolvedAttributionSource, 0, len(records))
+	seen := map[string]struct{}{}
+
+	for _, record := range records {
+		if keep != nil && !keep(record) {
+			continue
+		}
+
+		source := toResolvedSource(record)
+		key := string(source.Tier) + "|" + string(source.Type) + "|" + source.Name + "|" + source.Label + "|" + source.Actor
+		if _, ok := seen[key]; ok {
+			continue
+		}
+		seen[key] = struct{}{}
+		out = append(out, source)
+	}
+
+	return out
+}
+
+func toResolvedSource(record model.AttributionRecord) model.ResolvedAttributionSource {
+	return model.ResolvedAttributionSource{
+		Name:        record.Source.Name,
+		Tier:        record.Source.Tier,
+		Type:        record.Source.Type,
+		Label:       record.Label,
+		Actor:       record.Actor,
+		Category:    record.Category,
+		RiskClass:   record.RiskClass,
+		Confidence:  record.Confidence,
+		Contextual:  record.Contextual,
+		Escalating:  record.Escalating,
+		Description: record.Source.Description,
+	}
+}
+
+func sameSourceRecord(primary, candidate model.AttributionRecord) bool {
+	return primary.Source.Name == candidate.Source.Name &&
+		primary.Source.Tier == candidate.Source.Tier &&
+		primary.Source.Type == candidate.Source.Type
+}
+
+func corroborates(primary, candidate model.AttributionRecord) bool {
+	if sameSourceRecord(primary, candidate) {
+		return true
+	}
+	if primary.Contextual != candidate.Contextual || primary.Escalating != candidate.Escalating {
+		return false
+	}
+	if primary.Category != "" && primary.Category == candidate.Category {
+		return true
+	}
+	if primary.RiskClass != "" && primary.RiskClass == candidate.RiskClass {
+		return true
+	}
+	if sameIdentity(primary.Actor, candidate.Actor) || sameIdentity(primary.Label, candidate.Label) {
+		return true
+	}
+	return false
+}
+
+func conflicts(primary, candidate model.AttributionRecord) bool {
+	if sameSourceRecord(primary, candidate) {
+		return false
+	}
+	if primary.Contextual != candidate.Contextual || primary.Escalating != candidate.Escalating {
+		return true
+	}
+	if primary.Category != "" && candidate.Category != "" && primary.Category != candidate.Category &&
+		primary.RiskClass != "" && candidate.RiskClass != "" && primary.RiskClass != candidate.RiskClass &&
+		!sameIdentity(primary.Actor, candidate.Actor) &&
+		!sameIdentity(primary.Label, candidate.Label) {
+		return true
+	}
+	return false
+}
+
+func sameIdentity(left, right string) bool {
+	left = strings.TrimSpace(strings.ToLower(left))
+	right = strings.TrimSpace(strings.ToLower(right))
+	return left != "" && right != "" && left == right
+}
+
+func normalizedBaseConfidence(record model.AttributionRecord) float64 {
+	confidence := clampConfidence(record.Confidence)
+	if record.Source.Tier == model.AttributionSourceTierSecondary {
+		return mathMin(confidence, 0.58)
+	}
+	return confidence
+}
+
+func adjustedConfidence(base float64, primary model.AttributionRecord, corroborating []model.ResolvedAttributionSource, conflicting []model.ResolvedAttributionSource) float64 {
+	confidence := base
+
+	for _, source := range corroborating {
+		if source.Tier == model.AttributionSourceTierSecondary {
+			confidence += 0.07
+			continue
+		}
+		confidence += 0.03
+	}
+	for _, source := range conflicting {
+		if source.Tier == model.AttributionSourceTierSecondary {
+			confidence -= 0.05
+			continue
+		}
+		confidence -= 0.08
+	}
+
+	confidence = clampConfidence(confidence)
+	if primary.Source.Tier == model.AttributionSourceTierSecondary {
+		confidence = mathMin(confidence, 0.65)
+	}
+	return confidence
+}
+
+func clampConfidence(confidence float64) float64 {
+	switch {
+	case confidence < 0.35:
+		return 0.35
+	case confidence > 0.99:
+		return 0.99
+	default:
+		return confidence
+	}
+}
+
+func mathMin(left, right float64) float64 {
+	if left < right {
+		return left
+	}
+	return right
+}
+
 func normalizeAddress(address string) string {
 	return strings.ToLower(strings.TrimSpace(address))
 }
@@ -374,8 +543,10 @@ func networkMatches(recordNetwork string, requested string) bool {
 func tierRank(tier model.AttributionSourceTier) int {
 	switch tier {
 	case model.AttributionSourceTierLocalOverride:
-		return 2
+		return 3
 	case model.AttributionSourceTierPrimaryStructured:
+		return 2
+	case model.AttributionSourceTierSecondary:
 		return 1
 	default:
 		return 0

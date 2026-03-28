@@ -40,6 +40,8 @@ func TestRun_DatasetModeRoutesCuratedCasesAcrossChains(t *testing.T) {
 	setEnvForTest(t, "BOOTSTRAP_LABELS_PATH", repoPath("data", "labels", "bootstrap_entities.json"))
 	setEnvForTest(t, "GRAPHSENSE_LABELS_PATH", repoPath("data", "labels", "tier1_graphsense_entities.json"))
 	setEnvForTest(t, "BITCOIN_MINING_POOLS_PATH", repoPath("data", "labels", "tier1_bitcoin_mining_pools.json"))
+	setEnvForTest(t, "WALLET_EXPLORER_LABELS_PATH", repoPath("data", "labels", "tier2_wallet_explorer_entities.json"))
+	setEnvForTest(t, "CORROBORATING_LABELS_PATH", repoPath("data", "labels", "tier2_corroborating_entities.json"))
 
 	tests := []struct {
 		name                string
@@ -255,6 +257,8 @@ func TestApplyERC20CuratedLayer1Context_ThresholdsAndReasons(t *testing.T) {
 	setEnvForTest(t, "BOOTSTRAP_LABELS_PATH", repoPath("data", "labels", "bootstrap_entities.json"))
 	setEnvForTest(t, "GRAPHSENSE_LABELS_PATH", repoPath("data", "labels", "tier1_graphsense_entities.json"))
 	setEnvForTest(t, "BITCOIN_MINING_POOLS_PATH", repoPath("data", "labels", "tier1_bitcoin_mining_pools.json"))
+	setEnvForTest(t, "WALLET_EXPLORER_LABELS_PATH", repoPath("data", "labels", "tier2_wallet_explorer_entities.json"))
+	setEnvForTest(t, "CORROBORATING_LABELS_PATH", repoPath("data", "labels", "tier2_corroborating_entities.json"))
 
 	t.Run("exchange-like case avoids generic inbound rule", func(t *testing.T) {
 		curated := &datasets.ERC20CuratedLayer1Case{

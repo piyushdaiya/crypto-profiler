@@ -33,6 +33,10 @@ import (
 )
 
 func ApplyTier1Attribution(profile *model.WalletProfile) {
+	ApplyAttributionContext(profile)
+}
+
+func ApplyAttributionContext(profile *model.WalletProfile) {
 	if profile == nil {
 		return
 	}
@@ -50,35 +54,25 @@ func ApplyTier1Attribution(profile *model.WalletProfile) {
 	}
 
 	reason, breakdownCategory, ok := modifierForResolved(profile.Attribution)
-	if !ok {
-		return
-	}
-	if hasReasonCode(profile.RiskReasons, reason.Code) {
-		return
-	}
+	applyReasonModifier(profile, reason, breakdownCategory, ok)
 
-	profile.RiskReasons = append(profile.RiskReasons, reason)
-	switch breakdownCategory {
-	case "FRAUD":
-		profile.RiskBreakdown.Fraud = clamp(profile.RiskBreakdown.Fraud + reason.Offset)
-	case "REPUTATION":
-		profile.RiskBreakdown.Reputation = clamp(profile.RiskBreakdown.Reputation + reason.Offset)
-	case "LENDING":
-		profile.RiskBreakdown.Lending = clamp(profile.RiskBreakdown.Lending + reason.Offset)
-	}
+	reason, breakdownCategory, ok = corroborationModifier(profile.Attribution)
+	applyReasonModifier(profile, reason, breakdownCategory, ok)
 
-	profile.RiskScore = combinedRisk(profile.RiskBreakdown)
-	profile.RiskGrade = determineGrade(profile.RiskScore)
+	reason, breakdownCategory, ok = conflictModifier(profile.Attribution)
+	applyReasonModifier(profile, reason, breakdownCategory, ok)
+
 	if profile.RiskScore >= 5 || profile.Attribution.Escalating {
 		profile.ReviewRecommended = true
 	}
 
 	detail := fmt.Sprintf(
-		"Tier 1 Attribution: %s [%s/%s] via %s",
+		"Attribution: %s [%s/%s] via %s (confidence %.2f)",
 		firstNonEmpty(profile.Attribution.Label, profile.Attribution.Actor),
 		profile.Attribution.Category,
 		profile.Attribution.RiskClass,
 		profile.Attribution.SourceName,
+		profile.Attribution.Confidence,
 	)
 	if strings.TrimSpace(profile.ValidationDetails) == "" {
 		profile.ValidationDetails = detail
@@ -94,12 +88,37 @@ func modifierForResolved(resolved *model.ResolvedAttribution) (model.RiskReason,
 
 	name := firstNonEmpty(resolved.Label, resolved.Actor, resolved.Address)
 	base := model.RiskReason{
-		Source:         "tier1_attribution",
+		Source:         reasonSource(resolved),
 		RelatedEntity:  firstNonEmpty(resolved.Actor, resolved.Label),
 		RelatedAddress: resolved.Address,
 		Severity:       severityForResolved(resolved),
 		Confidence:     confidenceBucket(resolved.Confidence),
 		EvidenceCount:  len(resolved.SupportingSources),
+	}
+
+	if resolved.SecondaryOnly {
+		switch resolved.RiskClass {
+		case model.AttributionRiskClassSanctioned, model.AttributionRiskClassIllicitService, model.AttributionRiskClassExploit, model.AttributionRiskClassScam:
+			base.Code = "secondary_profile_risky_attribution"
+			base.Category = "FRAUD"
+			base.Description = fmt.Sprintf("Secondary corroborating source suggests risky attribution for profiled address: %s", name)
+			base.Offset = 4.0
+			return base, "FRAUD", true
+		case model.AttributionRiskClassExchange, model.AttributionRiskClassTrustedService:
+			base.Code = "secondary_profile_contextual_attribution"
+			base.Category = "REPUTATION"
+			base.Description = fmt.Sprintf("Secondary corroborating source suggests contextual service attribution: %s", name)
+			base.Offset = -2.0
+			return base, "REPUTATION", true
+		case model.AttributionRiskClassMiningPool, model.AttributionRiskClassTreasury:
+			base.Code = "secondary_profile_contextual_attribution"
+			base.Category = "REPUTATION"
+			base.Description = fmt.Sprintf("Secondary corroborating source suggests contextual infrastructure attribution: %s", name)
+			base.Offset = -2.0
+			return base, "REPUTATION", true
+		default:
+			return model.RiskReason{}, "", false
+		}
 	}
 
 	switch resolved.RiskClass {
@@ -130,6 +149,103 @@ func modifierForResolved(resolved *model.ResolvedAttribution) (model.RiskReason,
 	default:
 		return model.RiskReason{}, "", false
 	}
+}
+
+func corroborationModifier(resolved *model.ResolvedAttribution) (model.RiskReason, string, bool) {
+	if resolved == nil || resolved.SecondaryOnly {
+		return model.RiskReason{}, "", false
+	}
+
+	secondarySupport := countSecondarySources(resolved.CorroboratingSources)
+	if secondarySupport == 0 {
+		return model.RiskReason{}, "", false
+	}
+
+	name := firstNonEmpty(resolved.Label, resolved.Actor, resolved.Address)
+	base := model.RiskReason{
+		Source:         "secondary_corroboration",
+		RelatedEntity:  firstNonEmpty(resolved.Actor, resolved.Label),
+		RelatedAddress: resolved.Address,
+		Severity:       severityForResolved(resolved),
+		Confidence:     confidenceBucket(resolved.Confidence),
+		EvidenceCount:  secondarySupport,
+	}
+
+	if resolved.Escalating {
+		base.Code = "secondary_corroborated_risky_attribution"
+		base.Category = "FRAUD"
+		base.Description = fmt.Sprintf("Secondary corroborating source supports risky attribution: %s", name)
+		base.Offset = 3.0
+		return base, "FRAUD", true
+	}
+
+	if resolved.Contextual {
+		base.Code = "secondary_corroborated_contextual_attribution"
+		base.Category = "REPUTATION"
+		base.Description = fmt.Sprintf("Secondary corroborating source supports contextual attribution: %s", name)
+		base.Offset = -2.0
+		return base, "REPUTATION", true
+	}
+
+	return model.RiskReason{}, "", false
+}
+
+func conflictModifier(resolved *model.ResolvedAttribution) (model.RiskReason, string, bool) {
+	if resolved == nil || len(resolved.ConflictingSources) == 0 {
+		return model.RiskReason{}, "", false
+	}
+
+	return model.RiskReason{
+		Code:           "attribution_source_conflict_observed",
+		Source:         "attribution_conflict",
+		Category:       "REPUTATION",
+		Description:    "Conflicting attribution sources observed; stronger source precedence retained",
+		Offset:         0.0,
+		Severity:       model.LabelSeverityMedium,
+		Confidence:     confidenceBucket(resolved.Confidence),
+		EvidenceCount:  len(resolved.ConflictingSources),
+		RelatedEntity:  firstNonEmpty(resolved.Actor, resolved.Label),
+		RelatedAddress: resolved.Address,
+	}, "REPUTATION", true
+}
+
+func applyReasonModifier(profile *model.WalletProfile, reason model.RiskReason, breakdownCategory string, ok bool) {
+	if profile == nil || !ok || hasReasonCode(profile.RiskReasons, reason.Code) {
+		return
+	}
+
+	profile.RiskReasons = append(profile.RiskReasons, reason)
+	switch breakdownCategory {
+	case "FRAUD":
+		profile.RiskBreakdown.Fraud = clamp(profile.RiskBreakdown.Fraud + reason.Offset)
+	case "REPUTATION":
+		profile.RiskBreakdown.Reputation = clamp(profile.RiskBreakdown.Reputation + reason.Offset)
+	case "LENDING":
+		profile.RiskBreakdown.Lending = clamp(profile.RiskBreakdown.Lending + reason.Offset)
+	}
+
+	profile.RiskScore = combinedRisk(profile.RiskBreakdown)
+	profile.RiskGrade = determineGrade(profile.RiskScore)
+}
+
+func countSecondarySources(sources []model.ResolvedAttributionSource) int {
+	count := 0
+	for _, source := range sources {
+		if source.Tier == model.AttributionSourceTierSecondary {
+			count++
+		}
+	}
+	return count
+}
+
+func reasonSource(resolved *model.ResolvedAttribution) string {
+	if resolved == nil {
+		return "attribution"
+	}
+	if resolved.SecondaryOnly {
+		return "secondary_attribution"
+	}
+	return "tier1_attribution"
 }
 
 func combinedRisk(breakdown model.RiskCategory) float64 {

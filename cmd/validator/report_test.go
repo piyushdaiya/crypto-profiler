@@ -58,18 +58,37 @@ func TestRenderReport_IncludesAnalystFacingSections(t *testing.T) {
 			},
 		},
 		Attribution: &model.ResolvedAttribution{
-			Address:    "0xtest",
-			Network:    "EVM",
-			Label:      "Sample Exchange Wallet",
-			Actor:      "Sample Exchange",
-			Category:   model.LabelCategoryExchange,
-			RiskClass:  model.AttributionRiskClassExchange,
-			Confidence: 0.93,
-			Contextual: true,
-			Escalating: false,
-			SourceName: "graphsense_structured_labels",
-			SourceTier: model.AttributionSourceTierPrimaryStructured,
-			SourceType: model.AttributionSourceTypeGraphSense,
+			Address:        "0xtest",
+			Network:        "EVM",
+			Label:          "Sample Exchange Wallet",
+			Actor:          "Sample Exchange",
+			Category:       model.LabelCategoryExchange,
+			RiskClass:      model.AttributionRiskClassExchange,
+			BaseConfidence: 0.88,
+			Confidence:     0.93,
+			Contextual:     true,
+			Escalating:     false,
+			SourceName:     "graphsense_structured_labels",
+			SourceTier:     model.AttributionSourceTierPrimaryStructured,
+			SourceType:     model.AttributionSourceTypeGraphSense,
+			CorroboratingSources: []model.ResolvedAttributionSource{
+				{
+					Name:     "wallet_explorer_style_labels",
+					Tier:     model.AttributionSourceTierSecondary,
+					Type:     model.AttributionSourceTypeWalletExplorerStyle,
+					Label:    "Sample Exchange Cluster",
+					Category: model.LabelCategoryExchange,
+				},
+			},
+			ConflictingSources: []model.ResolvedAttributionSource{
+				{
+					Name:     "repo_safe_corroborating_labels",
+					Tier:     model.AttributionSourceTierSecondary,
+					Type:     model.AttributionSourceTypeSecondaryFixture,
+					Label:    "Unknown Service Wallet",
+					Category: model.LabelCategoryTrusted,
+				},
+			},
 		},
 	}
 
@@ -103,6 +122,10 @@ func TestRenderReport_IncludesAnalystFacingSections(t *testing.T) {
 		"Attribution:",
 		"Resolved Label: Sample Exchange Wallet",
 		"Actor: Sample Exchange",
+		"Primary Source: graphsense_structured_labels (PRIMARY_STRUCTURED / GRAPHSENSE_STRUCTURED)",
+		"Confidence Basis: base 0.88, resolved 0.93",
+		"Corroborating Sources:",
+		"Conflicting Sources:",
 		"Disposition: contextual / benign",
 		"Top Reasons:",
 		"Top Counterparties:",
@@ -174,6 +197,8 @@ func TestRun_DatasetModeReportIncludesChainSpecificContext(t *testing.T) {
 	setEnvForTest(t, "BOOTSTRAP_LABELS_PATH", repoPath("data", "labels", "bootstrap_entities.json"))
 	setEnvForTest(t, "GRAPHSENSE_LABELS_PATH", repoPath("data", "labels", "tier1_graphsense_entities.json"))
 	setEnvForTest(t, "BITCOIN_MINING_POOLS_PATH", repoPath("data", "labels", "tier1_bitcoin_mining_pools.json"))
+	setEnvForTest(t, "WALLET_EXPLORER_LABELS_PATH", repoPath("data", "labels", "tier2_wallet_explorer_entities.json"))
+	setEnvForTest(t, "CORROBORATING_LABELS_PATH", repoPath("data", "labels", "tier2_corroborating_entities.json"))
 
 	tests := []struct {
 		name                string
@@ -181,6 +206,7 @@ func TestRun_DatasetModeReportIncludesChainSpecificContext(t *testing.T) {
 		wantDetailSubstring string
 		wantCaseSubstring   string
 		wantAttribution     string
+		wantCorroboration   string
 	}{
 		{
 			name:                "ethereum curated report",
@@ -188,6 +214,7 @@ func TestRun_DatasetModeReportIncludesChainSpecificContext(t *testing.T) {
 			wantDetailSubstring: "Trace activity:",
 			wantCaseSubstring:   "Case: High-Risk Mixer Infrastructure (tornado-router-high-risk)",
 			wantAttribution:     "Resolved Label: Tornado Cash Router",
+			wantCorroboration:   "repo_safe_corroborating_labels [SECONDARY_CORROBORATING",
 		},
 		{
 			name:                "solana curated report",
@@ -200,6 +227,7 @@ func TestRun_DatasetModeReportIncludesChainSpecificContext(t *testing.T) {
 			args:                []string{"--report", "--dataset", repoPath("data", "cases", "curated-bitcoin", "bitcoin-broad-spend-heavy-operational-hub.json")},
 			wantDetailSubstring: "Inbound receipts:",
 			wantCaseSubstring:   "Case: Bitcoin Broad Spend-Heavy Operational Hub (bitcoin-broad-spend-heavy-operational-hub)",
+			wantAttribution:     "Resolved Label: WalletExplorer-style Exchange Cluster",
 		},
 		{
 			name:                "erc20 curated report",
@@ -207,6 +235,7 @@ func TestRun_DatasetModeReportIncludesChainSpecificContext(t *testing.T) {
 			wantDetailSubstring: "Unique token contracts:",
 			wantCaseSubstring:   "Case: ERC-20 Trusted Protocol Token Hub (erc20-uniswap-v2-router-trusted-token-hub)",
 			wantAttribution:     "Resolved Label: Uniswap V2 Router",
+			wantCorroboration:   "repo_safe_corroborating_labels [SECONDARY_CORROBORATING",
 		},
 	}
 
@@ -232,6 +261,9 @@ func TestRun_DatasetModeReportIncludesChainSpecificContext(t *testing.T) {
 			}
 			if tt.wantAttribution != "" && !strings.Contains(report, tt.wantAttribution) {
 				t.Fatalf("expected report to contain attribution detail %q, got:\n%s", tt.wantAttribution, report)
+			}
+			if tt.wantCorroboration != "" && !strings.Contains(report, tt.wantCorroboration) {
+				t.Fatalf("expected report to contain corroboration detail %q, got:\n%s", tt.wantCorroboration, report)
 			}
 		})
 	}

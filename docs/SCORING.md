@@ -18,6 +18,7 @@ Current status:
 - Solana stablecoin-flow scoring is implemented in validator dataset mode.
 - Bitcoin UTXO-flow scoring is implemented in validator dataset mode.
 - Tier 1 attribution-aware modifiers are implemented across live and dataset-mode outputs.
+- secondary corroborating sources are implemented with bounded confidence and note-level conflict handling.
 
 ---
 
@@ -39,7 +40,8 @@ The current ordering is:
 
 1. behavior or dataset context is scored first
 2. Tier 1 attribution is resolved second
-3. a bounded attribution modifier is applied
+3. secondary corroboration can raise confidence or surface conflicts
+4. a bounded attribution modifier is applied
 
 This means labels improve precision, but they do not replace the underlying behavior model.
 
@@ -77,6 +79,7 @@ Sanctions short-circuit to:
 |--------------------------------------|-----------------|-------------------------------------------------------------------|
 | Shared live analyzer                 | Yes             | Used for EVM live profiling and curated EVM cases.                |
 | Tier 1 attribution-aware modifiers   | Yes             | Applied after behavior scoring across live and dataset-mode paths. |
+| Secondary corroboration              | Yes             | Raises confidence modestly, adds bounded support, and surfaces conflicts. |
 | Ethereum trace-aware context         | Yes             | Added in dataset mode as observational context, not live scoring. |
 | ERC-20 Layer 1 scoring               | Yes             | Curated dataset mode only.                                        |
 | Solana stablecoin-flow scoring       | Yes             | Curated dataset mode only.                                        |
@@ -173,6 +176,31 @@ Important implementation notes:
 - direct watchlist sanctions still short-circuit first
 - Tier 1 attribution adds one resolved modifier rather than dumping all source labels into the score
 - contextual labels are meant to reduce false positives, not guarantee a low-risk outcome
+
+### Secondary corroboration behavior
+
+Wave 5B adds bounded secondary-source behavior on top of Tier 1.
+
+Current practical rules:
+
+- a lone secondary risky attribution is bounded to a small `+4` signal
+- a lone secondary contextual attribution is bounded to a small `-2` contextual adjustment
+- a secondary source corroborating a Tier 1 result adds only a modest `+3` or `-2` reinforcement
+- conflicting secondary sources add a note-only `0`-offset reason
+
+Current reason codes:
+
+- `secondary_profile_risky_attribution`
+- `secondary_profile_contextual_attribution`
+- `secondary_corroborated_risky_attribution`
+- `secondary_corroborated_contextual_attribution`
+- `attribution_source_conflict_observed`
+
+The design goal is deliberate:
+
+- secondary sources can sharpen confidence
+- secondary sources can improve analyst explanation
+- secondary sources must not create large hard jumps on their own
 
 ### What is not implemented yet for Ethereum
 
@@ -296,7 +324,7 @@ Today, Bitcoin dataset-mode scoring is trying to answer questions like:
 - peel-chain logic
 - change-aware or cluster-aware modeling
 - hop-based exposure scoring
-- WalletExplorer or other corroborating attribution sources
+- broader corroborating attribution coverage beyond the current bounded fixtures
 
 ---
 
@@ -316,13 +344,17 @@ Tier 1 today means:
 - Bitcoin mining-pool context
 - repo-local bootstrap overrides
 
+Wave 5B adds:
+
+- WalletExplorer-style secondary attribution support
+- repo-safe corroborating fixture sources
+- explicit corroborating vs conflicting source handling
+
 Deferred to later waves:
 
-- WalletExplorer
-- secondary or corroborating-source ingestion
 - cluster-aware actor reasoning
 - graph-aware attribution paths
-- WalletExplorer or other corroborating attribution sources
+- broader corroborating-source ingestion and conflict arbitration
 
 ---
 

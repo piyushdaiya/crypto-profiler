@@ -9,7 +9,7 @@ The current implementation picture is that Crypto Profiler has:
 - one shared live analyzer used primarily for EVM
 - chain-specific dataset-mode scoring adapters for ERC-20, Solana, and Bitcoin
 - trace-aware Ethereum case enrichment
-- a Tier 1 attribution resolver for actor and label context
+- an attribution resolver with Tier 1 precedence and bounded secondary corroboration
 - an analyst-facing report layer on top of the validator output
 
 It does not yet have one fully unified graph-aware engine across all chains.
@@ -25,8 +25,9 @@ If you only skim one section, this is the story:
 3. `cmd/validator --dataset` probes the case shape and routes to the right chain adapter
 4. behavioral scoring produces a shared `WalletProfile`
 5. Tier 1 attribution resolves actor and label context
-6. `cmd/validator --report` turns that profile into a concise analyst-facing brief
-7. future behavior layers will sit on top of that shared output contract rather than replacing it
+6. secondary sources can corroborate or conflict without overriding Tier 1
+7. `cmd/validator --report` turns that profile into a concise analyst-facing brief
+8. future behavior layers will sit on top of that shared output contract rather than replacing it
 
 This is why the project works well as both an engineering artifact and a portfolio demo.
 
@@ -45,6 +46,10 @@ Every score should be backed by visible `risk_reasons`, evidence counts, and pla
 ### Attribution-aware, not attribution-only
 
 Tier 1 labels can sharpen a score or suppress a false positive, but they do not replace behavioral reasoning.
+
+### Secondary sources stay bounded
+
+Corroborating sources can raise confidence, add modest bounded adjustments, or surface conflicts, but they do not get to dominate scoring on their own.
 
 ### Practical multi-chain realism
 
@@ -125,7 +130,7 @@ flowchart LR
     A --> C["Curated Dataset Loaders<br/>internal/datasets"]
     B --> D["Shared Analyzer<br/>internal/analyzer"]
     C --> E["Chain-Specific Dataset Contexts<br/>cmd/validator/dataset_*_context.go"]
-    D --> F["Tier 1 Attribution Resolver<br/>internal/attribution"]
+    D --> F["Attribution Resolver<br/>Tier 1 + Secondary Corroboration<br/>internal/attribution"]
     E --> F
     F --> G["WalletProfile"]
     G --> H["JSON Output"]
@@ -141,7 +146,7 @@ flowchart TD
     C --> D["Curated Case Artifacts<br/>data/cases/..."]
     D --> E["Validator Dataset Mode<br/>cmd/validator --dataset"]
     E --> F["Behavior Scoring"]
-    F --> G["Tier 1 Attribution Resolution"]
+    F --> G["Attribution Resolution<br/>Tier 1 anchor + secondary corroboration"]
     G --> H["WalletProfile"]
     H --> I["JSON Output"]
     H --> J["Analyst Report Output<br/>cmd/validator --report"]
@@ -155,13 +160,15 @@ flowchart TD
 3. `cmd/validator --dataset` probes the case shape and chooses the right chain adapter
 4. chain-specific or shared behavior scoring produces a baseline `WalletProfile`
 5. Tier 1 attribution resolves contextual or risk-escalating actor information
-6. the output is rendered either as JSON or as an analyst-facing report
+6. secondary corroboration can raise confidence or surface conflicts
+7. the output is rendered either as JSON or as an analyst-facing report
 
 ### What a reviewer should take away
 
 - the repo is multi-chain, but not falsely chain-agnostic
 - curated artifacts are a deliberate product surface, not throwaway fixtures
 - Tier 1 attribution improves precision without pretending the repo already has full graph intelligence
+- secondary corroboration improves analyst confidence without turning weak sources into hard risk jumps
 - report mode is a presentation layer on top of real scoring, not a mock demo veneer
 - future behavior work is staged as an additive layer, not something the docs pretend already exists
 
@@ -195,11 +202,12 @@ Today this is the strongest live-scoring path for EVM.
 
 ### `internal/attribution`
 
-Responsible for the Wave 5A attribution layer:
+Responsible for the Wave 5A and 5B attribution layer:
 
 - loading Tier 1 structured label fixtures
 - loading Bitcoin mining-pool context
 - loading repo-local bootstrap overrides
+- loading secondary corroborating sources
 - resolving a final attribution decision
 - applying controlled post-behavior score modifiers
 
@@ -246,10 +254,10 @@ It does not change the underlying scoring model.
 
 | Chain    | Current source path                                                                  | Current scoring path                                        | Current limit                                                                      |
 |----------|--------------------------------------------------------------------------------------|-------------------------------------------------------------|------------------------------------------------------------------------------------|
-| Ethereum | Etherscan live txs, extracted EVM datasets, optional trace summaries                 | Shared analyzer, Tier 1 attribution, plus trace-aware dataset context | No trace-driven live scoring, no hop-aware graph scoring                           |
-| ERC-20   | Local Blockchair ERC-20 shards, latest token metadata snapshot, curated ERC-20 cases | Dataset-mode ERC-20 Layer 1 scoring adapter plus Tier 1 attribution   | No live token scoring, no swap-aware decoding, no trace-aware pass-through scoring |
-| Solana   | Local stablecoin-flow Parquet exports and curated cases                              | Dataset-mode stablecoin scoring adapter plus Tier 1 attribution       | No general instruction-aware live scoring                                          |
-| Bitcoin  | Local Blockchair inputs/outputs and curated cases                                    | Dataset-mode UTXO-flow scoring adapter plus Tier 1 attribution        | No cluster-aware or graph-aware scoring                                            |
+| Ethereum | Etherscan live txs, extracted EVM datasets, optional trace summaries                 | Shared analyzer, Tier 1 attribution, bounded secondary corroboration, plus trace-aware dataset context | No trace-driven live scoring, no hop-aware graph scoring                           |
+| ERC-20   | Local Blockchair ERC-20 shards, latest token metadata snapshot, curated ERC-20 cases | Dataset-mode ERC-20 Layer 1 scoring adapter plus attribution hierarchy | No live token scoring, no swap-aware decoding, no trace-aware pass-through scoring |
+| Solana   | Local stablecoin-flow Parquet exports and curated cases                              | Dataset-mode stablecoin scoring adapter plus attribution hierarchy     | No general instruction-aware live scoring                                          |
+| Bitcoin  | Local Blockchair inputs/outputs and curated cases                                    | Dataset-mode UTXO-flow scoring adapter plus attribution hierarchy      | No cluster-aware or graph-aware scoring                                            |
 
 ---
 
@@ -376,12 +384,19 @@ Tier 1 currently means:
 - Bitcoin mining-pool context
 - repo-local bootstrap labels
 
+Wave 5B adds:
+
+- WalletExplorer-style secondary source support
+- repo-safe corroborating fixture inputs
+- supporting and conflicting source visibility
+
 The important architectural choice is ordering:
 
 1. behavior is scored first
 2. Tier 1 attribution is resolved second
-3. a controlled modifier is applied
-4. the report surfaces the resolved attribution concisely
+3. secondary corroboration can raise confidence or register a conflict
+4. a controlled modifier is applied
+5. the report surfaces the resolved attribution concisely
 
 This keeps the system useful for investigations without pretending the repo already has full cluster-aware entity resolution.
 
@@ -446,7 +461,6 @@ The repo deliberately keeps the committed artifacts small enough to support demo
 
 The architecture is set up so the next wave can add:
 
-- corroborating attribution sources and conflict handling
 - trace-aware pass-through or U-turn rules
 - 1-hop / 2-hop exposure summaries
 - fresh-wallet plus immediate large-flow reasoning

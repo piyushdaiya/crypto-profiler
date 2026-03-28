@@ -1,0 +1,26 @@
+[
+  {
+    "address": "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b",
+    "network": "EVM",
+    "label": "Tornado Cash Router (Secondary)",
+    "actor": "Tornado Cash",
+    "category": "MIXER",
+    "risk_class": "ILLICIT_SERVICE",
+    "confidence": 0.63,
+    "contextual": false,
+    "risk_escalating": true,
+    "notes": "Repo-safe secondary corroborating attribution fixture for known mixer infrastructure."
+  },
+  {
+    "address": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+    "network": "EVM",
+    "label": "Uniswap V2 Router (Secondary)",
+    "actor": "Uniswap",
+    "category": "PROTOCOL",
+    "risk_class": "TRUSTED_SERVICE",
+    "confidence": 0.61,
+    "contextual": true,
+    "risk_escalating": false,
+    "notes": "Repo-safe secondary corroborating attribution fixture for trusted protocol routing."
+  }
+]

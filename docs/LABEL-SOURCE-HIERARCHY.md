@@ -1,13 +1,14 @@
-# Tier 1 Label Source Hierarchy
+# Attribution Source Hierarchy
 
 ## Purpose
 
-This document explains the attribution layer implemented in Wave 5A.
+This document explains the attribution layer implemented across Wave 5A and Wave 5B.
 
 The goal is practical precision:
 
 - keep the behavioral model as the primary scoring engine
 - add a deterministic Tier 1 attribution layer on top
+- allow bounded secondary corroboration without letting weak sources dominate
 - distinguish risk-escalating labels from contextual or benign labels
 - improve analyst explanations without pretending the repo already has full entity resolution
 
@@ -17,15 +18,23 @@ The goal is practical precision:
 
 Tier 1 in Crypto Profiler means high-trust attribution inputs that are treated as primary context for scoring and reports.
 
-Wave 5A includes only:
+Primary attribution in this repo means Tier 1 sources that can anchor the resolved decision.
+
+Wave 5A established:
 
 - GraphSense-style structured entity labels
 - Bitcoin mining-pool context
 - repo-local bootstrap labels used as local continuity and demo overrides
 
-Wave 5A does not include:
+Wave 5B adds:
 
-- WalletExplorer
+- WalletExplorer-style secondary attribution support
+- repo-safe corroborating fixture inputs
+- confidence boosts from corroboration
+- conflict visibility in resolved attribution and report output
+
+Wave 5B still does not include:
+
 - broad corroborating-source ingestion
 - large-scale conflict arbitration across many providers
 - cluster-wide entity resolution
@@ -48,6 +57,7 @@ Each normalized record carries:
 - category
 - risk class
 - confidence
+- supporting vs conflicting evidence
 - actor, when available
 - whether the label is contextual or risk-escalating
 
@@ -84,9 +94,27 @@ Current Wave 5A sources:
 
 These are the first non-demo attribution inputs used by the resolver.
 
+### 3. Secondary corroborating
+
+Secondary corroborating sources sit below Tier 1.
+
+Current Wave 5B sources:
+
+- `data/labels/tier2_wallet_explorer_entities.json`
+- `data/labels/tier2_corroborating_entities.json`
+
+These sources may:
+
+- support a Tier 1 decision
+- raise confidence modestly
+- add analyst-facing context
+- surface conflicts
+
+They do not override a stronger Tier 1 result on their own.
+
 ---
 
-## Source Types In Wave 5A
+## Source Types In Waves 5A And 5B
 
 ### GraphSense-style structured labels
 
@@ -111,6 +139,22 @@ Used for:
 - small deterministic overrides for demos and tests
 - trusted or high-risk benchmark addresses already used elsewhere in the codebase
 
+### WalletExplorer-style secondary labels
+
+Used for:
+
+- lower-trust corroborating service or exchange-style context
+- bounded secondary-only attribution when no Tier 1 source exists
+- analyst-facing explanation without large score jumps
+
+### Repo-safe corroborating fixture labels
+
+Used for:
+
+- small cross-chain corroboration scenarios in tests and demos
+- confidence uplift and conflict visibility
+- deterministic secondary-source examples that are safe to commit
+
 ---
 
 ## Resolution Rules
@@ -134,8 +178,17 @@ The resolver returns:
 - source metadata
 - whether the result is contextual or risk-escalating
 - supporting source list
+- corroborating source list
+- conflicting source list
 
 This means the project does not collapse all labels into one generic “known entity” flag.
+
+Wave 5B behavior is intentionally bounded:
+
+- a lone secondary source can resolve, but remains low-confidence
+- a secondary source can corroborate a Tier 1 result and raise confidence modestly
+- a secondary source can conflict with Tier 1 and appear in the report
+- a secondary source does not override a stronger Tier 1 source
 
 ---
 
@@ -164,34 +217,34 @@ The scoring layer uses that distinction to avoid a common false-positive problem
 
 ## How Attribution Affects Scoring
 
-Wave 5A keeps the existing behavioral model intact.
+Wave 5A and 5B keep the existing behavioral model intact.
 
 The order is:
 
 1. analyze behavior
 2. resolve Tier 1 attribution
-3. apply a controlled attribution modifier
-4. render a report that shows both behavior and attribution context
+3. consider bounded secondary corroboration or conflicts
+4. apply a controlled attribution modifier
+5. render a report that shows both behavior and attribution context
 
 Current practical effects:
 
-- sanctioned or illicit-service attribution strongly escalates the final score
-- trusted protocol, exchange, mining-pool, or treasury attribution reduces false positives
+- sanctioned or illicit-service Tier 1 attribution strongly escalates the final score
+- trusted protocol, exchange, mining-pool, or treasury Tier 1 attribution reduces false positives
+- corroborating secondary sources can slightly raise confidence or add modest bounded adjustments
+- conflicting secondary sources can surface note-level caution without overriding Tier 1
 - attribution does not replace behavioral reasoning or remove visible risk reasons
 
 ---
 
-## What Is Deferred To Wave 5B And 5C
+## What Is Deferred To Wave 5C
 
-Wave 5A intentionally stops short of:
+Wave 5C is still deferred and will handle:
 
-- WalletExplorer integration
-- secondary or corroborating-source ingestion
-- multi-source conflict arbitration beyond the current tier rules
 - cluster-aware or actor-aware graph scoring
 - path-aware exposure, pass-through, or U-turn attribution
-
-Those are the next layers, not part of the current Tier 1 implementation.
+- richer actor-level behavioral refinement
+- broader conflict arbitration beyond the current bounded source rules
 
 ---
 

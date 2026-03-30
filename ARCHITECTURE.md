@@ -8,13 +8,13 @@ This document describes the architecture that is actually implemented in the rep
 The current implementation picture is that Crypto Profiler has:
 
 - one shared live analyzer used primarily for EVM
-- chain-specific dataset-mode scoring adapters for Optimism, Polygon, ERC-20, Solana, and Bitcoin
+- chain-specific dataset-mode scoring adapters for Optimism, Polygon, Arbitrum, ERC-20, Solana, and Bitcoin
 - trace-aware Ethereum case enrichment
 - an attribution resolver with Tier 1 precedence, bounded secondary corroboration, and actor/exposure refinement
 - a bounded graph summary and graph-aware scoring layer
 - an analyst-facing report layer on top of the validator output
 
-It does not yet have one fully unified graph-aware engine across all chains, and Optimism and Polygon Phase 1 are intentionally transactions-only while decoded-events remain deferred due scan-cost / ROI.
+It does not yet have one fully unified graph-aware engine across all chains, and Optimism, Polygon, and Arbitrum Phase 1 are intentionally transactions-only while decoded-events remain deferred due scan-cost / ROI.
 
 ---
 
@@ -76,6 +76,7 @@ Curated dataset mode is not a toy in this repo. It is the main delivery path for
 - trace-aware Ethereum examples
 - Optimism Phase 1 tx-only Layer 2 scoring
 - Polygon Phase 1 tx-only Layer 2 scoring
+- Arbitrum Phase 1 tx-only Layer 2 scoring
 - ERC-20 token-surface scoring
 - current Solana scoring
 - current Bitcoin scoring
@@ -119,6 +120,7 @@ Dataset mode currently dispatches to:
 - shared curated EVM cases
 - Optimism Phase 1 curated cases
 - Polygon Phase 1 curated cases
+- Arbitrum Phase 1 curated cases
 - ERC-20 curated cases
 - Solana curated stablecoin-flow cases
 - Bitcoin curated UTXO-flow cases
@@ -196,7 +198,7 @@ flowchart TD
 - the graph layer is deliberately sampled, bounded, and coverage-gated
 - report mode is a presentation layer on top of real scoring, not a mock demo veneer
 - future behavior work is staged as an additive layer, not something the docs pretend already exists
-- Optimism and Polygon Phase 1 are intentionally tx-only, cost-aware, and homelab-first
+- Optimism, Polygon, and Arbitrum Phase 1 are intentionally tx-only, cost-aware, and homelab-first
 
 ---
 
@@ -261,6 +263,7 @@ Responsible for chain-specific dataset scoring adapters:
 - `dataset_trace_context.go`
 - `dataset_optimism_layer2_context.go`
 - `dataset_polygon_layer2_context.go`
+- `dataset_arbitrum_layer2_context.go`
 - `dataset_erc20_layer1_context.go`
 - `dataset_solana_stablecoin_context.go`
 - `dataset_bitcoin_layer1_context.go`
@@ -268,8 +271,8 @@ Responsible for chain-specific dataset scoring adapters:
 This is an important architecture detail:
 
 - EVM live scoring uses the shared analyzer
-- Optimism, Polygon, ERC-20, Solana, and Bitcoin currently score through dataset adapters
-- Optimism and Polygon Phase 1 use tx-only adapters derived from exported Parquet summarized locally
+- Optimism, Polygon, Arbitrum, ERC-20, Solana, and Bitcoin currently score through dataset adapters
+- Optimism, Polygon, and Arbitrum Phase 1 use tx-only adapters derived from exported Parquet summarized locally
 
 ### Report layer responsibilities
 
@@ -289,14 +292,15 @@ It does not change the underlying scoring model.
 
 ## Chain Architecture Today
 
-| Chain    | Current source path | Current scoring path | Current limit |
-|----------|----------------------|----------------------|---------------|
-| Ethereum | Etherscan live txs, extracted EVM datasets, optional trace summaries | Shared analyzer, Tier 1 attribution, bounded secondary corroboration, actor/exposure refinement, trace-aware dataset context, bounded graph-aware refinement when coverage is meaningful | No trace-driven live scoring, no generalized graph scoring |
-| Optimism | BigQuery Blockchain Analytics transactions export, local Parquet summarization, curated cases | Dataset-mode tx-only Layer 2 scoring adapter plus attribution hierarchy | Decoded-events deferred in Phase 1 due scan-cost / ROI |
-| Polygon  | BigQuery Blockchain Analytics transactions export, local Parquet summarization, curated cases | Dataset-mode tx-only Layer 2 scoring adapter plus attribution hierarchy | Decoded-events deferred in Phase 1 due scan-cost / ROI |
-| ERC-20   | Local Blockchair ERC-20 shards, latest token metadata snapshot, curated ERC-20 cases | Dataset-mode ERC-20 scoring adapter plus attribution hierarchy, actor/exposure refinement, and bounded graph-summary output when coverage allows | No live token scoring, no swap-aware decoding, no generalized token graph scoring |
-| Solana   | Local stablecoin-flow Parquet exports and curated cases | Dataset-mode stablecoin scoring adapter plus attribution hierarchy | No general instruction-aware live scoring |
-| Bitcoin  | Local Blockchair inputs/outputs and curated cases | Dataset-mode UTXO-flow scoring adapter plus attribution hierarchy, bounded cluster-aware interpretation, and bounded graph-summary output when coverage allows | No generalized cluster graph scoring |
+| Chain    | Current source path                                                                           | Current scoring path                                                                                                                                                                     | Current limit                                                                     |
+|----------|-----------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| Ethereum | Etherscan live txs, extracted EVM datasets, optional trace summaries                          | Shared analyzer, Tier 1 attribution, bounded secondary corroboration, actor/exposure refinement, trace-aware dataset context, bounded graph-aware refinement when coverage is meaningful | No trace-driven live scoring, no generalized graph scoring                        |
+| Optimism | BigQuery Blockchain Analytics transactions export, local Parquet summarization, curated cases | Dataset-mode tx-only Layer 2 scoring adapter plus attribution hierarchy                                                                                                                  | Decoded-events deferred in Phase 1 due scan-cost / ROI                            |
+| Polygon  | BigQuery Blockchain Analytics transactions export, local Parquet summarization, curated cases | Dataset-mode tx-only Layer 2 scoring adapter plus attribution hierarchy                                                                                                                  | Decoded-events deferred in Phase 1 due scan-cost / ROI                            |
+| Arbitrum | BigQuery Blockchain Analytics transactions export, local Parquet summarization, curated cases | Dataset-mode tx-only Layer 2 scoring adapter plus attribution hierarchy                                                                                                                  | Decoded-events deferred in Phase 1 due scan-cost / ROI                            |
+| ERC-20   | Local Blockchair ERC-20 shards, latest token metadata snapshot, curated ERC-20 cases          | Dataset-mode ERC-20 scoring adapter plus attribution hierarchy, actor/exposure refinement, and bounded graph-summary output when coverage allows                                         | No live token scoring, no swap-aware decoding, no generalized token graph scoring |
+| Solana   | Local stablecoin-flow Parquet exports and curated cases                                       | Dataset-mode stablecoin scoring adapter plus attribution hierarchy                                                                                                                       | No general instruction-aware live scoring                                         |
+| Bitcoin  | Local Blockchair inputs/outputs and curated cases                                             | Dataset-mode UTXO-flow scoring adapter plus attribution hierarchy, bounded cluster-aware interpretation, and bounded graph-summary output when coverage allows                           | No generalized cluster graph scoring                                              |
 
 ---
 
@@ -406,6 +410,48 @@ So Phase 1 deliberately favors:
 ### What Phase 1 proves
 
 Even without decoded-events, the current Polygon implementation can already show:
+
+- repeated-contract service-like behavior
+- broad operational hub behavior
+- very high transaction concentration to one contract
+- broad mixed-flow surface across many counterparties
+- a practical Layer 2 dataset-mode workflow built under cost constraints
+
+---
+
+## Arbitrum Layer 2 Architecture (Phase 1)
+
+Arbitrum Phase 1 is intentionally transactions-only.
+
+### Current Arbitrum flow
+
+1. candidate mining runs against Google Cloud Blockchain Analytics / BigQuery over the repo’s canonical 90-day window
+2. shortlisted transactions are exported to Parquet
+3. exported Parquet is transferred to the homelab
+4. local summarization derives:
+   - tx counts
+   - inbound / outbound split
+   - unique counterparties
+   - top counterparties
+   - dominant destination contract share
+5. curated Arbitrum cases are written under `data/cases/curated-arbitrum/`
+6. `cmd/validator --dataset` applies Arbitrum-specific dataset scoring
+7. report mode renders Arbitrum cases using the same shared analyst-facing output contract
+
+### Why Phase 1 is tx-only
+
+Decoded-events were tested during implementation, but the scan-cost / ROI tradeoff was not strong enough for the first Arbitrum pass.
+
+So Phase 1 deliberately favors:
+
+- cheaper and more repeatable export workflow
+- homelab-first summarization
+- contract-destination-based interpretation
+- portfolio-safe, reproducible dataset-mode cases
+
+### What Phase 1 proves
+
+Even without decoded-events, the current Arbitrum implementation can already show:
 
 - repeated-contract service-like behavior
 - broad operational hub behavior
@@ -613,6 +659,7 @@ The architecture is set up so the next stage can add:
 - broader protocol-intent interpretation for ERC-20 and trace-enriched EVM paths
 - Optimism event-aware enhancement once scan-cost / ROI becomes favorable
 - Polygon event-aware enhancement once scan-cost / ROI becomes favorable
+- Arbitrum event-aware enhancement once scan-cost / ROI becomes favorable
 
 Those are next-stage additions, not claims about the current implementation.
 

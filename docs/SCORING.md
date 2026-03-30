@@ -8,7 +8,8 @@ It is intentionally implementation-aware:
 
 - what is actually scored now
 - which rules are only used in curated dataset mode
-- what is still planned for later live or graph-aware work
+- how attribution, actor/exposure refinement, and bounded graph-aware scoring fit into the pipeline
+- what still remains future work
 
 Current status:
 
@@ -18,7 +19,9 @@ Current status:
 - Solana stablecoin-flow scoring is implemented in validator dataset mode.
 - Bitcoin UTXO-flow scoring is implemented in validator dataset mode.
 - Tier 1 attribution-aware modifiers are implemented across live and dataset-mode outputs.
-- secondary corroborating sources are implemented with bounded confidence and note-level conflict handling.
+- Secondary corroborating sources are implemented with bounded confidence and note-level conflict handling.
+- Actor/exposure refinement is implemented where attribution support is strong enough.
+- Bounded graph summary and bounded graph-aware scoring are implemented when attributed graph coverage is meaningful.
 
 ---
 
@@ -41,9 +44,10 @@ The current ordering is:
 1. behavior or dataset context is scored first
 2. Tier 1 attribution is resolved second
 3. secondary corroboration can raise confidence or surface conflicts
-4. a bounded attribution modifier is applied
+4. actor/exposure refinement can be applied when attribution support is strong
+5. bounded graph-aware scoring can be applied when attributed graph coverage is meaningful
 
-This means labels improve precision, but they do not replace the underlying behavior model.
+This means labels and graph context improve precision, but they do not replace the underlying behavior model.
 
 ### Practical MVP weighting
 
@@ -75,17 +79,20 @@ Sanctions short-circuit to:
 
 ## What Is Implemented Today
 
-| Area                                 | Implemented now | Notes                                                             |
-|--------------------------------------|-----------------|-------------------------------------------------------------------|
-| Shared live analyzer                 | Yes             | Used for EVM live profiling and curated EVM cases.                |
-| Tier 1 attribution-aware modifiers   | Yes             | Applied after behavior scoring across live and dataset-mode paths. |
-| Secondary corroboration              | Yes             | Raises confidence modestly, adds bounded support, and surfaces conflicts. |
-| Ethereum trace-aware context         | Yes             | Added in dataset mode as observational context, not live scoring. |
-| ERC-20 Layer 1 scoring               | Yes             | Curated dataset mode only.                                        |
-| Solana stablecoin-flow scoring       | Yes             | Curated dataset mode only.                                        |
-| Bitcoin UTXO-flow scoring            | Yes             | Curated dataset mode only.                                        |
-| 1-hop / 2-hop exposure scoring       | No              | Planned.                                                          |
-| Graph-aware or cluster-aware scoring | No              | Planned.                                                          |
+| Area                                | Implemented now | Notes                                                                                                                                        |
+|-------------------------------------|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| Shared live analyzer                | Yes             | Used for EVM live profiling and curated EVM cases.                                                                                           |
+| Tier 1 attribution-aware modifiers  | Yes             | Applied after behavior scoring across live and dataset-mode paths.                                                                           |
+| Secondary corroboration             | Yes             | Raises confidence modestly, adds bounded support, and surfaces conflicts.                                                                    |
+| Actor/exposure refinement           | Yes             | Direct, near, repeated, concentration, pass-through, and U-turn findings are implemented in bounded form when attribution support is strong. |
+| Bounded graph summary               | Yes             | Renders only when attributed graph coverage is meaningful.                                                                                   |
+| Bounded graph-aware scoring         | Yes             | Selected motifs and concentration patterns can add bounded score refinements.                                                                |
+| Ethereum trace-aware context        | Yes             | Added in dataset mode as observational context, not live scoring.                                                                            |
+| ERC-20 Layer 1 scoring              | Yes             | Curated dataset mode only.                                                                                                                   |
+| Solana stablecoin-flow scoring      | Yes             | Curated dataset mode only.                                                                                                                   |
+| Bitcoin UTXO-flow scoring           | Yes             | Curated dataset mode only.                                                                                                                   |
+| Full generalized graph scoring      | No              | Not implemented.                                                                                                                             |
+| Full multi-hop live graph analytics | No              | Not implemented.                                                                                                                             |
 
 ---
 
@@ -98,17 +105,17 @@ Ethereum currently uses two layers:
 
 ### Shared analyzer rule families
 
-| Rule family                | Current reason codes                                                                                                | Implementation note                                                                     |
-|----------------------------|---------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
-| Sanctions                  | `direct_sanctions_match`, `direct_sanctions_exposure`                                                               | Direct match short-circuits; direct exposure is also scored.                            |
+| Rule family                | Current reason codes                                                                                                | Implementation note                                                                                 |
+|----------------------------|---------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| Sanctions                  | `direct_sanctions_match`, `direct_sanctions_exposure`                                                               | Direct match short-circuits; direct exposure is also scored.                                        |
 | Direct high-risk exposure  | `direct_mixer_interaction`, `direct_high_risk_entity`                                                               | Direct labeled contact is a major escalation path; profile-level attribution now applies afterward. |
-| Wallet age                 | `fresh_wallet`, `established_history`                                                                               | New wallets are escalated; old wallets can be mitigated.                                |
-| Trusted context            | `exchange_interaction`, `trusted_or_protocol_interaction`, `contextual_infrastructure_interaction`                  | Trusted or exchange context reduces score but does not override stronger fraud signals. |
-| Activity burst             | `high_velocity_behavior`                                                                                            | Tx-rate threshold heuristic.                                                            |
-| Repeated high-risk contact | `repeated_flagged_counterparty_interaction`                                                                         | Category-aware repeated-contact scoring.                                                |
-| Service concentration      | `high_risk_service_concentration`, `exchange_concentration`, `single_service_concentration`                         | Count-based concentration to the top labeled service.                                   |
-| Noisy inbound observations | `noisy_inbound_activity`, `high_counterparty_fan_in`, `zero_value_inbound_pattern`                                  | Low-severity observational rules.                                                       |
-| Combination logic          | `combo_mixer_plus_fresh_wallet`, `combo_mixer_plus_high_velocity`, `combo_contextual_mitigation_established_wallet` | Multi-signal escalation and contextual mitigation.                                      |
+| Wallet age                 | `fresh_wallet`, `established_history`                                                                               | New wallets are escalated; old wallets can be mitigated.                                            |
+| Trusted context            | `exchange_interaction`, `trusted_or_protocol_interaction`, `contextual_infrastructure_interaction`                  | Trusted or exchange context reduces score but does not override stronger fraud signals.             |
+| Activity burst             | `high_velocity_behavior`                                                                                            | Tx-rate threshold heuristic.                                                                        |
+| Repeated high-risk contact | `repeated_flagged_counterparty_interaction`                                                                         | Category-aware repeated-contact scoring.                                                            |
+| Service concentration      | `high_risk_service_concentration`, `exchange_concentration`, `single_service_concentration`                         | Count-based concentration to the top labeled service.                                               |
+| Noisy inbound observations | `noisy_inbound_activity`, `high_counterparty_fan_in`, `zero_value_inbound_pattern`                                  | Low-severity observational rules.                                                                   |
+| Combination logic          | `combo_mixer_plus_fresh_wallet`, `combo_mixer_plus_high_velocity`, `combo_contextual_mitigation_established_wallet` | Multi-signal escalation and contextual mitigation.                                                  |
 
 ### Practical offsets in the shared analyzer
 
@@ -164,12 +171,12 @@ After the shared analyzer or dataset-mode scoring runs, the resolver applies a b
 
 Current modifier families:
 
-| Attribution shape                             | Current reason code                    | Current effect      |
-|-----------------------------------------------|----------------------------------------|---------------------|
-| Sanctioned actor attribution                  | `tier1_profile_sanctioned_attribution` | `FRAUD +60`         |
-| Illicit service, exploit, or scam attribution | `tier1_profile_risky_attribution`      | `FRAUD +45`         |
-| Trusted protocol or exchange attribution      | `tier1_profile_contextual_attribution` | `REPUTATION -10`    |
-| Mining pool or treasury attribution           | `tier1_profile_contextual_attribution` | `REPUTATION -8`     |
+| Attribution shape                             | Current reason code                    | Current effect   |
+|-----------------------------------------------|----------------------------------------|------------------|
+| Sanctioned actor attribution                  | `tier1_profile_sanctioned_attribution` | `FRAUD +60`      |
+| Illicit service, exploit, or scam attribution | `tier1_profile_risky_attribution`      | `FRAUD +45`      |
+| Trusted protocol or exchange attribution      | `tier1_profile_contextual_attribution` | `REPUTATION -10` |
+| Mining pool or treasury attribution           | `tier1_profile_contextual_attribution` | `REPUTATION -8`  |
 
 Important implementation notes:
 
@@ -208,14 +215,14 @@ The current actor/exposure layer adds a bounded refinement step after attributio
 
 Current practical reason codes:
 
-| Refinement shape                            | Current reason code                     | Current effect     |
-|---------------------------------------------|-----------------------------------------|--------------------|
-| Actor-aware repeated risky interaction      | `actor_repeated_risky_interaction`      | `FRAUD +4` to `+6` |
-| Actor-aware risky concentration             | `actor_risky_concentration`             | `FRAUD +5`         |
-| Actor-aware repeated contextual interaction | `actor_contextual_repeated_interaction` | `REPUTATION -1.5`  |
-| Actor-aware contextual concentration        | `actor_contextual_concentration`        | `REPUTATION -3`    |
-| Pass-through exposure to risky actor        | `actor_pass_through_risky_exposure`     | `FRAUD +4`         |
-| U-turn through risky actor                  | `actor_u_turn_risky_service`            | `FRAUD +3`         |
+| Refinement shape                            | Current reason code                     | Current effect      |
+|---------------------------------------------|-----------------------------------------|---------------------|
+| Actor-aware repeated risky interaction      | `actor_repeated_risky_interaction`      | `FRAUD +4` to `+6`  |
+| Actor-aware risky concentration             | `actor_risky_concentration`             | `FRAUD +5`          |
+| Actor-aware repeated contextual interaction | `actor_contextual_repeated_interaction` | `REPUTATION -1.5`   |
+| Actor-aware contextual concentration        | `actor_contextual_concentration`        | `REPUTATION -3`     |
+| Pass-through exposure to risky actor        | `actor_pass_through_risky_exposure`     | `FRAUD +4`          |
+| U-turn through risky actor                  | `actor_u_turn_risky_service`            | `FRAUD +3`          |
 
 The current actor/exposure layer also adds `attribution_insights` for:
 
@@ -230,12 +237,92 @@ Guardrails:
 - secondary-only attribution can still appear in analyst-facing insights, but does not drive the stronger actor/exposure score modifiers
 - the goal is explainable refinement, not a second opaque scoring engine
 
+### Graph-aware summary and bounded graph scoring
+
+Crypto Profiler now includes a bounded graph-analysis layer on top of attribution and behavioral scoring.
+
+This layer is intentionally conservative:
+
+- it only activates when attributed graph coverage is meaningful
+- it does not override Tier 1 attribution or existing behavioral scoring
+- it is designed to improve explanation quality and add bounded score adjustments rather than simulate a full graph platform
+
+### When graph summary is shown
+
+The analyst-facing report renders a `Graph Summary` section only when:
+
+- attributed graph coverage is meaningful enough to avoid misleading output
+- the sampled graph can be rolled up into actor-level summaries with enough support to be useful
+
+In low-coverage cases, graph summary is suppressed rather than overstated.
+
+### Graph summary outputs
+
+When present, the graph summary can include:
+
+- attributed graph coverage over sampled interactions
+- unique actor count
+- direct risky actor count
+- direct contextual actor count
+- near risky actor count
+- top actors by attributed interaction share
+- graph motifs when the sampled graph supports them
+
+### Graph motifs currently supported
+
+The current bounded motif layer includes:
+
+- contextual-to-risky pass-through
+- risky-actor U-turn style behavior
+- contextual fan-in hubs
+- contextual fan-out hubs
+- risky fan-out patterns
+
+These motifs are sampled, explanation-first findings.
+They are not presented as full path reconstruction.
+
+### Bounded graph-aware score modifiers
+
+Graph-aware score changes are deliberately modest.
+
+Examples of bounded modifiers:
+
+- concentration on a risky actor when attributed graph coverage is meaningful
+- near-risky actor exposure
+- risky-actor U-turn motif
+- contextual-to-risky pass-through motif
+- contextual concentration reducing false-positive pressure in some cases
+
+These modifiers:
+
+- require meaningful attributed graph coverage
+- remain bounded in size
+- augment existing reasons instead of replacing them
+
+### What graph-aware scoring does not claim
+
+The current implementation does not claim:
+
+- full graph reconstruction
+- generalized path search over arbitrary hops
+- value-weighted graph scoring
+- comprehensive cluster resolution
+- trace-native path decoding across all chains
+- complete live graph analytics
+
+It is better understood as:
+
+- sampled graph intelligence
+- explainable actor-level rollups
+- bounded motif detection
+- cautious score refinement where the data supports it
+
 ### What is not implemented yet for Ethereum
 
 - trace-driven live pass-through or U-turn detection
 - value-weighted concentration from traces
 - generalized graph-aware path scoring
-- corroborating-source conflict resolution beyond Tier 1
+- full live multi-hop graph scoring
 
 ---
 
@@ -267,6 +354,7 @@ Today, ERC-20 dataset-mode scoring is trying to answer questions like:
 - is there repeated counterparty structure worth highlighting?
 - is token activity mixed across many contracts or heavily concentrated to one asset?
 - does Tier 1 attribution explain a broad token surface as trusted infrastructure instead of generic noise?
+- does meaningful attributed graph coverage support bounded graph summary or motif-based refinement?
 
 ### What is not implemented yet for ERC-20
 
@@ -310,7 +398,7 @@ Today, Solana dataset-mode scoring is trying to answer questions like:
 - live scoring from RPC-hydrated Solana history
 - instruction-aware or program-aware scoring
 - non-stablecoin Layer 1 coverage
-- bridge-aware or graph-aware scoring
+- bridge-aware or generalized graph scoring
 - generalized corroborating-source attribution beyond Tier 1
 
 ---
@@ -343,28 +431,30 @@ Today, Bitcoin dataset-mode scoring is trying to answer questions like:
 - is this more like an operational hub than a normal wallet?
 - is there extreme repeated interaction with one counterparty?
 - does mining-pool context explain a broad operational-looking address more safely?
+- does meaningful attributed graph coverage support a bounded graph rollup?
 
 ### What is not implemented yet for Bitcoin
 
 - rapid-spend scoring from output lifespan
 - dormant-output reactivation
 - peel-chain logic
-- change-aware or cluster-aware modeling
-- generalized hop-based exposure scoring
+- change-aware or generalized cluster-aware modeling
+- generalized multi-hop exposure scoring
 - broader corroborating attribution coverage beyond the current bounded fixtures
 
 ---
 
-## What Attribution Changes Today
+## What Attribution and Graph Context Change Today
 
-The current attribution and actor/exposure layer improves score precision in four ways:
+The current attribution, actor/exposure, and bounded graph layer improves score precision in five ways:
 
 1. risky actors can escalate scores without replacing behavioral reasons
 2. contextual infrastructure can reduce false positives for broad-surface or high-volume wallets
 3. reports can explain why a label mattered, including actor, confidence, and source tier
 4. strong actor support can refine repeated interaction, concentration, and sampled exposure narratives
+5. meaningful attributed graph coverage can add bounded graph summary and bounded motif-based score refinement
 
-This is deliberately narrower than a full attribution platform.
+This is deliberately narrower than a full attribution or graph platform.
 
 Tier 1 today means:
 
@@ -378,16 +468,19 @@ Secondary corroboration adds:
 - repo-safe corroborating fixture sources
 - explicit corroborating vs conflicting source handling
 
-The current actor/exposure layer adds:
+The current actor/exposure and graph layer adds:
 
 - actor-aware repeated-interaction and concentration refinement
 - practical direct and near exposure summaries
 - bounded pass-through and U-turn findings tied to attributed actors
+- bounded graph summary rollups
+- bounded graph motifs and bounded graph-aware score changes
 
 Still future work:
 
 - generalized graph-aware attribution paths
 - broader corroborating-source ingestion and conflict arbitration
+- richer graph coverage for currently sparse-attribution cases
 
 ---
 
@@ -415,7 +508,7 @@ That makes it good for:
 It does not currently:
 
 - recompute chain history live from the full raw source
-- build generalized 1-hop or 2-hop exposure graphs
+- build generalized arbitrary-hop exposure graphs
 - merge cluster identities across arbitrary address sets
 - compute value-aware path risk across protocols
 
@@ -423,9 +516,9 @@ It does not currently:
 
 Future work includes:
 
-- graph-aware 1-hop and 2-hop exposure
-- fresh-wallet plus immediate large-flow reasoning
+- broader graph coverage and richer graph-derived scoring
 - value-weighted concentration
+- fresh-wallet plus immediate large-flow reasoning
 - richer Solana and Bitcoin live-flow reasoning
 
 ---
@@ -437,3 +530,4 @@ Future work includes:
 - [`docs/ERC20-DATA-MODEL.md`](ERC20-DATA-MODEL.md)
 - [`docs/SOLANA-DATA-MODEL.md`](SOLANA-DATA-MODEL.md)
 - [`docs/BITCOIN-DATA-MODEL.md`](BITCOIN-DATA-MODEL.md)
+```

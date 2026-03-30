@@ -291,3 +291,94 @@ func TestRun_DatasetModeReportIncludesChainSpecificContext(t *testing.T) {
 		})
 	}
 }
+func TestRenderReport_IncludesGraphScoringSignals(t *testing.T) {
+	profile := &model.WalletProfile{
+		Address:           "0xprofile",
+		Network:           "EVM",
+		IsValid:           true,
+		RiskScore:         16.0,
+		RiskGrade:         "LOW (Reviewable)",
+		ReviewRecommended: true,
+		RiskReasons: []model.RiskReason{
+			{
+				Code:          "graph_risky_actor_concentration",
+				Category:      "FRAUD",
+				Description:   "Graph summary is concentrated on risky actor Sample Mixer Cluster (75.00% of attributed interactions)",
+				Offset:        2.0,
+				Source:        "graph_summary",
+				EvidenceCount: 18,
+			},
+			{
+				Code:          "graph_risky_actor_u_turn",
+				Category:      "FRAUD",
+				Description:   "Sampled flows show inbound and outbound interaction with risky actor Sample Mixer Cluster (possible U-turn style pattern).",
+				Offset:        2.0,
+				Source:        "graph_summary",
+				EvidenceCount: 6,
+			},
+		},
+		GraphSummary: &model.GraphSummary{
+			TotalInteractions:          30,
+			AttributedInteractions:     24,
+			AttributedInteractionShare: 0.80,
+			UniqueActors:               2,
+			TopActorShare:              0.75,
+			ConcentrationHHI:           0.61,
+			DirectRiskyActorCount:      1,
+			DirectContextualActorCount: 1,
+			NearRiskyActorCount:        2,
+			TopActors: []model.GraphActorSummary{
+				{
+					Actor:            "Sample Mixer Cluster",
+					Category:         "MIXER",
+					RiskClass:        "ILLICIT_SERVICE",
+					RiskEscalating:   true,
+					Confidence:       0.97,
+					InteractionCount: 18,
+					InboundCount:     9,
+					OutboundCount:    9,
+					UniqueAddresses:  3,
+					Share:            0.75,
+				},
+				{
+					Actor:            "Sample Exchange",
+					Category:         "EXCHANGE",
+					RiskClass:        "EXCHANGE",
+					Contextual:       true,
+					Confidence:       0.72,
+					InteractionCount: 6,
+					InboundCount:     6,
+					OutboundCount:    0,
+					UniqueAddresses:  2,
+					Share:            0.25,
+				},
+			},
+			Motifs: []model.GraphMotif{
+				{
+					Code:    "risky_actor_u_turn",
+					Summary: "Sampled flows show inbound and outbound interaction with risky actor Sample Mixer Cluster (possible U-turn style pattern).",
+					Count:   6,
+				},
+			},
+		},
+	}
+
+	out := renderReport(profile, &reportContext{
+		Mode:           "dataset",
+		DatasetType:    "Synthetic graph test dataset",
+		Interpretation: "Synthetic graph scoring demonstrator.",
+	})
+
+	requiredSnippets := []string{
+		"Graph Summary:",
+		"Top Actors:",
+		"Graph Motifs:",
+		"graph summary is concentrated on risky actor",
+	}
+
+	for _, snippet := range requiredSnippets {
+		if !strings.Contains(strings.ToLower(out), strings.ToLower(snippet)) {
+			t.Fatalf("expected report to contain %q, got:\n%s", snippet, out)
+		}
+	}
+}

@@ -1,6 +1,7 @@
 package attribution
 
 import (
+	"fmt"
 	"math"
 	"sort"
 	"strings"
@@ -16,13 +17,12 @@ type FlowEdge struct {
 type ResolveAttributionFunc func(address string) *model.ResolvedAttribution
 
 type actorAccumulator struct {
-	Actor          string
-	Category       string
-	RiskClass      string
-	Contextual     bool
-	RiskEscalating bool
-	Confidence     float64
-
+	Actor           string
+	Category        string
+	RiskClass       string
+	Contextual      bool
+	Escalating      bool
+	Confidence      float64
 	InboundCount    int
 	OutboundCount   int
 	UniqueAddresses map[string]struct{}
@@ -38,11 +38,45 @@ func BuildGraphSummaryFromWave5CInput(
 	}
 
 	edges := buildFlowEdgesFromWave5CInput(profiled, input)
-	if len(edges) == 0 {
+	if len(edges) > 0 {
+		return BuildGraphSummary(profiled, edges, resolve)
+	}
+
+	// Fallback: synthesize simple edges from counterparties when sampled flows
+	// are too sparse to give a useful ordered graph.
+	fallbackEdges := make([]FlowEdge, 0, len(input.Counterparties))
+	profiledNorm := normalizeAddr(profiled)
+
+	for _, cp := range input.Counterparties {
+		addr := normalizeAddr(cp.Address)
+		if addr == "" || addr == profiledNorm {
+			continue
+		}
+
+		switch {
+		case cp.OutboundCount > cp.InboundCount:
+			fallbackEdges = append(fallbackEdges, FlowEdge{
+				Source:      profiledNorm,
+				Destination: addr,
+			})
+		case cp.InboundCount > 0:
+			fallbackEdges = append(fallbackEdges, FlowEdge{
+				Source:      addr,
+				Destination: profiledNorm,
+			})
+		default:
+			fallbackEdges = append(fallbackEdges, FlowEdge{
+				Source:      profiledNorm,
+				Destination: addr,
+			})
+		}
+	}
+
+	if len(fallbackEdges) == 0 {
 		return nil
 	}
 
-	return BuildGraphSummary(profiled, edges, resolve)
+	return BuildGraphSummary(profiled, fallbackEdges, resolve)
 }
 
 func BuildGraphSummary(
@@ -50,7 +84,7 @@ func BuildGraphSummary(
 	edges []FlowEdge,
 	resolve ResolveAttributionFunc,
 ) *model.GraphSummary {
-	if profiled == "" || len(edges) == 0 || resolve == nil {
+	if strings.TrimSpace(profiled) == "" || len(edges) == 0 || resolve == nil {
 		return nil
 	}
 
@@ -103,7 +137,7 @@ func BuildGraphSummary(
 				Category:        string(attr.Category),
 				RiskClass:       string(attr.RiskClass),
 				Contextual:      attr.Contextual,
-				RiskEscalating:  attrRiskEscalating(attr),
+				Escalating:      attrEscalating(attr),
 				Confidence:      attr.Confidence,
 				UniqueAddresses: map[string]struct{}{},
 			}
@@ -117,7 +151,7 @@ func BuildGraphSummary(
 			acc.OutboundCount++
 		}
 
-		if attrRiskEscalating(attr) {
+		if attrEscalating(attr) {
 			directRiskyActors[actorKey] = struct{}{}
 		}
 		if attr.Contextual {
@@ -161,7 +195,7 @@ func BuildGraphSummary(
 			Category:         acc.Category,
 			RiskClass:        acc.RiskClass,
 			Contextual:       acc.Contextual,
-			RiskEscalating:   acc.RiskEscalating,
+			RiskEscalating:   acc.Escalating,
 			Confidence:       acc.Confidence,
 			InteractionCount: count,
 			InboundCount:     acc.InboundCount,
@@ -194,6 +228,110 @@ func BuildGraphSummary(
 	return summary
 }
 
+func ApplyGraphSummaryContext(profile *model.WalletProfile) {
+	if profile == nil || profile.GraphSummary == nil {
+		return
+	}
+
+	summary := profile.GraphSummary
+	if summary.AttributedInteractions < 5 || summary.AttributedInteractionShare < 0.10 {
+		return
+	}
+
+	if len(summary.TopActors) > 0 {
+		top := summary.TopActors[0]
+
+		if top.RiskEscalating && top.Share >= 0.60 && top.InteractionCount >= 10 {
+			appendGraphReason(
+				profile,
+				"graph_risky_actor_concentration",
+				"FRAUD",
+				fmt.Sprintf("Graph summary is concentrated on risky actor %s (%.2f%% of attributed interactions)", top.Actor, top.Share*100),
+				2.0,
+				top.InteractionCount,
+			)
+		}
+
+		if top.Contextual && top.Share >= 0.80 && top.InteractionCount >= 10 && top.UniqueAddresses >= 2 {
+			appendGraphReason(
+				profile,
+				"graph_contextual_actor_concentration",
+				"REPUTATION",
+				fmt.Sprintf("Graph summary is heavily concentrated on contextual actor %s (%.2f%% of attributed interactions)", top.Actor, top.Share*100),
+				-1.0,
+				top.InteractionCount,
+			)
+		}
+	}
+
+	if summary.NearRiskyActorCount > 0 {
+		appendGraphReason(
+			profile,
+			"graph_near_risky_actor_exposure",
+			"FRAUD",
+			fmt.Sprintf("Graph summary observed near exposure to %d risky actor(s) within 2 hops of sampled flows", summary.NearRiskyActorCount),
+			2.0,
+			summary.NearRiskyActorCount,
+		)
+	}
+
+	for _, motif := range summary.Motifs {
+		switch motif.Code {
+		case "contextual_to_risky_pass_through":
+			appendGraphReason(
+				profile,
+				"graph_contextual_to_risky_pass_through",
+				"FRAUD",
+				motif.Summary,
+				2.0,
+				motif.Count,
+			)
+		case "risky_actor_u_turn":
+			appendGraphReason(
+				profile,
+				"graph_risky_actor_u_turn",
+				"FRAUD",
+				motif.Summary,
+				2.0,
+				motif.Count,
+			)
+		case "risky_actor_fan_out":
+			appendGraphReason(
+				profile,
+				"graph_risky_actor_fan_out",
+				"FRAUD",
+				motif.Summary,
+				1.5,
+				motif.Count,
+			)
+		case "contextual_fan_in_hub":
+			appendGraphReason(
+				profile,
+				"graph_contextual_fan_in_hub",
+				"REPUTATION",
+				motif.Summary,
+				-1.0,
+				motif.Count,
+			)
+		case "contextual_fan_out_hub":
+			appendGraphReason(
+				profile,
+				"graph_contextual_fan_out_hub",
+				"REPUTATION",
+				motif.Summary,
+				-0.5,
+				motif.Count,
+			)
+		}
+	}
+
+	profile.RiskScore = roundFloat(clampMin(profile.RiskScore, 0), 2)
+	profile.RiskGrade = graphAdjustedRiskGrade(profile.RiskScore)
+	if profile.RiskScore >= 5 {
+		profile.ReviewRecommended = true
+	}
+}
+
 func buildFlowEdgesFromWave5CInput(profiled string, input Wave5CInput) []FlowEdge {
 	profiled = normalizeAddr(profiled)
 	if profiled == "" || len(input.Flows) == 0 {
@@ -219,7 +357,6 @@ func buildFlowEdgesFromWave5CInput(profiled string, input Wave5CInput) []FlowEdg
 				Destination: cp,
 			})
 		case "authority":
-			// For now, treat authority-linked flow as profiled -> counterparty
 			edges = append(edges, FlowEdge{
 				Source:      profiled,
 				Destination: cp,
@@ -231,9 +368,48 @@ func buildFlowEdgesFromWave5CInput(profiled string, input Wave5CInput) []FlowEdg
 }
 
 func buildGraphMotifs(stats map[string]*actorAccumulator) []model.GraphMotif {
+	motifs := make([]model.GraphMotif, 0)
+
+	for _, acc := range stats {
+		addressCount := len(acc.UniqueAddresses)
+		total := acc.InboundCount + acc.OutboundCount
+
+		if acc.Contextual && acc.InboundCount >= 5 && addressCount >= 2 {
+			motifs = append(motifs, model.GraphMotif{
+				Code:       "contextual_fan_in_hub",
+				Summary:    fmt.Sprintf("Sampled graph shows contextual fan-in toward actor %s across %d addresses.", acc.Actor, addressCount),
+				ToActor:    acc.Actor,
+				ToCategory: acc.Category,
+				Count:      acc.InboundCount,
+				Confidence: roundFloat(acc.Confidence, 2),
+			})
+		}
+
+		if acc.Contextual && acc.OutboundCount >= 5 && addressCount >= 2 {
+			motifs = append(motifs, model.GraphMotif{
+				Code:         "contextual_fan_out_hub",
+				Summary:      fmt.Sprintf("Sampled graph shows contextual fan-out from actor %s across %d addresses.", acc.Actor, addressCount),
+				FromActor:    acc.Actor,
+				FromCategory: acc.Category,
+				Count:        acc.OutboundCount,
+				Confidence:   roundFloat(acc.Confidence, 2),
+			})
+		}
+
+		if acc.Escalating && acc.OutboundCount >= 5 && addressCount >= 2 {
+			motifs = append(motifs, model.GraphMotif{
+				Code:         "risky_actor_fan_out",
+				Summary:      fmt.Sprintf("Sampled graph shows risky fan-out from actor %s across %d addresses.", acc.Actor, addressCount),
+				FromActor:    acc.Actor,
+				FromCategory: acc.Category,
+				Count:        total,
+				Confidence:   roundFloat(acc.Confidence, 2),
+			})
+		}
+	}
+
 	inboundActors := make([]*actorAccumulator, 0)
 	outboundActors := make([]*actorAccumulator, 0)
-
 	for _, acc := range stats {
 		if acc.InboundCount > 0 {
 			inboundActors = append(inboundActors, acc)
@@ -243,14 +419,12 @@ func buildGraphMotifs(stats map[string]*actorAccumulator) []model.GraphMotif {
 		}
 	}
 
-	motifs := make([]model.GraphMotif, 0)
-
 	for _, inAcc := range inboundActors {
 		for _, outAcc := range outboundActors {
-			if inAcc.Actor == outAcc.Actor && inAcc.RiskEscalating {
+			if inAcc.Actor == outAcc.Actor && inAcc.Escalating && minInt(inAcc.InboundCount, outAcc.OutboundCount) >= 3 {
 				motifs = append(motifs, model.GraphMotif{
 					Code:       "risky_actor_u_turn",
-					Summary:    "Sampled flows show inbound and outbound interaction with the same risky actor.",
+					Summary:    fmt.Sprintf("Sampled flows show inbound and outbound interaction with risky actor %s (possible U-turn style pattern).", inAcc.Actor),
 					FromActor:  inAcc.Actor,
 					ToActor:    outAcc.Actor,
 					Count:      minInt(inAcc.InboundCount, outAcc.OutboundCount),
@@ -259,10 +433,10 @@ func buildGraphMotifs(stats map[string]*actorAccumulator) []model.GraphMotif {
 				continue
 			}
 
-			if inAcc.Contextual && outAcc.RiskEscalating && inAcc.Actor != outAcc.Actor {
+			if inAcc.Contextual && outAcc.Escalating && inAcc.Actor != outAcc.Actor && minInt(inAcc.InboundCount, outAcc.OutboundCount) >= 3 {
 				motifs = append(motifs, model.GraphMotif{
 					Code:         "contextual_to_risky_pass_through",
-					Summary:      "Sampled flows suggest contextual-to-risky pass-through behavior.",
+					Summary:      fmt.Sprintf("Sampled flows suggest contextual-to-risky pass-through from %s to %s.", inAcc.Actor, outAcc.Actor),
 					FromActor:    inAcc.Actor,
 					ToActor:      outAcc.Actor,
 					FromCategory: inAcc.Category,
@@ -281,8 +455,8 @@ func buildGraphMotifs(stats map[string]*actorAccumulator) []model.GraphMotif {
 		return motifs[i].Count > motifs[j].Count
 	})
 
-	if len(motifs) > 3 {
-		motifs = motifs[:3]
+	if len(motifs) > 5 {
+		motifs = motifs[:5]
 	}
 
 	return motifs
@@ -307,7 +481,7 @@ func countNearRiskyActors(
 			}
 
 			attr := resolve(next)
-			if attr == nil || !attrRiskEscalating(attr) {
+			if attr == nil || !attrEscalating(attr) {
 				continue
 			}
 
@@ -319,6 +493,43 @@ func countNearRiskyActors(
 	}
 
 	return len(found)
+}
+
+func appendGraphReason(profile *model.WalletProfile, code, category, description string, offset float64, evidenceCount int) {
+	if profile == nil {
+		return
+	}
+
+	profile.RiskReasons = append(profile.RiskReasons, model.RiskReason{
+		Code:          code,
+		Category:      category,
+		Description:   description,
+		Offset:        offset,
+		Source:        "graph_summary",
+		EvidenceCount: evidenceCount,
+	})
+
+	switch category {
+	case "FRAUD":
+		profile.RiskBreakdown.Fraud = roundFloat(profile.RiskBreakdown.Fraud+offset, 2)
+		profile.RiskScore = roundFloat(profile.RiskScore+(offset*0.5), 2)
+	case "REPUTATION":
+		profile.RiskBreakdown.Reputation = roundFloat(profile.RiskBreakdown.Reputation+offset, 2)
+		profile.RiskScore = roundFloat(profile.RiskScore+(offset*0.3), 2)
+	}
+}
+
+func graphAdjustedRiskGrade(score float64) string {
+	switch {
+	case score < 5:
+		return "MINIMAL (Observed)"
+	case score < 20:
+		return "LOW (Reviewable)"
+	case score < 50:
+		return "ELEVATED"
+	default:
+		return "HIGH RISK"
+	}
 }
 
 func extractCounterparty(profiled, src, dst string) (string, string, bool) {
@@ -355,9 +566,12 @@ func actorDisplayName(attr *model.ResolvedAttribution) string {
 	return attr.Label
 }
 
-func attrRiskEscalating(attr *model.ResolvedAttribution) bool {
+func attrEscalating(attr *model.ResolvedAttribution) bool {
 	if attr == nil {
 		return false
+	}
+	if attr.Escalating {
+		return true
 	}
 	if attr.Contextual {
 		return false
@@ -392,4 +606,11 @@ func minInt(a, b int) int {
 		return a
 	}
 	return b
+}
+
+func clampMin(v, min float64) float64 {
+	if v < min {
+		return min
+	}
+	return v
 }

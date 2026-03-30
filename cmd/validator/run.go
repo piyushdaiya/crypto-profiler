@@ -258,4 +258,6 @@ func applyGraphSummary(profile *model.WalletProfile, input attribution.Wave5CInp
 			return resolved
 		},
 	)
+
+	attribution.ApplyGraphSummaryContext(profile)
 }

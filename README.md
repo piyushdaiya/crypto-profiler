@@ -7,17 +7,20 @@ Portfolio-grade multi-chain crypto risk profiling for AML, sanctions, fraud, and
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-active%20mvp-blue)](#current-implementation-status)
 
-Crypto Profiler is a Go-based wallet risk profiling project focused on explainable, portfolio-grade crypto intelligence across multiple chains.
+Crypto Profiler is a Go-based wallet risk and exposure intelligence project for AML, sanctions, fraud, and crypto investigations.
 
 The repository currently combines:
 
 - shared live scoring for EVM wallets
-- curated dataset-mode scoring for ERC-20, Solana, and Bitcoin Layer 1
+- curated dataset-mode scoring for Ethereum, ERC-20, Solana, and Bitcoin Layer 1 cases
 - trace-aware Ethereum case enrichment
-- attribution-aware scoring with bounded corroboration and actor-aware report context
+- attribution-aware scoring with bounded corroboration
+- actor and exposure findings in analyst-facing reports
+- bounded graph summary reporting when attributed graph coverage is meaningful
+- bounded graph-aware score adjustments for selected motifs and concentration patterns
 - a watchlist-driven sanctions path
 
-Near-term future work is deeper value-aware and live-path behavior scoring on top of the current multi-chain Layer 1 base.
+Near-term future work is deeper value-aware path scoring, richer live-path reasoning, and broader graph coverage on top of the current multi-chain Layer 1 base.
 
 ---
 
@@ -26,6 +29,7 @@ Near-term future work is deeper value-aware and live-path behavior scoring on to
 - Built to demonstrate multi-chain Layer 1 reasoning without pretending Ethereum, Solana, Bitcoin, and ERC-20 all share the same data model.
 - Produces explainable risk output with visible reasons, review recommendations, and an analyst-facing report mode for demos.
 - Packages the engineering story end to end: extraction patterns, curated case artifacts, validator dataset mode, CI, security checks, docs, and sample outputs.
+- Adds bounded actor-aware, exposure-aware, and graph-aware interpretation without overstating weak evidence.
 
 ---
 
@@ -40,6 +44,7 @@ Why this matters for crypto-risk and regtech work:
 - analysts and compliance reviewers need evidence they can inspect, not just opaque scores
 - different chains expose different useful primitives, so the modeling layer should reflect reality
 - curated benchmark cases are useful for demos, interviews, and regression testing when live data is noisy or unstable
+- attribution and graph context should refine interpretation without pretending weak coverage is strong evidence
 
 ---
 
@@ -53,9 +58,11 @@ It demonstrates:
 - explainable risk scoring through visible `risk_reasons`, evidence counts, and review-oriented grades
 - attribution-aware contextualization that can escalate illicit actors, suppress false positives for trusted infrastructure, surface corroboration or conflicts cleanly, and add bounded actor-aware or hop-aware interpretation where the data supports it
 - a practical curated-case workflow from extraction to analyst-facing report output
+- bounded graph summary reporting, graph motifs, and graph-aware score refinement when attributed graph coverage is meaningful
 - disciplined repository storytelling through aligned docs, curated artifacts, tests, and CI security checks
 
 ---
+
 ## Demo
 
 A short demo reel and static screenshots are included in the repository.
@@ -64,9 +71,8 @@ A short demo reel and static screenshots are included in the repository.
 - [Sample analyst reports](docs/sample-reports/README.md)
 - [Release notes](docs/RELEASE-NOTES.md)
 
-
 <p align="center">
-  <img src="data/media/screenshots/01-demo-overview.png" alt="Crypto Profiler demo overview" width="900">
+  <img src="docs/media/screenshots/01-demo-overview.png" alt="Crypto Profiler demo overview" width="900">
 </p>
 
 <p align="center">
@@ -86,6 +92,7 @@ A short demo reel and static screenshots are included in the repository.
 </p>
 
 ---
+
 ## Why The Architecture Looks Like This
 
 Crypto Profiler deliberately separates:
@@ -95,19 +102,22 @@ Crypto Profiler deliberately separates:
 - trace-aware Ethereum enrichment for cases where internal call context materially improves the story
 - Tier 1 attribution resolution that is applied after behavior scoring
 - secondary corroboration that can raise confidence or surface conflicts without dominating the score
+- actor/exposure refinement that stays bounded by attribution confidence
+- graph summary reporting that only renders when attributed graph coverage is meaningful
 
 That choice keeps the implementation honest:
 
 - Ethereum is the most mature live path
 - Solana, Bitcoin, and ERC-20 are real Layer 1 slices, but currently delivered through curated dataset mode
-- Tier 1 attribution improves precision without pretending the repo already has full entity-resolution or graph analytics
+- Tier 1 attribution improves precision without pretending the repo already has full entity-resolution
+- bounded graph-aware output adds analytical value without overstating thin graph coverage
 - the shared output contract stays consistent even when the ingestion and scoring path differs by chain
 
 ---
 
 ## Analyst Report Mode
 
-The validator now supports an analyst-facing report mode on top of the existing JSON output.
+The validator supports an analyst-facing report mode on top of the existing JSON output.
 
 JSON remains the default:
 
@@ -126,7 +136,10 @@ Report mode is designed to surface:
 - address and network
 - case title and dataset context
 - risk score, grade, and review recommendation
+- resolved attribution and source context
 - top reasons
+- actor / exposure findings
+- graph summary when attributed graph coverage is meaningful
 - top counterparties
 - short interpretation
 - chain-specific Layer 1 context
@@ -135,9 +148,9 @@ This mode is meant to make the repo easy to demo in interviews and portfolio rev
 
 ---
 
-## Attribution Layer
+## Attribution and Graph Layer
 
-Crypto Profiler adds a normalized attribution layer on top of the behavioral model.
+Crypto Profiler adds a normalized attribution and bounded graph-analysis layer on top of the behavioral model.
 
 Implemented now:
 
@@ -149,7 +162,10 @@ Implemented now:
 - resolved attribution in JSON output and `--report`
 - controlled post-behavior scoring modifiers
 - actor-aware repeated-interaction and concentration refinement when attribution support is strong
-- practical cluster-aware grouping, direct or near exposure summaries, and bounded pass-through or U-turn findings in dataset-mode reports
+- practical direct and near exposure summaries
+- bounded pass-through and U-turn findings in dataset-mode reports
+- bounded graph summary rollups
+- bounded graph-aware scoring for selected motifs and concentration patterns
 
 What this means in practice:
 
@@ -158,14 +174,15 @@ What this means in practice:
 - corroborating secondary sources can raise confidence and modestly reinforce a result
 - conflicting secondary sources are visible to analysts without overriding a stronger Tier 1 source
 - actor-aware rollups only apply stronger score refinements when attribution confidence is strong enough
-- pass-through, U-turn, and hop-aware findings improve explanation without pretending the repo already has a full graph platform
-- attribution improves interpretation, but it does not replace behavior-based reasoning
+- graph summary only appears when attributed graph coverage is meaningful enough to avoid misleading output
+- graph-aware scoring improves explanation without pretending the repo already has a full graph platform
 
 What it does not claim yet:
 
 - full entity-resolution or generalized clustering across arbitrary graph neighborhoods
 - value-weighted graph scoring across arbitrary paths
 - comprehensive live-path actor rollups outside the current EVM live analyzer
+- generalized full-chain graph reconstruction
 
 See [`docs/LABEL-SOURCE-HIERARCHY.md`](docs/LABEL-SOURCE-HIERARCHY.md) for the exact hierarchy.
 
@@ -173,18 +190,20 @@ See [`docs/LABEL-SOURCE-HIERARCHY.md`](docs/LABEL-SOURCE-HIERARCHY.md) for the e
 
 ## Current Implementation Status
 
-| Area                               | Status today                | Notes                                                                                                                                             |
-|------------------------------------|-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| EVM live wallet profiling          | Implemented                 | Uses Etherscan transaction history, watchlist checks, Tier 1 attribution, and the shared analyzer.                                               |
-| Ethereum curated Layer 1 cases     | Implemented                 | Built from extracted address-scoped native and ERC-20 transfer activity.                                                                          |
-| Ethereum trace integration         | Implemented                 | Address-scoped traces can be extracted, merged into curated cases, and surfaced in dataset mode.                                                  |
-| Attribution layer                  | Implemented                 | Tier 1 sources, bounded secondary corroboration, and actor/exposure refinement now feed scoring confidence and report output.                      |
-| ERC-20 Layer 1                     | Implemented in dataset mode | Address-scoped ERC-20 transfer summaries, curated cases, validator dataset scoring, and Tier 1 attribution-aware contextualization are in place. |
-| Solana Layer 1                     | Implemented in dataset mode | Current Solana layer is stablecoin-flow based and curated from large-value USDC/USDT summaries.                                                   |
-| Bitcoin Layer 1                    | Implemented in dataset mode | Current Bitcoin layer is address-level UTXO-flow based, with mining-pool context and bounded WalletExplorer-style corroboration in attribution.   |
-| Solana live Layer 1 scoring        | Not implemented             | Live Solana strategy currently provides address validation and basic activity/balance lookup only.                                                |
-| Bitcoin live Layer 1 scoring       | Not implemented             | Live Bitcoin strategy currently provides address validation and basic activity/balance lookup only.                                               |
-| ERC-20 live or graph-aware scoring | Not implemented             | Current ERC-20 support is curated dataset mode only; live token scoring, swap-aware interpretation, and graph-aware exposure remain future work.  |
+| Area                               | Status today                | Notes |
+|------------------------------------|-----------------------------|-------|
+| EVM live wallet profiling          | Implemented                 | Uses Etherscan transaction history, watchlist checks, Tier 1 attribution, and the shared analyzer. |
+| Ethereum curated Layer 1 cases     | Implemented                 | Built from extracted address-scoped native and ERC-20 transfer activity. |
+| Ethereum trace integration         | Implemented                 | Address-scoped traces can be extracted, merged into curated cases, and surfaced in dataset mode. |
+| Attribution layer                  | Implemented                 | Tier 1 sources, bounded secondary corroboration, and actor/exposure refinement now feed scoring confidence and report output. |
+| Graph summary reporting            | Implemented                 | Renders only when attributed graph coverage is meaningful. |
+| Bounded graph-aware scoring        | Implemented                 | Selected motifs and concentration patterns can add bounded score refinements when coverage is sufficient. |
+| ERC-20 Layer 1                     | Implemented in dataset mode | Address-scoped ERC-20 transfer summaries, curated cases, validator dataset scoring, and attribution-aware contextualization are in place. |
+| Solana Layer 1                     | Implemented in dataset mode | Current Solana layer is stablecoin-flow based and curated from large-value USDC/USDT summaries. |
+| Bitcoin Layer 1                    | Implemented in dataset mode | Current Bitcoin layer is address-level UTXO-flow based, with mining-pool context and bounded WalletExplorer-style corroboration in attribution. |
+| Solana live Layer 1 scoring        | Not implemented             | Live Solana strategy currently provides address validation and basic activity/balance lookup only. |
+| Bitcoin live Layer 1 scoring       | Not implemented             | Live Bitcoin strategy currently provides address validation and basic activity/balance lookup only. |
+| Full graph platform                | Not implemented             | The current graph layer is sampled, bounded, and explanation-first rather than a generalized graph engine. |
 
 ---
 
@@ -201,16 +220,16 @@ Implemented now:
 - optional trace enrichment for curated cases
 - validator dataset mode that surfaces trace-aware internal-call context
 - attribution-aware contextualization for named actors and infrastructure, with bounded corroborating-source support
-- sampled actor-aware direct exposure, near-exposure, and pass-through/U-turn reporting where attributed counterparties exist
+- sampled actor-aware direct exposure, near-exposure, pass-through/U-turn reporting, and bounded graph-aware refinement where attributed counterparties exist
 
 Not implemented yet:
 
 - trace-driven live scoring
-- generalized graph-aware exposure beyond the current sampled actor/exposure layer
+- generalized graph-aware exposure beyond the current sampled actor/exposure and bounded graph-summary layer
 
 ### ERC-20 Layer 1
 
-ERC-20 Layer 1 is now a dedicated dataset-mode path built from local Blockchair ERC-20 transfer shards plus the latest token metadata snapshot.
+ERC-20 Layer 1 is a dedicated dataset-mode path built from local Blockchair ERC-20 transfer shards plus token metadata snapshots.
 
 Implemented now:
 
@@ -220,13 +239,14 @@ Implemented now:
 - validator dataset-mode scoring for trusted protocol hubs, noisy inbound token surfaces, broad token surfaces, mixed token activity, repeated counterparties, and token concentration
 - attribution-aware contextual suppression for trusted protocol and exchange-style cases, plus secondary corroboration in reports
 - actor-aware contextual clustering and repeated-interaction interpretation when counterparties resolve to the same actor
+- bounded graph summary rendering only when attributed graph coverage is meaningful
 
 Not implemented yet:
 
 - live ERC-20 scoring inside the EVM address strategy
 - swap-aware decoding or protocol-intent interpretation
 - trace-aware ERC-20 swap decoding
-- generalized hop-based or graph-aware token exposure beyond the current sampled actor/exposure layer
+- generalized token graph scoring
 
 ### Solana Layer 1
 
@@ -244,6 +264,7 @@ Not implemented yet:
 - general instruction-aware Solana profiling
 - non-stablecoin Solana Layer 1 scoring
 - live Solana Layer 1 scoring from full extracted history
+- broader graph-aware scoring beyond the current bounded architecture
 
 ### Bitcoin Layer 1
 
@@ -256,12 +277,13 @@ Implemented now:
 - validator dataset-mode scoring for spend-heavy, inbound-heavy, mixed-flow, and broad-surface behavior
 - Tier 1 mining-pool context plus secondary WalletExplorer-style context for analyst interpretation and false-positive reduction
 - bounded actor-aware cluster grouping when WalletExplorer-style context links multiple sampled addresses to the same service actor
+- bounded graph summary rollups when attributed graph coverage is meaningful
 
 Not implemented yet:
 
 - generalized cluster-aware modeling
 - change detection
-- graph-aware peel-chain or richer pass-through scoring
+- graph-aware peel-chain scoring beyond the current bounded motif layer
 
 ---
 
@@ -293,6 +315,7 @@ Dataset mode is the current delivery path for:
 - Solana Layer 1 stablecoin-flow scoring
 - Bitcoin Layer 1 UTXO-flow scoring
 - attribution-aware analyst reports with corroborating and conflicting source context
+- bounded graph summary and graph-aware scoring where graph coverage is strong enough
 
 ---
 
@@ -327,6 +350,7 @@ Important nuance:
 
 - live EVM has the strongest current scoring path
 - live Bitcoin and live Solana are still basic address-state lookups, not full Layer 1 dataset scoring
+- graph-aware reporting is currently strongest in curated dataset mode, where sampled structure is reproducible
 
 ---
 
@@ -421,6 +445,7 @@ The repo includes:
 - a watchlist / sanctions engine
 - malformed-input and validator safety tests
 - focused dataset-loader and dataset-mode regression tests
+- attribution, graph-summary, and report rendering regression tests
 - reproducible `govulncheck` and `gosec` checks in CI and locally
 - practical OWASP-oriented security coverage
 
@@ -455,6 +480,10 @@ What the current automated coverage emphasizes:
 - validator dataset-mode routing across Ethereum, Solana, Bitcoin, and ERC-20 curated cases
 - curated loader failure modes for malformed JSON and missing required fields
 - chain-specific Solana, Bitcoin, and ERC-20 dataset scoring thresholds and differentiated reason generation
+- attribution resolution, corroboration, and conflict handling
+- actor/exposure refinement behavior
+- bounded graph-summary and graph-scoring behavior
+- report rendering for graph-aware signals
 - file/path safety regressions around local trace-summary lookups
 - watchlist, label-loading, and malformed-input CLI safety checks already in the repo
 
@@ -479,11 +508,11 @@ go run ./cmd/validator --dataset ./data/cases/curated-bitcoin/bitcoin-noisy-inbo
 
 The next major items after the current implementation are:
 
-- 1-hop and 2-hop exposure summaries
-- pass-through and U-turn behavior
+- deeper graph coverage for cases where current attribution coverage is still sparse
+- richer value-aware path reasoning
 - fresh-wallet plus immediate large-flow reasoning
-- richer graph-aware reasoning
 - stronger live Solana and Bitcoin Layer 1 scoring
+- broader protocol-intent interpretation for ERC-20 and trace-enriched EVM paths
 
 ---
 
@@ -492,5 +521,6 @@ The next major items after the current implementation are:
 - Go 1.25
 - Docker / Docker Compose
 - watchlist-driven sanctions checks
-- Blockchair historical datasets for EVM and Bitcoin extraction
+- Blockchair historical datasets for EVM, ERC-20, and Bitcoin extraction
 - BigQuery exports for Ethereum traces and Solana stablecoin-flow source data
+```

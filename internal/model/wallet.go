@@ -48,6 +48,7 @@ type WalletProfile struct {
 	RiskReasons         []RiskReason         `json:"risk_reasons"`   // Explainable offsets
 	Attribution         *ResolvedAttribution `json:"attribution,omitempty"`
 	AttributionInsights []AttributionInsight `json:"attribution_insights,omitempty"`
+	GraphSummary        *GraphSummary        `json:"graph_summary,omitempty"`
 }
 
 type RiskCategory struct {

@@ -1,27 +1,3 @@
-/*
- *
- *  *  Copyright (c) 2026 Piyush Daiya
- *  *  *
- *  *  * Permission is hereby granted, free of charge, to any person obtaining a copy
- *  *  * of this software and associated documentation files (the "Software"), to deal
- *  *  * in the Software without restriction, including without limitation the rights
- *  *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  *  * copies of the Software, and to permit persons to whom the Software is
- *  *  * furnished to do so, subject to the following conditions:
- *  *  *
- *  *  * The above copyright notice and this permission notice shall be included in all
- *  *  * copies or substantial portions of the Software.
- *  *  *
- *  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *  *  * SOFTWARE.
- *
- */
-
 package main
 
 import (
@@ -133,8 +109,11 @@ func run(args []string, out io.Writer, errOut io.Writer, strategies []address.Ch
 			ValidationDetails: "Invalid format or no matching chain strategy",
 		}
 	}
+
 	attribution.ApplyTier1Attribution(result)
-	attribution.ApplyWave5CContext(result, attribution.Wave5CInput{Network: result.Network})
+	liveWave5CInput := attribution.Wave5CInput{Network: result.Network}
+	attribution.ApplyWave5CContext(result, liveWave5CInput)
+	applyGraphSummary(result, liveWave5CInput)
 
 	return writeOutput(result, buildLiveReportContext(result), *reportMode, out, errOut)
 }
@@ -181,7 +160,11 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 		profile := buildWalletProfileFromSolanaCuratedStablecoinCase(cc)
 		applySolanaCuratedStablecoinContext(profile, cc)
 		attribution.ApplyTier1Attribution(profile)
-		attribution.ApplyWave5CContext(profile, buildWave5CInputFromSolanaCase(cc))
+
+		input := buildWave5CInputFromSolanaCase(cc)
+		attribution.ApplyWave5CContext(profile, input)
+		applyGraphSummary(profile, input)
+
 		return profile, buildReportContextFromSolanaCase(cc), nil
 	}
 
@@ -194,7 +177,11 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 		profile := buildWalletProfileFromBitcoinCuratedLayer1Case(cc)
 		applyBitcoinCuratedLayer1Context(profile, cc)
 		attribution.ApplyTier1Attribution(profile)
-		attribution.ApplyWave5CContext(profile, buildWave5CInputFromBitcoinCase(cc))
+
+		input := buildWave5CInputFromBitcoinCase(cc)
+		attribution.ApplyWave5CContext(profile, input)
+		applyGraphSummary(profile, input)
+
 		return profile, buildReportContextFromBitcoinCase(cc), nil
 	}
 
@@ -207,7 +194,11 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 		profile := buildWalletProfileFromERC20CuratedLayer1Case(cc)
 		applyERC20CuratedLayer1Context(profile, cc)
 		attribution.ApplyTier1Attribution(profile)
-		attribution.ApplyWave5CContext(profile, buildWave5CInputFromERC20Case(cc))
+
+		input := buildWave5CInputFromERC20Case(cc)
+		attribution.ApplyWave5CContext(profile, input)
+		applyGraphSummary(profile, input)
+
 		return profile, buildReportContextFromERC20Case(cc), nil
 	}
 
@@ -222,7 +213,10 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 	analyzer.Investigate(profile, txs)
 	applyCuratedTraceContext(profile, cc)
 	attribution.ApplyTier1Attribution(profile)
-	attribution.ApplyWave5CContext(profile, buildWave5CInputFromCuratedCase(cc))
+
+	input := buildWave5CInputFromCuratedCase(cc)
+	attribution.ApplyWave5CContext(profile, input)
+	applyGraphSummary(profile, input)
 
 	return profile, buildReportContextFromCuratedCase(cc), nil
 }
@@ -246,4 +240,22 @@ func writeOutput(result *model.WalletProfile, context *reportContext, reportMode
 	}
 
 	return 0
+}
+
+func applyGraphSummary(profile *model.WalletProfile, input attribution.Wave5CInput) {
+	if profile == nil {
+		return
+	}
+
+	profile.GraphSummary = attribution.BuildGraphSummaryFromWave5CInput(
+		profile.Address,
+		input,
+		func(address string) *model.ResolvedAttribution {
+			resolved, ok := attribution.ResolveAddress(address, profile.Network)
+			if !ok {
+				return nil
+			}
+			return resolved
+		},
+	)
 }

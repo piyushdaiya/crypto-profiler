@@ -1,27 +1,3 @@
-/*
- *
- *  *  Copyright (c) 2026 Piyush Daiya
- *  *  *
- *  *  * Permission is hereby granted, free of charge, to any person obtaining a copy
- *  *  * of this software and associated documentation files (the "Software"), to deal
- *  *  * in the Software without restriction, including without limitation the rights
- *  *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  *  * copies of the Software, and to permit persons to whom the Software is
- *  *  * furnished to do so, subject to the following conditions:
- *  *  *
- *  *  * The above copyright notice and this permission notice shall be included in all
- *  *  * copies or substantial portions of the Software.
- *  *  *
- *  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *  *  * SOFTWARE.
- *
- */
-
 package main
 
 import (
@@ -61,6 +37,7 @@ func buildWave5CInputFromCuratedCase(cc *datasets.CuratedCase) attribution.Wave5
 		direction := ""
 		counterparty := ""
 		counterpartyLabel := ""
+
 		switch {
 		case strings.EqualFold(tr.To, cc.Address):
 			direction = "inbound"
@@ -179,6 +156,7 @@ func buildWave5CInputFromSolanaCase(cc *datasets.SolanaCuratedStablecoinCase) at
 		if strings.EqualFold(counterparty, cc.Address) || strings.TrimSpace(counterparty) == "" {
 			continue
 		}
+
 		direction := tr.TransferType
 		if strings.EqualFold(tr.Source, cc.Address) {
 			direction = "outbound"
@@ -213,10 +191,12 @@ func parseWave5CTime(raw string) time.Time {
 		"2006-01-02 15:04:05",
 		"2006-01-02T15:04:05",
 	}
+
 	for _, layout := range layouts {
 		if ts, err := time.Parse(layout, raw); err == nil {
 			return ts.UTC()
 		}
 	}
+
 	return time.Time{}
 }

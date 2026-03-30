@@ -279,7 +279,7 @@ func renderReport(profile *model.WalletProfile, ctx *reportContext) string {
 			lines = append(lines, fmt.Sprintf("%d. %s", idx+1, renderAttributionInsight(insight)))
 		}
 	}
-
+	lines = append(lines, renderGraphSummary(profile.GraphSummary)...)
 	if ctx != nil && len(ctx.TopCounterparties) > 0 {
 		lines = append(lines, "", "Top Counterparties:")
 		for idx, cp := range limitCounterparties(ctx.TopCounterparties, 5) {
@@ -523,4 +523,67 @@ func insightPriority(insight model.AttributionInsight) int {
 	default:
 		return 5
 	}
+}
+func renderGraphSummary(summary *model.GraphSummary) []string {
+	if summary == nil {
+		return nil
+	}
+	if summary.AttributedInteractions < 5 || summary.AttributedInteractionShare < 0.10 {
+		return nil
+	}
+
+	lines := []string{
+		"",
+		"Graph Summary:",
+		fmt.Sprintf(
+			"- Attributed graph coverage: %d / %d sampled interactions (%.2f%%)",
+			summary.AttributedInteractions,
+			summary.TotalInteractions,
+			summary.AttributedInteractionShare*100,
+		),
+		fmt.Sprintf("- Unique actors: %d", summary.UniqueActors),
+		fmt.Sprintf("- Direct risky actors: %d", summary.DirectRiskyActorCount),
+		fmt.Sprintf("- Direct contextual actors: %d", summary.DirectContextualActorCount),
+		fmt.Sprintf("- Near risky actors: %d", summary.NearRiskyActorCount),
+	}
+
+	if summary.AttributedInteractions >= 10 && summary.UniqueActors >= 2 {
+		lines = append(lines,
+			fmt.Sprintf("- Top actor share: %.2f%%", summary.TopActorShare*100),
+			fmt.Sprintf("- Concentration (HHI): %.4f", summary.ConcentrationHHI),
+		)
+	}
+
+	if len(summary.TopActors) > 0 {
+		lines = append(lines, "", "Top Actors:")
+		limit := len(summary.TopActors)
+		if limit > 5 {
+			limit = 5
+		}
+		for i := 0; i < limit; i++ {
+			a := summary.TopActors[i]
+			lines = append(
+				lines,
+				fmt.Sprintf(
+					"%d. %s - %d interactions (%.2f%% share, %d inbound / %d outbound, %d addresses)",
+					i+1,
+					a.Actor,
+					a.InteractionCount,
+					a.Share*100,
+					a.InboundCount,
+					a.OutboundCount,
+					a.UniqueAddresses,
+				),
+			)
+		}
+	}
+
+	if len(summary.Motifs) > 0 {
+		lines = append(lines, "", "Graph Motifs:")
+		for i, motif := range summary.Motifs {
+			lines = append(lines, fmt.Sprintf("%d. %s", i+1, motif.Summary))
+		}
+	}
+
+	return lines
 }

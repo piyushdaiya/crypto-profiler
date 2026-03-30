@@ -213,6 +213,18 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 
 		return profile, buildReportContextFromOptimismCase(&cc), nil
 	}
+	if looksLikePolygonCase(string(raw)) {
+		var cc polygonCuratedLayer2Case
+		if err := json.Unmarshal(raw, &cc); err != nil {
+			return nil, nil, fmt.Errorf("Error loading Polygon curated dataset: %v", err)
+		}
+
+		profile := buildWalletProfileFromPolygonCuratedLayer2Case(&cc)
+		applyPolygonCuratedLayer2Context(profile, &cc)
+		attribution.ApplyTier1Attribution(profile)
+
+		return profile, buildReportContextFromPolygonCase(&cc), nil
+	}
 	cc, err := datasets.LoadCuratedCase(path)
 	if err != nil {
 		return nil, nil, fmt.Errorf("Error loading dataset: %v", err)

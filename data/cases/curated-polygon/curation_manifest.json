@@ -1,0 +1,9 @@
+{
+  "script": "curate_polygon_layer2.py",
+  "input_dir": "/Volumes/Extreme SSD/crypto-profiler/polygon/extracted",
+  "out_dir": "/Users/piyushdaiya/Documents/projects/crypto-profiler/data/cases/curated-polygon",
+  "case_ids": [
+    "polygon-repeated-contract-service-like",
+    "polygon-broad-operational-hub"
+  ]
+}

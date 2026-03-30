@@ -13,7 +13,7 @@ Crypto Profiler is a Go-based wallet risk and exposure intelligence project for 
 The repository currently combines:
 
 - shared live scoring for EVM wallets
-- curated dataset-mode scoring for Ethereum, Optimism, ERC-20, Solana, and Bitcoin cases
+- curated dataset-mode scoring for Ethereum, Optimism, Polygon, ERC-20, Solana, and Bitcoin cases
 - trace-aware Ethereum case enrichment
 - attribution-aware scoring with bounded corroboration
 - actor and exposure findings in analyst-facing reports
@@ -27,11 +27,11 @@ Near-term future work is deeper value-aware path scoring, richer live-path reaso
 
 ## Portfolio Snapshot
 
-- Built to demonstrate multi-chain wallet intelligence without pretending Ethereum, Optimism, Solana, Bitcoin, and ERC-20 all share the same data model.
+- Built to demonstrate multi-chain wallet intelligence without pretending Ethereum, Optimism, Polygon, Solana, Bitcoin, and ERC-20 all share the same data model.
 - Produces explainable risk output with visible reasons, review recommendations, and an analyst-facing report mode for demos.
 - Packages the engineering story end to end: extraction patterns, curated case artifacts, validator dataset mode, CI, security checks, docs, and sample outputs.
 - Adds bounded actor-aware, exposure-aware, and graph-aware interpretation without overstating weak evidence.
-- Includes a practical, cost-conscious Optimism Phase 1 workflow built around transactions-only export and homelab-first summarization.
+- Includes practical, cost-conscious Optimism and Polygon Phase 1 workflows built around transactions-only export and homelab-first summarization.
 
 ---
 
@@ -63,7 +63,7 @@ It demonstrates:
 - a practical curated-case workflow from extraction to analyst-facing report output
 - bounded graph summary reporting, graph motifs, and graph-aware score refinement when attributed graph coverage is meaningful
 - disciplined repository storytelling through aligned docs, curated artifacts, tests, and CI security checks
-- a transactions-only Optimism Phase 1 delivery path that proves L2 expansion can be added in a cost-conscious, homelab-first way
+- transactions-only Optimism and Polygon Phase 1 delivery paths that prove L2 expansion can be added in a cost-conscious, homelab-first way
 
 ---
 
@@ -102,7 +102,7 @@ A short demo reel and static screenshots are included in the repository.
 Crypto Profiler deliberately separates:
 
 - live EVM scoring via a shared analyzer
-- curated dataset-mode scoring for Optimism, ERC-20, Solana, and Bitcoin
+- curated dataset-mode scoring for Optimism, Polygon, ERC-20, Solana, and Bitcoin
 - trace-aware Ethereum enrichment for cases where internal call context materially improves the story
 - Tier 1 attribution resolution that is applied after behavior scoring
 - secondary corroboration that can raise confidence or surface conflicts without dominating the score
@@ -112,8 +112,8 @@ Crypto Profiler deliberately separates:
 That choice keeps the implementation honest:
 
 - Ethereum is the most mature live path
-- Optimism, Solana, Bitcoin, and ERC-20 are real scoped expansions, but currently delivered through dataset mode
-- Optimism Phase 1 is intentionally transactions-only because decoded-events were evaluated and deferred due scan-cost / ROI
+- Optimism, Polygon, Solana, Bitcoin, and ERC-20 are real scoped expansions, but currently delivered through dataset mode
+- Optimism and Polygon Phase 1 are intentionally transactions-only because decoded-events were evaluated and deferred due scan-cost / ROI
 - Tier 1 attribution improves precision without pretending the repo already has full entity-resolution
 - bounded graph-aware output adds analytical value without overstating thin graph coverage
 - the shared output contract stays consistent even when the ingestion and scoring path differs by chain
@@ -204,6 +204,7 @@ See [`docs/LABEL-SOURCE-HIERARCHY.md`](docs/LABEL-SOURCE-HIERARCHY.md) for the e
 | Graph summary reporting        | Implemented                           | Renders only when attributed graph coverage is meaningful.                                                                                      |
 | Bounded graph-aware scoring    | Implemented                           | Selected motifs and concentration patterns can add bounded score refinements when coverage is sufficient.                                       |
 | Optimism Layer 2               | Implemented in dataset mode (Phase 1) | Transactions-only 90-day BigQuery export summarized locally; decoded-events deferred due cost/ROI.                                              |
+| Polygon Layer 2                | Implemented in dataset mode (Phase 1) | Transactions-only 90-day BigQuery export summarized locally; decoded-events deferred due cost/ROI.                                              |
 | ERC-20 Layer 1                 | Implemented in dataset mode           | Address-scoped ERC-20 transfer summaries, curated cases, validator dataset scoring, and attribution-aware contextualization are in place.       |
 | Solana Layer 1                 | Implemented in dataset mode           | Current Solana layer is stablecoin-flow based and curated from large-value USDC/USDT summaries.                                                 |
 | Bitcoin Layer 1                | Implemented in dataset mode           | Current Bitcoin layer is address-level UTXO-flow based, with mining-pool context and bounded WalletExplorer-style corroboration in attribution. |
@@ -244,8 +245,8 @@ Implemented now:
 - homelab-first local summarization
 - curated Optimism cases under `data/cases/curated-optimism/`
 - validator dataset-mode scoring for:
-    - repeated-contract, router-like behavior
-    - broad operational hub behavior
+  - repeated-contract, router-like behavior
+  - broad operational hub behavior
 - analyst-facing report output for Optimism cases
 
 Important implementation note:
@@ -258,6 +259,32 @@ Current curated Optimism cases:
 
 - `optimism-repeated-contract-router-like`
 - `optimism-broad-operational-hub`
+
+### Polygon Layer 2 (Phase 1)
+
+Polygon Phase 1 is currently implemented in dataset mode using a transactions-only workflow.
+
+Implemented now:
+
+- candidate mining from Google Cloud Blockchain Analytics / BigQuery over the same canonical 90-day window used elsewhere in the repo
+- shortlist export to Parquet
+- homelab-first local summarization
+- curated Polygon cases under `data/cases/curated-polygon/`
+- validator dataset-mode scoring for:
+  - repeated-contract, service-like behavior
+  - broad operational hub behavior
+- analyst-facing report output for Polygon cases
+
+Important implementation note:
+
+- Phase 1 is intentionally transactions-only
+- decoded-events were evaluated but deferred for now because scan-cost / ROI was weak relative to the value needed for the first pass
+- this keeps the Polygon path practical within a homelab-first, credits-conscious workflow
+
+Current curated Polygon cases:
+
+- `polygon-repeated-contract-service-like`
+- `polygon-broad-operational-hub`
 
 ### ERC-20
 
@@ -326,6 +353,7 @@ Validator dataset mode currently supports:
 - curated Ethereum cases in `data/cases/curated/`
 - trace-enriched Ethereum cases in `data/cases/curated-enriched/`
 - curated Optimism cases in `data/cases/curated-optimism/`
+- curated Polygon cases in `data/cases/curated-polygon/`
 - curated ERC-20 cases in `data/cases/curated-erc20/`
 - curated Solana cases in `data/cases/curated-solana/`
 - curated Bitcoin cases in `data/cases/curated-bitcoin/`
@@ -336,6 +364,8 @@ Examples:
 go run ./cmd/validator --report --dataset ./data/cases/curated-enriched/tornado-router-high-risk.json
 go run ./cmd/validator --report --dataset ./data/cases/curated-optimism/optimism-repeated-contract-router-like.json
 go run ./cmd/validator --report --dataset ./data/cases/curated-optimism/optimism-broad-operational-hub.json
+go run ./cmd/validator --report --dataset ./data/cases/curated-polygon/polygon-repeated-contract-service-like.json
+go run ./cmd/validator --report --dataset ./data/cases/curated-polygon/polygon-broad-operational-hub.json
 go run ./cmd/validator --report --dataset ./data/cases/curated-solana/solana-stablecoin-authority-operator.json
 go run ./cmd/validator --report --dataset ./data/cases/curated-bitcoin/bitcoin-broad-spend-heavy-operational-hub.json
 go run ./cmd/validator --report --dataset ./data/cases/curated-erc20/erc20-uniswap-v2-router-trusted-token-hub.json
@@ -347,6 +377,7 @@ Dataset mode is the current delivery path for:
 - case-study walkthroughs
 - trace-aware EVM examples
 - Optimism Phase 1 tx-only L2 scoring
+- Polygon Phase 1 tx-only L2 scoring
 - ERC-20 token-surface scoring
 - Solana stablecoin-flow scoring
 - Bitcoin UTXO-flow scoring
@@ -361,6 +392,7 @@ The repo currently includes checked-in benchmark cases for:
 
 - Ethereum native and trace-enriched cases under `data/cases/curated/` and `data/cases/curated-enriched/`
 - Optimism Phase 1 cases under `data/cases/curated-optimism/`
+- Polygon Phase 1 cases under `data/cases/curated-polygon/`
 - Solana stablecoin-flow cases under `data/cases/curated-solana/`
 - Bitcoin UTXO-flow cases under `data/cases/curated-bitcoin/`
 - ERC-20 token-surface cases under `data/cases/curated-erc20/`
@@ -387,7 +419,7 @@ Important nuance:
 
 - live EVM has the strongest current scoring path
 - live Bitcoin and live Solana are still basic address-state lookups, not full dataset-mode scoring
-- Optimism is currently dataset-mode only
+- Optimism and Polygon are currently dataset-mode only
 - graph-aware reporting is currently strongest in curated dataset mode, where sampled structure is reproducible
 
 ---
@@ -409,6 +441,13 @@ The repo includes an intentionally lightweight extract-and-curate workflow.
 - shortlisted transactions are exported to Parquet
 - exported Parquet is summarized locally on the homelab
 - `scripts/curate_optimism_layer2.py` creates curated Optimism cases
+
+### Polygon
+
+- BigQuery candidate mining is used to identify shortlisted L2 addresses over the canonical 90-day window
+- shortlisted transactions are exported to Parquet
+- exported Parquet is summarized locally on the homelab
+- `scripts/curate_polygon_layer2.py` creates curated Polygon cases
 
 ### Solana
 
@@ -443,6 +482,11 @@ The repo includes an intentionally lightweight extract-and-curate workflow.
 
 - `data/cases/curated-optimism/optimism-repeated-contract-router-like.json`
 - `data/cases/curated-optimism/optimism-broad-operational-hub.json`
+
+### Polygon
+
+- `data/cases/curated-polygon/polygon-repeated-contract-service-like.json`
+- `data/cases/curated-polygon/polygon-broad-operational-hub.json`
 
 ### Solana
 
@@ -527,9 +571,9 @@ gosec ./...
 
 What the current automated coverage emphasizes:
 
-- validator dataset-mode routing across Ethereum, Optimism, Solana, Bitcoin, and ERC-20 curated cases
+- validator dataset-mode routing across Ethereum, Optimism, Polygon, Solana, Bitcoin, and ERC-20 curated cases
 - curated loader failure modes for malformed JSON and missing required fields
-- chain-specific Solana, Bitcoin, ERC-20, and Optimism dataset scoring thresholds and differentiated reason generation
+- chain-specific Solana, Bitcoin, ERC-20, Optimism, and Polygon dataset scoring thresholds and differentiated reason generation
 - attribution resolution, corroboration, and conflict handling
 - actor/exposure refinement behavior
 - bounded graph-summary and graph-scoring behavior
@@ -548,6 +592,7 @@ Dataset-mode validation examples:
 ```bash
 go run ./cmd/validator --dataset ./data/cases/curated-enriched/uniswap-v3-router-trusted-protocol.json
 go run ./cmd/validator --dataset ./data/cases/curated-optimism/optimism-repeated-contract-router-like.json
+go run ./cmd/validator --dataset ./data/cases/curated-polygon/polygon-repeated-contract-service-like.json
 go run ./cmd/validator --dataset ./data/cases/curated-erc20/erc20-exchange-like-broad-service-surface.json
 go run ./cmd/validator --dataset ./data/cases/curated-solana/solana-usdc-distributor-treasury-like.json
 go run ./cmd/validator --dataset ./data/cases/curated-bitcoin/bitcoin-noisy-inbound-broad-surface.json
@@ -565,6 +610,7 @@ The next major items after the current implementation are:
 - stronger live Solana and Bitcoin scoring
 - broader protocol-intent interpretation for ERC-20 and trace-enriched EVM paths
 - Optimism Phase 1.5 or Phase 2 event-aware enhancement if scan-cost / ROI becomes favorable
+- Polygon Phase 1.5 or Phase 2 event-aware enhancement if scan-cost / ROI becomes favorable
 
 ---
 
@@ -574,4 +620,4 @@ The next major items after the current implementation are:
 - Docker / Docker Compose
 - watchlist-driven sanctions checks
 - Blockchair historical datasets for EVM, ERC-20, and Bitcoin extraction
-- BigQuery exports for Ethereum traces, Optimism Phase 1 transactions, and Solana stablecoin-flow source data
+- BigQuery exports for Ethereum traces, Optimism Phase 1 transactions, Polygon Phase 1 transactions, and Solana stablecoin-flow source data

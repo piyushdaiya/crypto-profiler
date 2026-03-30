@@ -1,4 +1,3 @@
-
 # Crypto Profiler Scoring
 
 ## Purpose
@@ -17,6 +16,7 @@ Current status:
 - Ethereum native transaction scoring is implemented in the shared analyzer.
 - Ethereum trace integration is implemented as dataset enrichment and observational context.
 - Optimism Phase 1 tx-only scoring is implemented in validator dataset mode.
+- Polygon Phase 1 tx-only scoring is implemented in validator dataset mode.
 - ERC-20 scoring is implemented in validator dataset mode.
 - Solana stablecoin-flow scoring is implemented in validator dataset mode.
 - Bitcoin UTXO-flow scoring is implemented in validator dataset mode.
@@ -63,7 +63,7 @@ Today, Solana and Bitcoin dataset-mode paths only use fraud and reputation, so t
 
 - `FRAUD * 0.5 + REPUTATION * 0.3`
 
-Optimism Phase 1 also effectively uses fraud and reputation in its current dataset-mode scoring.
+Optimism and Polygon Phase 1 also effectively use fraud and reputation in their current dataset-mode scoring.
 
 ### Score bands
 
@@ -93,6 +93,7 @@ Sanctions short-circuit to:
 | Bounded graph-aware scoring         | Yes             | Selected motifs and concentration patterns can add bounded score refinements.                                                                |
 | Ethereum trace-aware context        | Yes             | Added in dataset mode as observational context, not live scoring.                                                                            |
 | Optimism Layer 2 tx-only scoring    | Yes             | Curated dataset mode only; decoded-events deferred in Phase 1 due cost/ROI.                                                                  |
+| Polygon Layer 2 tx-only scoring     | Yes             | Curated dataset mode only; decoded-events deferred in Phase 1 due cost/ROI.                                                                  |
 | ERC-20 scoring                      | Yes             | Curated dataset mode only.                                                                                                                   |
 | Solana stablecoin-flow scoring      | Yes             | Curated dataset mode only.                                                                                                                   |
 | Bitcoin UTXO-flow scoring           | Yes             | Curated dataset mode only.                                                                                                                   |
@@ -186,13 +187,13 @@ It is intentionally conservative and cost-aware:
 
 ### Implemented Optimism Phase 1 rule families
 
-| Rule family                            | Current reason code                              | Current effect   |
-|----------------------------------------|--------------------------------------------------|------------------|
-| Repeated-contract router-like behavior | `optimism_repeated_contract_router_like`         | `REPUTATION +10` |
-| Low-diversity contextual concentration | `optimism_low_counterparty_diversity_context`    | `REPUTATION +4`  |
-| Broad operational hub                  | `optimism_broad_operational_hub`                 | `FRAUD +14`      |
-| Extremely broad counterparty surface   | `optimism_extremely_broad_counterparty_surface`  | `FRAUD +8`       |
-| Mixed-flow operational pattern         | `optimism_mixed_flow_operational_pattern`        | `REPUTATION +3`  |
+| Rule family                            | Current reason code                             | Current effect   |
+|----------------------------------------|-------------------------------------------------|------------------|
+| Repeated-contract router-like behavior | `optimism_repeated_contract_router_like`        | `REPUTATION +10` |
+| Low-diversity contextual concentration | `optimism_low_counterparty_diversity_context`   | `REPUTATION +4`  |
+| Broad operational hub                  | `optimism_broad_operational_hub`                | `FRAUD +14`      |
+| Extremely broad counterparty surface   | `optimism_extremely_broad_counterparty_surface` | `FRAUD +8`       |
+| Mixed-flow operational pattern         | `optimism_mixed_flow_operational_pattern`       | `REPUTATION +3`  |
 
 ### Practical interpretation
 
@@ -214,6 +215,53 @@ That means Phase 1 does not yet claim:
 - event-driven bridge classification
 - richer contract semantics from event arguments
 - graph-aware Optimism motifs built from decoded event streams
+
+Those remain good next-stage enhancements once the transactions-only path is fully documented and stabilized.
+
+---
+
+## Polygon Layer 2 Phase 1 Scoring
+
+Polygon Phase 1 is currently implemented as a transactions-only dataset-mode path.
+
+It is intentionally conservative and cost-aware:
+
+- uses the repo’s canonical 90-day window
+- mines and exports shortlisted Polygon transactions from BigQuery
+- summarizes those exports locally on the homelab
+- derives the first scoring pass from transaction shape, counterparties, and destination concentration
+- defers decoded-events for now because the scan-cost / ROI tradeoff was poor for the initial implementation
+
+### Implemented Polygon Phase 1 rule families
+
+| Rule family                             | Current reason code                            | Current effect  |
+|-----------------------------------------|------------------------------------------------|-----------------|
+| Repeated-contract service-like behavior | `polygon_repeated_contract_service_like`       | `REPUTATION +9` |
+| Low-diversity contextual concentration  | `polygon_low_counterparty_diversity_context`   | `REPUTATION +4` |
+| Broad operational hub                   | `polygon_broad_operational_hub`                | `FRAUD +14`     |
+| Extremely broad counterparty surface    | `polygon_extremely_broad_counterparty_surface` | `FRAUD +10`     |
+| Mixed-flow operational pattern          | `polygon_mixed_flow_operational_pattern`       | `REPUTATION +3` |
+
+### Practical interpretation
+
+The current tx-only Polygon layer is trying to answer questions like:
+
+- Is this wallet dominated by one contract destination?
+- Does the transaction shape look like repeated contract-centric service or infrastructure usage?
+- Is the wallet operating across a very broad counterparty surface?
+- Is the activity mixed inbound/outbound in a way that looks operational and reviewable?
+- Does the broad surface look like an operational hub rather than a concentrated service wallet?
+
+### What is deferred
+
+Polygon decoded-events were evaluated during Phase 1, but deferred because query-scan cost was high relative to immediate scoring value for the first implementation pass.
+
+That means Phase 1 does not yet claim:
+
+- decoded-event-native protocol classification
+- event-driven bridge classification
+- richer contract semantics from event arguments
+- graph-aware Polygon motifs built from decoded event streams
 
 Those remain good next-stage enhancements once the transactions-only path is fully documented and stabilized.
 
@@ -580,6 +628,7 @@ Future work includes:
 - fresh-wallet plus immediate large-flow reasoning
 - richer Solana and Bitcoin live-flow reasoning
 - Optimism event-aware or selector-plus-event enrichment once cost/ROI supports it
+- Polygon event-aware enhancement once cost/ROI supports it
 
 ---
 

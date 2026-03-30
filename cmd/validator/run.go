@@ -201,6 +201,18 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 
 		return profile, buildReportContextFromERC20Case(cc), nil
 	}
+	if looksLikeArbitrumCase(string(raw)) {
+		var cc arbitrumCuratedLayer2Case
+		if err := json.Unmarshal(raw, &cc); err != nil {
+			return nil, nil, fmt.Errorf("Error loading Arbitrum curated dataset: %v", err)
+		}
+
+		profile := buildWalletProfileFromArbitrumCuratedLayer2Case(&cc)
+		applyArbitrumCuratedLayer2Context(profile, &cc)
+		attribution.ApplyTier1Attribution(profile)
+
+		return profile, buildReportContextFromArbitrumCase(&cc), nil
+	}
 	if looksLikeOptimismCase(string(raw)) {
 		var cc optimismCuratedLayer2Case
 		if err := json.Unmarshal(raw, &cc); err != nil {

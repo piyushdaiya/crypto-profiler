@@ -306,7 +306,7 @@ func renderReport(profile *model.WalletProfile, ctx *reportContext) string {
 	}
 
 	if ctx != nil && len(ctx.ChainContext) > 0 {
-		lines = append(lines, "", "Layer 1 Context:")
+		lines = append(lines, "", "Chain Context:")
 		for _, item := range ctx.ChainContext {
 			lines = append(lines, "- "+item)
 		}

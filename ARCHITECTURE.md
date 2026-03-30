@@ -1,3 +1,4 @@
+
 # Crypto Profiler Architecture
 
 ## Purpose
@@ -7,13 +8,13 @@ This document describes the architecture that is actually implemented in the rep
 The current implementation picture is that Crypto Profiler has:
 
 - one shared live analyzer used primarily for EVM
-- chain-specific dataset-mode scoring adapters for ERC-20, Solana, and Bitcoin
+- chain-specific dataset-mode scoring adapters for Optimism, ERC-20, Solana, and Bitcoin
 - trace-aware Ethereum case enrichment
 - an attribution resolver with Tier 1 precedence, bounded secondary corroboration, and actor/exposure refinement
 - a bounded graph summary and graph-aware scoring layer
 - an analyst-facing report layer on top of the validator output
 
-It does not yet have one fully unified graph-aware engine across all chains.
+It does not yet have one fully unified graph-aware engine across all chains, and Optimism Phase 1 is intentionally transactions-only while decoded-events remain deferred due scan-cost / ROI.
 
 ---
 
@@ -21,13 +22,13 @@ It does not yet have one fully unified graph-aware engine across all chains.
 
 If you only skim one section, this is the story:
 
-1. chain-specific Layer 1 data is extracted into address-scoped summaries outside git
+1. chain-specific source data is extracted into address-scoped summaries outside git
 2. small, high-signal curated case artifacts are committed into `data/cases/...`
 3. `cmd/validator --dataset` probes the case shape and routes to the right chain adapter
 4. behavioral scoring produces a shared `WalletProfile`
 5. Tier 1 attribution resolves actor and label context
 6. secondary sources can corroborate or conflict without overriding Tier 1
-7. a bounded actor-aware, hop-aware, and pass-through/U-turn refinement layer runs where attribution support is strong
+7. a bounded actor-aware, hop-aware, and pass-through / U-turn refinement layer runs where attribution support is strong
 8. a bounded graph summary and motif layer runs when attributed graph coverage is meaningful
 9. `cmd/validator --report` turns that profile into a concise analyst-facing brief
 10. future behavior layers will sit on top of that shared output contract rather than replacing it
@@ -73,9 +74,10 @@ Curated dataset mode is not a toy in this repo. It is the main delivery path for
 - repeatable demos
 - benchmark cases
 - trace-aware Ethereum examples
-- ERC-20 Layer 1 token-surface scoring
-- current Solana Layer 1 scoring
-- current Bitcoin Layer 1 scoring
+- Optimism Phase 1 tx-only Layer 2 scoring
+- ERC-20 token-surface scoring
+- current Solana scoring
+- current Bitcoin scoring
 - reproducible graph-aware and attribution-aware report output
 
 ### Portfolio-ready outputs matter
@@ -114,11 +116,12 @@ Current live behavior by chain:
 Dataset mode currently dispatches to:
 
 - shared curated EVM cases
-- ERC-20 Layer 1 curated cases
-- Solana stablecoin-flow curated cases
-- Bitcoin UTXO-flow curated cases
+- Optimism Phase 1 curated cases
+- ERC-20 curated cases
+- Solana curated stablecoin-flow cases
+- Bitcoin curated UTXO-flow cases
 
-This is where the repo currently delivers its multi-chain Layer 1 scoring story.
+This is where the repo currently delivers its multi-chain dataset-mode story.
 
 ### 3. Analyst-facing report flow
 
@@ -155,7 +158,7 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    A["Chain-Specific Inputs<br/>Etherscan / Blockchair / Solana stablecoin exports / traces"] --> B["Extraction + Candidate Mining"]
+    A["Chain-Specific Inputs<br/>Etherscan / BigQuery / Blockchair / Solana stablecoin exports / traces"] --> B["Extraction + Candidate Mining"]
     B --> C["Address-Scoped Summaries"]
     C --> D["Curated Case Artifacts<br/>data/cases/..."]
     D --> E["Validator Dataset Mode<br/>cmd/validator --dataset"]
@@ -191,6 +194,7 @@ flowchart TD
 - the graph layer is deliberately sampled, bounded, and coverage-gated
 - report mode is a presentation layer on top of real scoring, not a mock demo veneer
 - future behavior work is staged as an additive layer, not something the docs pretend already exists
+- Optimism Phase 1 is intentionally tx-only, cost-aware, and homelab-first
 
 ---
 
@@ -204,7 +208,7 @@ Responsible for:
 - live balance and activity lookup
 - initial `WalletProfile` construction
 
-This module does not currently provide full multi-chain Layer 1 scoring on its own.
+This module does not currently provide full multi-chain scoring on its own.
 
 ### `internal/analyzer`
 
@@ -232,7 +236,7 @@ Responsible for the attribution, actor/exposure, and bounded graph layer:
 - applying controlled post-behavior score modifiers
 - rolling repeated interaction or concentration up to actor level when attribution support is strong
 - surfacing direct or near actor exposure summaries
-- detecting bounded pass-through or U-turn patterns from sampled Layer 1 flows
+- detecting bounded pass-through or U-turn patterns from sampled activity
 - building graph summaries from attributed sampled flows
 - deriving bounded graph motifs
 - applying bounded graph-aware score modifiers when coverage thresholds are met
@@ -253,6 +257,7 @@ Responsible for:
 Responsible for chain-specific dataset scoring adapters:
 
 - `dataset_trace_context.go`
+- `dataset_optimism_layer2_context.go`
 - `dataset_erc20_layer1_context.go`
 - `dataset_solana_stablecoin_context.go`
 - `dataset_bitcoin_layer1_context.go`
@@ -260,7 +265,8 @@ Responsible for chain-specific dataset scoring adapters:
 This is an important architecture detail:
 
 - EVM live scoring uses the shared analyzer
-- ERC-20, Solana, and Bitcoin Layer 1 currently score through chain-specific dataset adapters
+- Optimism, ERC-20, Solana, and Bitcoin currently score through dataset adapters
+- Optimism Phase 1 uses a tx-only adapter derived from exported Parquet summarized locally
 
 ### Report layer responsibilities
 
@@ -269,7 +275,7 @@ The report layer adds:
 - case title and dataset context
 - resolved attribution and source context
 - concise risk-summary framing
-- chain-specific Layer 1 context lines
+- chain context lines
 - actor-aware or hop-aware findings when they materially improve interpretation
 - graph summary when attributed graph coverage is meaningful
 - top-counterparty presentation for demos and portfolio review
@@ -280,16 +286,17 @@ It does not change the underlying scoring model.
 
 ## Chain Architecture Today
 
-| Chain    | Current source path                                                                  | Current scoring path                                                                                                                                                                     | Current limit                                                                     |
-|----------|--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| Ethereum | Etherscan live txs, extracted EVM datasets, optional trace summaries                 | Shared analyzer, Tier 1 attribution, bounded secondary corroboration, actor/exposure refinement, trace-aware dataset context, bounded graph-aware refinement when coverage is meaningful | No trace-driven live scoring, no generalized graph scoring                        |
-| ERC-20   | Local Blockchair ERC-20 shards, latest token metadata snapshot, curated ERC-20 cases | Dataset-mode ERC-20 Layer 1 scoring adapter plus attribution hierarchy, actor/exposure refinement, and bounded graph-summary output when coverage allows                                 | No live token scoring, no swap-aware decoding, no generalized token graph scoring |
-| Solana   | Local stablecoin-flow Parquet exports and curated cases                              | Dataset-mode stablecoin scoring adapter plus attribution hierarchy                                                                                                                       | No general instruction-aware live scoring                                         |
-| Bitcoin  | Local Blockchair inputs/outputs and curated cases                                    | Dataset-mode UTXO-flow scoring adapter plus attribution hierarchy, bounded cluster-aware interpretation, and bounded graph-summary output when coverage allows                           | No generalized cluster graph scoring                                              |
+| Chain    | Current source path                                                                           | Current scoring path                                                                                                                                                                     | Current limit                                                                     |
+|----------|-----------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| Ethereum | Etherscan live txs, extracted EVM datasets, optional trace summaries                          | Shared analyzer, Tier 1 attribution, bounded secondary corroboration, actor/exposure refinement, trace-aware dataset context, bounded graph-aware refinement when coverage is meaningful | No trace-driven live scoring, no generalized graph scoring                        |
+| Optimism | BigQuery Blockchain Analytics transactions export, local Parquet summarization, curated cases | Dataset-mode tx-only Layer 2 scoring adapter plus attribution hierarchy                                                                                                                  | Decoded-events deferred in Phase 1 due scan-cost / ROI                            |
+| ERC-20   | Local Blockchair ERC-20 shards, latest token metadata snapshot, curated ERC-20 cases          | Dataset-mode ERC-20 scoring adapter plus attribution hierarchy, actor/exposure refinement, and bounded graph-summary output when coverage allows                                         | No live token scoring, no swap-aware decoding, no generalized token graph scoring |
+| Solana   | Local stablecoin-flow Parquet exports and curated cases                                       | Dataset-mode stablecoin scoring adapter plus attribution hierarchy                                                                                                                       | No general instruction-aware live scoring                                         |
+| Bitcoin  | Local Blockchair inputs/outputs and curated cases                                             | Dataset-mode UTXO-flow scoring adapter plus attribution hierarchy, bounded cluster-aware interpretation, and bounded graph-summary output when coverage allows                           | No generalized cluster graph scoring                                              |
 
 ---
 
-## Ethereum Layer 1 Architecture
+## Ethereum Architecture
 
 Ethereum currently combines three pieces:
 
@@ -319,9 +326,52 @@ That keeps the implementation honest:
 
 ---
 
-## Solana Layer 1 Architecture
+## Optimism Layer 2 Architecture (Phase 1)
 
-Solana Layer 1 is currently stablecoin-flow first.
+Optimism Phase 1 is intentionally transactions-only.
+
+### Current Optimism flow
+
+1. candidate mining runs against Google Cloud Blockchain Analytics / BigQuery over the repo’s canonical 90-day window
+2. shortlisted transactions are exported to Parquet
+3. exported Parquet is transferred to the homelab
+4. local summarization derives:
+    - tx counts
+    - inbound / outbound split
+    - unique counterparties
+    - top counterparties
+    - dominant destination contract share
+    - dominant function-selector share
+5. curated Optimism cases are written under `data/cases/curated-optimism/`
+6. `cmd/validator --dataset` applies Optimism-specific dataset scoring
+7. report mode renders Optimism cases using the same shared analyst-facing output contract
+
+### Why Phase 1 is tx-only
+
+Decoded-events were tested during implementation, but the scan-cost / ROI tradeoff was not strong enough for the first Optimism pass.
+
+So Phase 1 deliberately favors:
+
+- cheaper and more repeatable export workflow
+- homelab-first summarization
+- contract-destination and selector-based interpretation
+- portfolio-safe, reproducible dataset-mode cases
+
+### What Phase 1 proves
+
+Even without decoded-events, the current Optimism implementation can already show:
+
+- repeated-contract router-like behavior
+- broad operational hub behavior
+- very high transaction concentration to one contract
+- broad mixed-flow surface across many counterparties
+- a practical Layer 2 dataset-mode workflow built under cost constraints
+
+---
+
+## Solana Architecture
+
+Solana is currently stablecoin-flow first.
 
 ### Current Solana flow
 
@@ -342,13 +392,13 @@ Solana Layer 1 is currently stablecoin-flow first.
 
 This is not yet a full Solana transaction- or program-semantics architecture.
 
-It is a practical Layer 1 stablecoin-flow slice.
+It is a practical stablecoin-flow slice.
 
 ---
 
-## ERC-20 Layer 1 Architecture
+## ERC-20 Architecture
 
-ERC-20 Layer 1 is transfer-event first.
+ERC-20 is transfer-event first.
 
 ### Current ERC-20 flow
 
@@ -356,7 +406,7 @@ ERC-20 Layer 1 is transfer-event first.
 2. `scripts/mine_erc20_candidates.py` identifies behavior-driven ERC-20 candidates from the canonical window
 3. `scripts/extract_erc20_layer1.py` builds address-scoped summaries plus compressed raw subsets
 4. `scripts/curate_erc20_layer1.py` creates curated ERC-20 benchmark cases
-5. `cmd/validator --dataset` applies ERC-20-specific Layer 1 scoring
+5. `cmd/validator --dataset` applies ERC-20-specific scoring
 6. attribution, actor/exposure refinement, and bounded graph-summary output can refine the final case when attributed coverage is sufficient
 
 ### Current ERC-20 responsibilities
@@ -371,15 +421,15 @@ ERC-20 Layer 1 is transfer-event first.
 
 ### Current ERC-20 limitation
 
-This is ERC-20 transfer-row Layer 1 scoring, not full DeFi intent decoding.
+This is ERC-20 transfer-row scoring, not full DeFi intent decoding.
 
 It does not yet reconstruct swaps, decode protocol semantics, or use traces for full path scoring.
 
 ---
 
-## Bitcoin Layer 1 Architecture
+## Bitcoin Architecture
 
-Bitcoin Layer 1 is currently UTXO-flow first.
+Bitcoin is currently UTXO-flow first.
 
 ### Current Bitcoin flow
 
@@ -515,6 +565,7 @@ The architecture is set up so the next stage can add:
 - fresh-wallet plus immediate large-flow reasoning
 - richer Solana and Bitcoin live-path reasoning
 - broader protocol-intent interpretation for ERC-20 and trace-enriched EVM paths
+- Optimism event-aware enhancement once scan-cost / ROI becomes favorable
 
 Those are next-stage additions, not claims about the current implementation.
 
@@ -523,7 +574,7 @@ Those are next-stage additions, not claims about the current implementation.
 For the fastest architecture review:
 
 1. read the portfolio snapshot in [`README.md`](README.md)
-2. scan the two Mermaid diagrams in this file
+2. scan the Mermaid diagrams in this file
 3. run one curated report command from [`docs/DEMO-WALKTHROUGH.md`](docs/DEMO-WALKTHROUGH.md)
 4. compare the output with the static examples in [`docs/sample-reports/README.md`](docs/sample-reports/README.md)
 
@@ -539,4 +590,3 @@ For the fastest architecture review:
 - [`docs/ERC20-DATA-MODEL.md`](docs/ERC20-DATA-MODEL.md)
 - [`docs/SOLANA-DATA-MODEL.md`](docs/SOLANA-DATA-MODEL.md)
 - [`docs/BITCOIN-DATA-MODEL.md`](docs/BITCOIN-DATA-MODEL.md)
-```

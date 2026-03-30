@@ -153,7 +153,7 @@ func TestRenderReport_IncludesAnalystFacingSections(t *testing.T) {
 		"Near exposure to risky actor Tornado Cash is visible through an intermediary pass-through path.",
 		"Top Counterparties:",
 		"Interpretation:",
-		"Layer 1 Context:",
+		"Chain Context:",
 	} {
 		if !strings.Contains(report, want) {
 			t.Fatalf("expected report to contain %q, got:\n%s", want, report)

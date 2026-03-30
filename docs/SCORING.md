@@ -1,3 +1,4 @@
+
 # Crypto Profiler Scoring
 
 ## Purpose
@@ -15,7 +16,8 @@ Current status:
 
 - Ethereum native transaction scoring is implemented in the shared analyzer.
 - Ethereum trace integration is implemented as dataset enrichment and observational context.
-- ERC-20 Layer 1 scoring is implemented in validator dataset mode.
+- Optimism Phase 1 tx-only scoring is implemented in validator dataset mode.
+- ERC-20 scoring is implemented in validator dataset mode.
 - Solana stablecoin-flow scoring is implemented in validator dataset mode.
 - Bitcoin UTXO-flow scoring is implemented in validator dataset mode.
 - Tier 1 attribution-aware modifiers are implemented across live and dataset-mode outputs.
@@ -61,6 +63,8 @@ Today, Solana and Bitcoin dataset-mode paths only use fraud and reputation, so t
 
 - `FRAUD * 0.5 + REPUTATION * 0.3`
 
+Optimism Phase 1 also effectively uses fraud and reputation in its current dataset-mode scoring.
+
 ### Score bands
 
 Current grade thresholds are shared across the implemented scoring paths:
@@ -88,7 +92,8 @@ Sanctions short-circuit to:
 | Bounded graph summary               | Yes             | Renders only when attributed graph coverage is meaningful.                                                                                   |
 | Bounded graph-aware scoring         | Yes             | Selected motifs and concentration patterns can add bounded score refinements.                                                                |
 | Ethereum trace-aware context        | Yes             | Added in dataset mode as observational context, not live scoring.                                                                            |
-| ERC-20 Layer 1 scoring              | Yes             | Curated dataset mode only.                                                                                                                   |
+| Optimism Layer 2 tx-only scoring    | Yes             | Curated dataset mode only; decoded-events deferred in Phase 1 due cost/ROI.                                                                  |
+| ERC-20 scoring                      | Yes             | Curated dataset mode only.                                                                                                                   |
 | Solana stablecoin-flow scoring      | Yes             | Curated dataset mode only.                                                                                                                   |
 | Bitcoin UTXO-flow scoring           | Yes             | Curated dataset mode only.                                                                                                                   |
 | Full generalized graph scoring      | No              | Not implemented.                                                                                                                             |
@@ -165,7 +170,56 @@ This means curated EVM cases can say:
 
 without pretending the repo already has mature trace-driven behavioral scoring.
 
-### Tier 1 attribution modifiers
+---
+
+## Optimism Layer 2 Phase 1 Scoring
+
+Optimism Phase 1 is currently implemented as a transactions-only dataset-mode path.
+
+It is intentionally conservative and cost-aware:
+
+- uses the repo’s canonical 90-day window
+- mines and exports shortlisted Optimism transactions from BigQuery
+- summarizes those exports locally on the homelab
+- derives the first scoring pass from transaction structure, counterparties, destination concentration, and function-selector concentration
+- defers decoded-events for now because the scan-cost / ROI tradeoff was poor for the initial implementation
+
+### Implemented Optimism Phase 1 rule families
+
+| Rule family                            | Current reason code                              | Current effect   |
+|----------------------------------------|--------------------------------------------------|------------------|
+| Repeated-contract router-like behavior | `optimism_repeated_contract_router_like`         | `REPUTATION +10` |
+| Low-diversity contextual concentration | `optimism_low_counterparty_diversity_context`    | `REPUTATION +4`  |
+| Broad operational hub                  | `optimism_broad_operational_hub`                 | `FRAUD +14`      |
+| Extremely broad counterparty surface   | `optimism_extremely_broad_counterparty_surface`  | `FRAUD +8`       |
+| Mixed-flow operational pattern         | `optimism_mixed_flow_operational_pattern`        | `REPUTATION +3`  |
+
+### Practical interpretation
+
+The current tx-only Optimism layer is trying to answer questions like:
+
+- Is this wallet dominated by one contract destination and one function selector?
+- Does the transaction shape look like repeated router / contract-centric infrastructure usage?
+- Is the wallet operating across a very broad counterparty surface?
+- Is the activity mixed inbound/outbound in a way that looks operational and reviewable?
+- Does the broad surface look like an operational hub rather than a concentrated service wallet?
+
+### What is deferred
+
+Optimism decoded-events were evaluated during Phase 1, but deferred because query-scan cost was high relative to immediate scoring value for the first implementation pass.
+
+That means Phase 1 does not yet claim:
+
+- decoded-event-native protocol classification
+- event-driven bridge classification
+- richer contract semantics from event arguments
+- graph-aware Optimism motifs built from decoded event streams
+
+Those remain good next-stage enhancements once the transactions-only path is fully documented and stabilized.
+
+---
+
+## Tier 1 Attribution Modifiers
 
 After the shared analyzer or dataset-mode scoring runs, the resolver applies a bounded attribution modifier when a Tier 1 label is available.
 
@@ -184,7 +238,9 @@ Important implementation notes:
 - Tier 1 attribution adds one resolved modifier rather than dumping all source labels into the score
 - contextual labels are meant to reduce false positives, not guarantee a low-risk outcome
 
-### Secondary corroboration behavior
+---
+
+## Secondary Corroboration Behavior
 
 Secondary corroboration adds a bounded layer on top of Tier 1.
 
@@ -209,7 +265,9 @@ The design goal is deliberate:
 - secondary sources can improve analyst explanation
 - secondary sources must not create large hard jumps on their own
 
-### Actor and Exposure Refinements
+---
+
+## Actor and Exposure Refinements
 
 The current actor/exposure layer adds a bounded refinement step after attribution resolution.
 
@@ -229,7 +287,7 @@ The current actor/exposure layer also adds `attribution_insights` for:
 - direct exposure to attributed actors
 - near exposure to risky actors through an intermediary
 - cluster-aware grouping when multiple sampled addresses resolve to the same actor
-- pass-through and U-turn findings where sampled Layer 1 flow order supports them
+- pass-through and U-turn findings where sampled flow order supports them
 
 Guardrails:
 
@@ -237,9 +295,11 @@ Guardrails:
 - secondary-only attribution can still appear in analyst-facing insights, but does not drive the stronger actor/exposure score modifiers
 - the goal is explainable refinement, not a second opaque scoring engine
 
-### Graph-aware summary and bounded graph scoring
+---
 
-Crypto Profiler now includes a bounded graph-analysis layer on top of attribution and behavioral scoring.
+## Graph-aware Summary and Bounded Graph Scoring
+
+Crypto Profiler includes a bounded graph-analysis layer on top of attribution and behavioral scoring.
 
 This layer is intentionally conservative:
 
@@ -278,8 +338,7 @@ The current bounded motif layer includes:
 - contextual fan-out hubs
 - risky fan-out patterns
 
-These motifs are sampled, explanation-first findings.
-They are not presented as full path reconstruction.
+These motifs are sampled, explanation-first findings. They are not presented as full path reconstruction.
 
 ### Bounded graph-aware score modifiers
 
@@ -326,9 +385,9 @@ It is better understood as:
 
 ---
 
-## ERC-20 Layer 1 Scoring
+## ERC-20 Scoring
 
-ERC-20 scoring is currently implemented only in validator dataset mode for curated ERC-20 Layer 1 cases.
+ERC-20 scoring is currently implemented only in validator dataset mode for curated ERC-20 cases.
 
 It is built from `erc20_summary`, `token_breakdown`, and `top_counterparties`.
 
@@ -397,7 +456,7 @@ Today, Solana dataset-mode scoring is trying to answer questions like:
 
 - live scoring from RPC-hydrated Solana history
 - instruction-aware or program-aware scoring
-- non-stablecoin Layer 1 coverage
+- non-stablecoin coverage
 - bridge-aware or generalized graph scoring
 - generalized corroborating-source attribution beyond Tier 1
 
@@ -520,6 +579,7 @@ Future work includes:
 - value-weighted concentration
 - fresh-wallet plus immediate large-flow reasoning
 - richer Solana and Bitcoin live-flow reasoning
+- Optimism event-aware or selector-plus-event enrichment once cost/ROI supports it
 
 ---
 
@@ -530,4 +590,3 @@ Future work includes:
 - [`docs/ERC20-DATA-MODEL.md`](ERC20-DATA-MODEL.md)
 - [`docs/SOLANA-DATA-MODEL.md`](SOLANA-DATA-MODEL.md)
 - [`docs/BITCOIN-DATA-MODEL.md`](BITCOIN-DATA-MODEL.md)
-```

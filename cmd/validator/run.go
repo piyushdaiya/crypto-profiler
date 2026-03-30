@@ -201,7 +201,18 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 
 		return profile, buildReportContextFromERC20Case(cc), nil
 	}
+	if looksLikeOptimismCase(string(raw)) {
+		var cc optimismCuratedLayer2Case
+		if err := json.Unmarshal(raw, &cc); err != nil {
+			return nil, nil, fmt.Errorf("Error loading Optimism curated dataset: %v", err)
+		}
 
+		profile := buildWalletProfileFromOptimismCuratedLayer2Case(&cc)
+		applyOptimismCuratedLayer2Context(profile, &cc)
+		attribution.ApplyTier1Attribution(profile)
+
+		return profile, buildReportContextFromOptimismCase(&cc), nil
+	}
 	cc, err := datasets.LoadCuratedCase(path)
 	if err != nil {
 		return nil, nil, fmt.Errorf("Error loading dataset: %v", err)

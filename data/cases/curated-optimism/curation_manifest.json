@@ -1,0 +1,9 @@
+{
+  "script": "curate_optimism_layer2.py",
+  "input_dir": "/Volumes/Extreme SSD/crypto-profiler/optimism/extracted-phase1",
+  "out_dir": "/Users/piyushdaiya/Documents/projects/crypto-profiler/data/cases/curated-optimism",
+  "case_ids": [
+    "optimism-repeated-contract-router-like",
+    "optimism-broad-operational-hub"
+  ]
+}

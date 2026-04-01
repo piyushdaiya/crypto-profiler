@@ -1,0 +1,117 @@
+[
+{
+"chain": "OPTIMISM",
+"address": "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
+"window_start": "2025-03-16T00:00:00Z",
+"window_end": "2025-06-17T00:00:00Z",
+"tx_count": 764546,
+"inbound_count": 764546,
+"outbound_count": 0,
+"unique_counterparties": 281,
+"dominant_contract_share": 100,
+"dominant_counterparty_share": 3.5,
+"failure_rate_pct": 0.06,
+"success_count": 764120,
+"failure_count": 426,
+"unique_emitters": 7,
+"unique_topic0s": 12,
+"bridge_hit_count": 0,
+"protocol_hit_count": 1,
+"stablecoin_hit_count": 0,
+"service_hit_count": 1,
+"bridge_topic_hit_count": 0,
+"protocol_topic_hit_count": 1,
+"matched_bridge_families": [],
+"matched_protocol_families": [
+"erc4337_entrypoint_v06"
+],
+"matched_topic_families": [
+"erc20_transfer"
+],
+"top_bridge_family": "",
+"top_protocol_family": "erc4337_entrypoint_v06",
+"top_stablecoin_family": "",
+"service_like_candidate": true,
+"operational_hub_candidate": false,
+"bridge_or_stablecoin_candidate": false
+},
+{
+"chain": "POLYGON",
+"address": "0x2b92478666516ef5d997490981aa3e00e9c8da9a",
+"window_start": "2025-03-16T00:00:00Z",
+"window_end": "2025-06-17T00:00:00Z",
+"tx_count": 2504895,
+"inbound_count": 1243392,
+"outbound_count": 1261503,
+"unique_counterparties": 1244465,
+"dominant_contract_share": 49.64,
+"dominant_counterparty_share": 0,
+"failure_rate_pct": 0.42,
+"success_count": 2494374,
+"failure_count": 10521,
+"unique_emitters": 1834,
+"unique_topic0s": 221,
+"bridge_hit_count": 1,
+"protocol_hit_count": 3,
+"stablecoin_hit_count": 2,
+"service_hit_count": 0,
+"bridge_topic_hit_count": 2,
+"protocol_topic_hit_count": 4,
+"matched_bridge_families": [
+"polygon_pos_bridge"
+],
+"matched_protocol_families": [
+"official_usdc",
+"polygon_bridged_usdt",
+"polygon_bridged_dai"
+],
+"matched_topic_families": [
+"erc20_transfer",
+"erc20_approval"
+],
+"top_bridge_family": "polygon_pos_bridge",
+"top_protocol_family": "official_usdc",
+"top_stablecoin_family": "official_usdc",
+"service_like_candidate": false,
+"operational_hub_candidate": true,
+"bridge_or_stablecoin_candidate": true
+},
+{
+"chain": "ARBITRUM",
+"address": "0x3bdb03ad7363152dfbc185ee23ebc93f0cf93fd1",
+"window_start": "2025-03-16T00:00:00Z",
+"window_end": "2025-06-17T00:00:00Z",
+"tx_count": 997251,
+"inbound_count": 416642,
+"outbound_count": 580609,
+"unique_counterparties": 187218,
+"dominant_contract_share": 41.78,
+"dominant_counterparty_share": 0.08,
+"failure_rate_pct": 0.31,
+"success_count": 994159,
+"failure_count": 3092,
+"unique_emitters": 624,
+"unique_topic0s": 109,
+"bridge_hit_count": 1,
+"protocol_hit_count": 2,
+"stablecoin_hit_count": 1,
+"service_hit_count": 0,
+"bridge_topic_hit_count": 1,
+"protocol_topic_hit_count": 2,
+"matched_bridge_families": [
+"arbitrum_token_bridge"
+],
+"matched_protocol_families": [
+"official_usdc"
+],
+"matched_topic_families": [
+"erc20_transfer"
+],
+"top_bridge_family": "arbitrum_token_bridge",
+"top_protocol_family": "official_usdc",
+"top_stablecoin_family": "official_usdc",
+"service_like_candidate": false,
+"operational_hub_candidate": true,
+"bridge_or_stablecoin_candidate": true
+}
+]

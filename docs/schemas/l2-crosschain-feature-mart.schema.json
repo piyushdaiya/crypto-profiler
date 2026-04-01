@@ -1,0 +1,220 @@
+{
+"$schema": "https://json-schema.org/draft/2020-12/schema",
+"$id": "https://crypto-profiler.local/schemas/l2-crosschain-feature-mart.schema.json",
+"title": "Crypto Profiler L2 Cross-Chain Feature Mart",
+"description": "Normalized Phase 3 cross-chain feature mart for Optimism, Polygon, and Arbitrum.",
+"type": "array",
+"items": {
+"$ref": "#/$defs/martRow"
+},
+"$defs": {
+"martRow": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"chain",
+"address",
+"window_start",
+"window_end",
+"tx_count",
+"inbound_count",
+"outbound_count",
+"unique_counterparties",
+"dominant_contract_share",
+"dominant_counterparty_share",
+"failure_rate_pct",
+"success_count",
+"failure_count",
+"unique_emitters",
+"unique_topic0s",
+"bridge_hit_count",
+"protocol_hit_count",
+"stablecoin_hit_count",
+"service_hit_count",
+"bridge_topic_hit_count",
+"protocol_topic_hit_count",
+"matched_bridge_families",
+"matched_protocol_families",
+"matched_topic_families",
+"top_bridge_family",
+"top_protocol_family",
+"top_stablecoin_family",
+"service_like_candidate",
+"operational_hub_candidate",
+"bridge_or_stablecoin_candidate"
+],
+"properties": {
+"chain": {
+"type": "string",
+"enum": [
+"OPTIMISM",
+"POLYGON",
+"ARBITRUM"
+]
+},
+"address": {
+"type": "string",
+"pattern": "^0x[a-f0-9]{40}$"
+},
+"window_start": {
+"type": "string",
+"format": "date-time"
+},
+"window_end": {
+"type": "string",
+"format": "date-time"
+},
+"tx_count": {
+"type": "integer",
+"minimum": 0
+},
+"inbound_count": {
+"type": "integer",
+"minimum": 0
+},
+"outbound_count": {
+"type": "integer",
+"minimum": 0
+},
+"unique_counterparties": {
+"type": "integer",
+"minimum": 0
+},
+"dominant_contract_share": {
+"type": "number",
+"minimum": 0,
+"maximum": 100
+},
+"dominant_counterparty_share": {
+"type": "number",
+"minimum": 0,
+"maximum": 100
+},
+"failure_rate_pct": {
+"type": "number",
+"minimum": 0,
+"maximum": 100
+},
+"success_count": {
+"type": "integer",
+"minimum": 0
+},
+"failure_count": {
+"type": "integer",
+"minimum": 0
+},
+"unique_emitters": {
+"type": "integer",
+"minimum": 0
+},
+"unique_topic0s": {
+"type": "integer",
+"minimum": 0
+},
+"bridge_hit_count": {
+"type": "integer",
+"minimum": 0
+},
+"protocol_hit_count": {
+"type": "integer",
+"minimum": 0
+},
+"stablecoin_hit_count": {
+"type": "integer",
+"minimum": 0
+},
+"service_hit_count": {
+"type": "integer",
+"minimum": 0
+},
+"bridge_topic_hit_count": {
+"type": "integer",
+"minimum": 0
+},
+"protocol_topic_hit_count": {
+"type": "integer",
+"minimum": 0
+},
+"matched_bridge_families": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"matched_protocol_families": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"matched_topic_families": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"top_bridge_family": {
+"type": "string"
+},
+"top_protocol_family": {
+"type": "string"
+},
+"top_stablecoin_family": {
+"type": "string"
+},
+"service_like_candidate": {
+"type": "boolean"
+},
+"operational_hub_candidate": {
+"type": "boolean"
+},
+"bridge_or_stablecoin_candidate": {
+"type": "boolean"
+}
+},
+"allOf": [
+{
+"if": {
+"properties": {
+"service_like_candidate": {
+"const": true
+}
+},
+"required": [
+"service_like_candidate"
+]
+},
+"then": {
+"properties": {
+"tx_count": {
+"minimum": 100000
+},
+"dominant_contract_share": {
+"minimum": 95
+}
+}
+}
+},
+{
+"if": {
+"properties": {
+"operational_hub_candidate": {
+"const": true
+}
+},
+"required": [
+"operational_hub_candidate"
+]
+},
+"then": {
+"properties": {
+"unique_counterparties": {
+"minimum": 100000
+}
+}
+}
+}
+]
+}
+}
+}

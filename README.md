@@ -32,7 +32,7 @@ Near-term future work is deeper value-aware path scoring, richer live-path reaso
 - Packages the engineering story end to end: extraction patterns, curated case artifacts, validator dataset mode, CI, security checks, docs, and sample outputs.
 - Adds bounded actor-aware, exposure-aware, and graph-aware interpretation without overstating weak evidence.
 - Includes practical, cost-conscious Optimism, Polygon, and Arbitrum Phase 1 workflows built around transactions-only export and homelab-first summarization.
-
+- Includes Phase 2 and Phase 3 readiness scaffolding for L2 expansion: shared bridge / protocol / topic registries, Phase 2 semantic extract schemas, validator/report scaffolding for cross-chain L2 cases, and a normalized cross-chain feature-mart path that can be populated once the next round of receipt/log semantic queries is run.
 ---
 
 ## Target Problem Space
@@ -63,7 +63,7 @@ It demonstrates:
 - a practical curated-case workflow from extraction to analyst-facing report output
 - bounded graph summary reporting, graph motifs, and graph-aware score refinement when attributed graph coverage is meaningful
 - disciplined repository storytelling through aligned docs, curated artifacts, tests, and CI security checks
-- transactions-only Optimism, Polygon, and Arbitrum Phase 1 delivery paths that prove L2 expansion can be added in a cost-conscious, homelab-first way
+- transactions-only Optimism, Polygon, and Arbitrum Phase 1 delivery paths that prove L2 expansion can be added in a cost-conscious, homelab-first way, then extended into partial Phase 2 semantic enrichment and an initial Phase 3 cross-chain pilot
 
 ---
 
@@ -195,24 +195,25 @@ See [`docs/LABEL-SOURCE-HIERARCHY.md`](docs/LABEL-SOURCE-HIERARCHY.md) for the e
 
 ## Current Implementation Status
 
-| Area                           | Status today                          | Notes                                                                                                                                           |
-|--------------------------------|---------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| EVM live wallet profiling      | Implemented                           | Uses Etherscan transaction history, watchlist checks, Tier 1 attribution, and the shared analyzer.                                              |
-| Ethereum curated Layer 1 cases | Implemented                           | Built from extracted address-scoped native and ERC-20 transfer activity.                                                                        |
-| Ethereum trace integration     | Implemented                           | Address-scoped traces can be extracted, merged into curated cases, and surfaced in dataset mode.                                                |
-| Attribution layer              | Implemented                           | Tier 1 sources, bounded secondary corroboration, and actor/exposure refinement now feed scoring confidence and report output.                   |
-| Graph summary reporting        | Implemented                           | Renders only when attributed graph coverage is meaningful.                                                                                      |
-| Bounded graph-aware scoring    | Implemented                           | Selected motifs and concentration patterns can add bounded score refinements when coverage is sufficient.                                       |
-| Optimism Layer 2               | Implemented in dataset mode (Phase 1) | Transactions-only 90-day BigQuery export summarized locally; decoded-events deferred due cost/ROI.                                              |
-| Polygon Layer 2                | Implemented in dataset mode (Phase 1) | Transactions-only 90-day BigQuery export summarized locally; decoded-events deferred due cost/ROI.                                              |
-| Arbitrum Layer 2               | Implemented in dataset mode (Phase 1) | Transactions-only 90-day BigQuery export summarized locally; decoded-events deferred due cost/ROI.                                              |
-| ERC-20 Layer 1                 | Implemented in dataset mode           | Address-scoped ERC-20 transfer summaries, curated cases, validator dataset scoring, and attribution-aware contextualization are in place.       |
-| Solana Layer 1                 | Implemented in dataset mode           | Current Solana layer is stablecoin-flow based and curated from large-value USDC/USDT summaries.                                                 |
-| Bitcoin Layer 1                | Implemented in dataset mode           | Current Bitcoin layer is address-level UTXO-flow based, with mining-pool context and bounded WalletExplorer-style corroboration in attribution. |
-| Solana live Layer 1 scoring    | Not implemented                       | Live Solana strategy currently provides address validation and basic activity/balance lookup only.                                              |
-| Bitcoin live Layer 1 scoring   | Not implemented                       | Live Bitcoin strategy currently provides address validation and basic activity/balance lookup only.                                             |
-| Full graph platform            | Not implemented                       | The current graph layer is sampled, bounded, and explanation-first rather than a generalized graph engine.                                      |
-
+| Area                                | Status today                          | Notes                                                                                                                                                                                                                         |
+|-------------------------------------|---------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| EVM live wallet profiling           | Implemented                           | Uses Etherscan transaction history, watchlist checks, Tier 1 attribution, and the shared analyzer.                                                                                                                            |
+| Ethereum curated Layer 1 cases      | Implemented                           | Built from extracted address-scoped native and ERC-20 transfer activity.                                                                                                                                                      |
+| Ethereum trace integration          | Implemented                           | Address-scoped traces can be extracted, merged into curated cases, and surfaced in dataset mode.                                                                                                                              |
+| Attribution layer                   | Implemented                           | Tier 1 sources, bounded secondary corroboration, and actor/exposure refinement now feed scoring confidence and report output.                                                                                                 |
+| Graph summary reporting             | Implemented                           | Renders only when attributed graph coverage is meaningful.                                                                                                                                                                    |
+| Bounded graph-aware scoring         | Implemented                           | Selected motifs and concentration patterns can add bounded score refinements when coverage is sufficient.                                                                                                                     |
+| Optimism Layer 2                    | Implemented in dataset mode (Phase 1) | Transactions-only 90-day BigQuery export summarized locally; decoded-events deferred due cost/ROI.                                                                                                                            |
+| Polygon Layer 2                     | Implemented in dataset mode (Phase 1) | Transactions-only 90-day BigQuery export summarized locally; decoded-events deferred due cost/ROI.                                                                                                                            |
+| Arbitrum Layer 2                    | Implemented in dataset mode (Phase 1) | Transactions-only 90-day BigQuery export summarized locally; decoded-events deferred due cost/ROI.                                                                                                                            |
+| ERC-20 Layer 1                      | Implemented in dataset mode           | Address-scoped ERC-20 transfer summaries, curated cases, validator dataset scoring, and attribution-aware contextualization are in place.                                                                                     |
+| Solana Layer 1                      | Implemented in dataset mode           | Current Solana layer is stablecoin-flow based and curated from large-value USDC/USDT summaries.                                                                                                                               |
+| Bitcoin Layer 1                     | Implemented in dataset mode           | Current Bitcoin layer is address-level UTXO-flow based, with mining-pool context and bounded WalletExplorer-style corroboration in attribution.                                                                               |
+| Solana live Layer 1 scoring         | Not implemented                       | Live Solana strategy currently provides address validation and basic activity/balance lookup only.                                                                                                                            |
+| Bitcoin live Layer 1 scoring        | Not implemented                       | Live Bitcoin strategy currently provides address validation and basic activity/balance lookup only.                                                                                                                           |
+| Full graph platform                 | Not implemented                       | The current graph layer is sampled, bounded, and explanation-first rather than a generalized graph engine.                                                                                                                    |
+| L2 Phase 2 semantic enrichment path | Scaffolded / not yet populated        | Shared registries, Phase 2 extract schemas, merge scripts, and report/validator hooks are prepared; production receipt/log summaries and semantic case refreshes are pending the next cloud-query window.                     |
+| L2 Phase 3 cross-chain feature mart | Scaffolded / not yet populated        | Cross-chain mart schema, curation schema, validator routing, report scaffolding, and tests are in place; production mart rows and curated cross-chain L2 cases will be created after Phase 2 semantic extracts are populated. |
 ---
 
 ## Multi-Chain Story
@@ -313,6 +314,51 @@ Current curated Arbitrum cases:
 - `arbitrum-repeated-contract-service-like`
 - `arbitrum-broad-operational-hub`
 
+### L2 Phase 2 Readiness (Optimism / Polygon / Arbitrum)
+
+The next L2 step is not a full decoded-events warehouse. It is a bounded semantic enrichment layer on top of the current tx-only Phase 1 extracts.
+
+Prepared now:
+
+- shared bridge, protocol, stablecoin, and topic registries under `data/registries/`
+- shared Phase 2 extract schema and manifest schema under `docs/schemas/`
+- registry-hit enrichment helper:
+  - `scripts/build_l2_phase2_registry_hits.py`
+- chain-specific Phase 2 merge scripts:
+  - `scripts/extract_optimism_phase2_semantics.py`
+  - `scripts/extract_polygon_phase2_semantics.py`
+  - `scripts/extract_arbitrum_phase2_semantics.py`
+
+Phase 2 is designed to merge:
+
+- existing tx-only Phase 1 summaries
+- receipt-level success / failure summaries
+- log-level emitter and topic0 summaries
+- registry-hit enrichment for bridge / protocol / stablecoin context
+
+This is intentionally staged so the repo can gain semantic precision without prematurely committing to broad decoded-events exports as the default path.
+
+### L2 Phase 3 Cross-Chain Readiness
+
+The repo also now has a prepared cross-chain L2 path that normalizes Optimism, Polygon, and Arbitrum Phase 2 outputs into one comparable mart.
+
+Prepared now:
+
+- normalized cross-chain mart builder:
+  - `scripts/build_l2_crosschain_feature_mart.py`
+- curated cross-chain case generator:
+  - `scripts/curate_crosschain_l2_cases.py`
+- cross-chain mart schema and curated-case schema under `docs/schemas/`
+- validator/report scaffolding for cross-chain L2 cases
+- regression tests for cross-chain dataset routing and report rendering
+
+The target Phase 3 case families are:
+
+- `crosschain-l2-repeated-contract-service-pattern`
+- `crosschain-l2-broad-operational-hub`
+- `crosschain-l2-stablecoin-bridge-operational-surface`
+
+These are scaffolded now, but production curated cases will be generated only after the next semantic extract pass.
 ### ERC-20
 
 ERC-20 is a dedicated dataset-mode path built from local Blockchair ERC-20 transfer shards plus token metadata snapshots.
@@ -382,6 +428,7 @@ Validator dataset mode currently supports:
 - curated Optimism cases in `data/cases/curated-optimism/`
 - curated Polygon cases in `data/cases/curated-polygon/`
 - curated Arbitrum cases in `data/cases/curated-arbitrum/`
+- curated cross-chain L2 pilot cases in `data/cases/curated-crosschain-l2/`
 - curated ERC-20 cases in `data/cases/curated-erc20/`
 - curated Solana cases in `data/cases/curated-solana/`
 - curated Bitcoin cases in `data/cases/curated-bitcoin/`
@@ -396,6 +443,8 @@ go run ./cmd/validator --report --dataset ./data/cases/curated-polygon/polygon-r
 go run ./cmd/validator --report --dataset ./data/cases/curated-polygon/polygon-broad-operational-hub.json
 go run ./cmd/validator --report --dataset ./data/cases/curated-arbitrum/arbitrum-repeated-contract-service-like.json
 go run ./cmd/validator --report --dataset ./data/cases/curated-arbitrum/arbitrum-broad-operational-hub.json
+go run ./cmd/validator --report --dataset ./data/cases/curated-crosschain-l2/crosschain-l2-repeated-contract-service-pattern.json
+go run ./cmd/validator --report --dataset ./data/cases/curated-crosschain-l2/crosschain-l2-broad-operational-hub.json
 go run ./cmd/validator --report --dataset ./data/cases/curated-solana/solana-stablecoin-authority-operator.json
 go run ./cmd/validator --report --dataset ./data/cases/curated-bitcoin/bitcoin-broad-spend-heavy-operational-hub.json
 go run ./cmd/validator --report --dataset ./data/cases/curated-erc20/erc20-uniswap-v2-router-trusted-token-hub.json
@@ -409,6 +458,7 @@ Dataset mode is the current delivery path for:
 - Optimism Phase 1 tx-only L2 scoring
 - Polygon Phase 1 tx-only L2 scoring
 - Arbitrum Phase 1 tx-only L2 scoring
+- initial cross-chain L2 pilot scoring
 - ERC-20 token-surface scoring
 - Solana stablecoin-flow scoring
 - Bitcoin UTXO-flow scoring
@@ -488,6 +538,69 @@ The repo includes an intentionally lightweight extract-and-curate workflow.
 - exported Parquet is summarized locally on the homelab
 - `scripts/curate_arbitrum_layer2.py` creates curated Arbitrum cases
 
+### Optimism Phase 2 status
+
+Optimism Phase 2 has started in a receipt-first, cost-aware form.
+
+Current status:
+
+- Phase 1 tx-only extracts remain the primary Optimism dataset path.
+- Phase 2 receipt summaries and registry-hit enrichment have been merged into refreshed extracted artifacts.
+- Full log-summary enrichment was evaluated but deferred for this pass because the public logs scan cost was too high relative to immediate portfolio value.
+- Optimism Phase 2 is therefore currently partial: receipt-aware and registry-aware, with log-aware enrichment reserved for narrower targeted follow-up.
+
+### Polygon Phase 2 
+Polygon Phase 2 receipt enrichment was evaluated but deferred for the current pass because the BigQuery public receipts path remained too expensive even after narrowing to the smaller curated case address. Polygon therefore remains in a tx-first / registry-aware state for this phase, with receipt-aware enrichment deferred to a later targeted or alternative-source pass.
+
+### L2 Phase 2 semantic enrichment
+
+Prepared now:
+
+- `data/registries/l2_bridge_registry.json`
+- `data/registries/l2_protocol_registry.json`
+- `data/registries/l2_topic_registry.json`
+- `scripts/build_l2_phase2_registry_hits.py`
+- `scripts/extract_optimism_phase2_semantics.py`
+- `scripts/extract_polygon_phase2_semantics.py`
+- `scripts/extract_arbitrum_phase2_semantics.py`
+
+The intended Phase 2 flow is:
+
+1. start from existing L2 Phase 1 extracts
+2. add registry-hit enrichment
+3. merge per-address receipt summaries
+4. merge per-address log summaries
+5. refresh curated L2 cases with stronger semantic context
+
+### L2 Phase 3 cross-chain mart
+
+Implemented now as an initial pilot:
+
+- `scripts/build_l2_crosschain_feature_mart.py`
+- `scripts/curate_crosschain_l2_cases.py`
+- populated mart artifacts under `data/cases/crosschain-l2-mart/`
+- curated pilot cases under `data/cases/curated-crosschain-l2/`
+
+The current Phase 3 flow is:
+
+1. read best-available L2 artifacts across Optimism, Polygon, and Arbitrum
+2. normalize them into one cross-chain feature mart
+3. derive cross-chain candidate patterns
+4. curate cross-chain L2 benchmark cases for validator dataset mode
+
+Current pilot case families:
+
+- `crosschain-l2-repeated-contract-service-pattern`
+- `crosschain-l2-broad-operational-hub`
+
+Current implementation note:
+
+- Optimism contributes partial Phase 2 receipt + registry context
+- Arbitrum contributes a partial Phase 2 receipt-first pilot
+- Polygon contributes a tx-first / registry-aware fallback
+
+This keeps the cross-chain story honest, additive, and demonstrable without overstating semantic completeness.
+
 ### Solana
 
 - `scripts/mine_solana_whale_candidates.py` mines stablecoin-flow candidates
@@ -505,6 +618,7 @@ The repo includes an intentionally lightweight extract-and-curate workflow.
 - `scripts/mine_erc20_candidates.py` mines ERC-20 Layer 1 candidates from local Blockchair transfer shards
 - `scripts/extract_erc20_layer1.py` builds extracted ERC-20 summaries and compressed raw subsets
 - `scripts/curate_erc20_layer1.py` creates curated ERC-20 cases
+
 
 ---
 
@@ -531,6 +645,11 @@ The repo includes an intentionally lightweight extract-and-curate workflow.
 
 - `data/cases/curated-arbitrum/arbitrum-repeated-contract-service-like.json`
 - `data/cases/curated-arbitrum/arbitrum-broad-operational-hub.json`
+
+### Cross-Chain L2
+
+- `data/cases/curated-crosschain-l2/crosschain-l2-repeated-contract-service-pattern.json`
+- `data/cases/curated-crosschain-l2/crosschain-l2-broad-operational-hub.json`
 
 ### Solana
 
@@ -638,6 +757,7 @@ go run ./cmd/validator --dataset ./data/cases/curated-enriched/uniswap-v3-router
 go run ./cmd/validator --dataset ./data/cases/curated-optimism/optimism-repeated-contract-router-like.json
 go run ./cmd/validator --dataset ./data/cases/curated-polygon/polygon-repeated-contract-service-like.json
 go run ./cmd/validator --dataset ./data/cases/curated-arbitrum/arbitrum-repeated-contract-service-like.json
+go run ./cmd/validator --dataset ./data/cases/curated-crosschain-l2/crosschain-l2-repeated-contract-service-pattern.json
 go run ./cmd/validator --dataset ./data/cases/curated-erc20/erc20-exchange-like-broad-service-surface.json
 go run ./cmd/validator --dataset ./data/cases/curated-solana/solana-usdc-distributor-treasury-like.json
 go run ./cmd/validator --dataset ./data/cases/curated-bitcoin/bitcoin-noisy-inbound-broad-surface.json
@@ -649,14 +769,19 @@ go run ./cmd/validator --dataset ./data/cases/curated-bitcoin/bitcoin-noisy-inbo
 
 The next major items after the current implementation are:
 
-- deeper graph coverage for cases where current attribution coverage is still sparse
+- populate L2 Phase 2 receipt/log semantic summaries for Optimism, Polygon, and Arbitrum
+- refresh L2 curated cases using registry-hit, receipt, and log context
+- generate the first populated cross-chain L2 mart rows
+- create the first curated cross-chain L2 benchmark cases
+- deepen graph coverage for cases where current attribution coverage is still sparse
 - richer value-aware path reasoning
 - fresh-wallet plus immediate large-flow reasoning
 - stronger live Solana and Bitcoin scoring
 - broader protocol-intent interpretation for ERC-20 and trace-enriched EVM paths
-- Optimism Phase 1.5 or Phase 2 event-aware enhancement if scan-cost / ROI becomes favorable
-- Polygon Phase 1.5 or Phase 2 event-aware enhancement if scan-cost / ROI becomes favorable
-- Arbitrum Phase 1.5 or Phase 2 event-aware enhancement if scan-cost / ROI becomes favorable
+- targeted decoded-events pilots only where Phase 2 semantic coverage still leaves too much ambiguity
+
+The repo already has the scaffolding for the L2 Phase 2 / Phase 3 path; the remaining work is primarily semantic data population and case generation.
+
 
 ---
 
@@ -666,4 +791,4 @@ The next major items after the current implementation are:
 - Docker / Docker Compose
 - watchlist-driven sanctions checks
 - Blockchair historical datasets for EVM, ERC-20, and Bitcoin extraction
-- BigQuery exports for Ethereum traces, Optimism Phase 1 transactions, Polygon Phase 1 transactions, Arbitrum Phase 1 transactions, and Solana stablecoin-flow source data
+- BigQuery exports for Ethereum traces, Optimism / Polygon / Arbitrum Phase 1 transactions, targeted Phase 2 receipt-first enrichment, and Solana stablecoin-flow source data

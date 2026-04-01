@@ -26,7 +26,8 @@ Current status:
 - Secondary corroborating sources are implemented with bounded confidence and note-level conflict handling.
 - Actor/exposure refinement is implemented where attribution support is strong enough.
 - Bounded graph summary and bounded graph-aware scoring are implemented when attributed graph coverage is meaningful.
-
+- Optimism / Polygon / Arbitrum Phase 2 semantic scoring scaffolding is prepared but not yet populated with production receipt/log summaries.
+- Cross-chain L2 Phase 3 scoring scaffolding is prepared but not yet populated with production mart-derived curated cases.
 ---
 
 ## Core Scoring Philosophy
@@ -85,24 +86,25 @@ Sanctions short-circuit to:
 
 ## What Is Implemented Today
 
-| Area                                | Implemented now | Notes                                                                                                                                        |
-|-------------------------------------|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| Shared live analyzer                | Yes             | Used for EVM live profiling and curated EVM cases.                                                                                           |
-| Tier 1 attribution-aware modifiers  | Yes             | Applied after behavior scoring across live and dataset-mode paths.                                                                           |
-| Secondary corroboration             | Yes             | Raises confidence modestly, adds bounded support, and surfaces conflicts.                                                                    |
-| Actor/exposure refinement           | Yes             | Direct, near, repeated, concentration, pass-through, and U-turn findings are implemented in bounded form when attribution support is strong. |
-| Bounded graph summary               | Yes             | Renders only when attributed graph coverage is meaningful.                                                                                   |
-| Bounded graph-aware scoring         | Yes             | Selected motifs and concentration patterns can add bounded score refinements.                                                                |
-| Ethereum trace-aware context        | Yes             | Added in dataset mode as observational context, not live scoring.                                                                            |
-| Optimism Layer 2 tx-only scoring    | Yes             | Curated dataset mode only; decoded-events deferred in Phase 1 due cost/ROI.                                                                  |
-| Polygon Layer 2 tx-only scoring     | Yes             | Curated dataset mode only; decoded-events deferred in Phase 1 due cost/ROI.                                                                  |
-| Arbitrum Layer 2 tx-only scoring    | Yes             | Curated dataset mode only; decoded-events deferred in Phase 1 due cost/ROI.                                                                  |
-| ERC-20 scoring                      | Yes             | Curated dataset mode only.                                                                                                                   |
-| Solana stablecoin-flow scoring      | Yes             | Curated dataset mode only.                                                                                                                   |
-| Bitcoin UTXO-flow scoring           | Yes             | Curated dataset mode only.                                                                                                                   |
-| Full generalized graph scoring      | No              | Not implemented.                                                                                                                             |
-| Full multi-hop live graph analytics | No              | Not implemented.                                                                                                                             |
-
+| Area                                    | Implemented now      | Notes                                                                                                                                                           |
+|-----------------------------------------|----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Shared live analyzer                    | Yes                  | Used for EVM live profiling and curated EVM cases.                                                                                                              |
+| Tier 1 attribution-aware modifiers      | Yes                  | Applied after behavior scoring across live and dataset-mode paths.                                                                                              |
+| Secondary corroboration                 | Yes                  | Raises confidence modestly, adds bounded support, and surfaces conflicts.                                                                                       |
+| Actor/exposure refinement               | Yes                  | Direct, near, repeated, concentration, pass-through, and U-turn findings are implemented in bounded form when attribution support is strong.                    |
+| Bounded graph summary                   | Yes                  | Renders only when attributed graph coverage is meaningful.                                                                                                      |
+| Bounded graph-aware scoring             | Yes                  | Selected motifs and concentration patterns can add bounded score refinements.                                                                                   |
+| Ethereum trace-aware context            | Yes                  | Added in dataset mode as observational context, not live scoring.                                                                                               |
+| Optimism Layer 2 tx-only scoring        | Yes                  | Curated dataset mode only; decoded-events deferred in Phase 1 due cost/ROI.                                                                                     |
+| Polygon Layer 2 tx-only scoring         | Yes                  | Curated dataset mode only; decoded-events deferred in Phase 1 due cost/ROI.                                                                                     |
+| Arbitrum Layer 2 tx-only scoring        | Yes                  | Curated dataset mode only; decoded-events deferred in Phase 1 due cost/ROI.                                                                                     |
+| ERC-20 scoring                          | Yes                  | Curated dataset mode only.                                                                                                                                      |
+| Solana stablecoin-flow scoring          | Yes                  | Curated dataset mode only.                                                                                                                                      |
+| Bitcoin UTXO-flow scoring               | Yes                  | Curated dataset mode only.                                                                                                                                      |
+| Full generalized graph scoring          | No                   | Not implemented.                                                                                                                                                |
+| Full multi-hop live graph analytics     | No                   | Not implemented.                                                                                                                                                |
+| L2 Phase 2 semantic scoring scaffolds   | Scaffolded / partial | Registry-hit enrichment, schemas, merge scripts, validator/report readiness, and test scaffolding are prepared; production semantic extracts are still pending. |
+| Cross-chain L2 Phase 3 scoring scaffold | Scaffolded / partial | Cross-chain mart schema, curated-case schema, validator routing, report scaffolding, and tests are prepared; populated production cases are still pending.      |
 ---
 
 ## Ethereum Native and Trace-Aware Scoring
@@ -221,6 +223,23 @@ That means Phase 1 does not yet claim:
 
 Those remain good next-stage enhancements once the transactions-only path is fully documented and stabilized.
 
+### Optimism Phase 2 semantic readiness
+
+Optimism Phase 2 semantic enrichment is currently partial.
+
+Implemented for the current pass:
+
+- receipt success / failure context
+- registry-hit enrichment for bridge / protocol / topic context
+- refreshed extracted artifacts suitable for curated-case refresh
+
+Deferred for the current pass:
+
+- full log-summary population across the selected window
+
+Reason for deferral:
+
+- the Optimism public logs path had an unfavorable scan-cost / ROI profile for the current pass, so log-aware enrichment remains a targeted follow-up item rather than a default full-window step.
 ---
 
 ## Polygon Layer 2 Phase 1 Scoring
@@ -314,6 +333,58 @@ That means Phase 1 does not yet claim:
 - graph-aware Arbitrum motifs built from decoded event streams
 
 Those remain good next-stage enhancements once the transactions-only path is fully documented and stabilized.
+
+## L2 Phase 2 Semantic Scoring Readiness
+
+The next L2 scoring layer is designed to sit on top of the current Phase 1 tx-only extracts.
+
+Prepared now:
+
+- bridge / protocol / stablecoin / topic registries
+- Phase 2 extract schemas
+- registry-hit enrichment
+- merge scripts that combine:
+    - tx-only Phase 1 summaries
+    - receipt summaries
+    - log summaries
+    - registry-hit context
+
+The intended Phase 2 scoring families include:
+
+- service-like semantic reinforcement when repeated-contract behavior is supported by registry or log context
+- bridge-context reinforcement when receipt/log and registry evidence support bridge-adjacent interpretation
+- stablecoin-surface contextualization when token or protocol markers are present
+- broader operational-surface reinforcement when log/receipt diversity supports the tx-only interpretation
+
+Important constraint:
+
+- Phase 2 semantic enrichment is no longer just empty scaffolding: Optimism and Arbitrum now have real partial receipt-first semantic population, while Polygon remains deferred for the current pass
+- richer log-aware and bridge/stablecoin-specific production offsets should still be documented cautiously until broader semantic coverage is populated
+
+## Cross-Chain L2 Phase 3 Scoring Readiness
+
+The prepared Phase 3 path is designed to score normalized multi-L2 cases rather than isolated chain cases.
+
+Prepared now:
+
+- normalized cross-chain feature mart builder
+- curated cross-chain case generator
+- validator routing for cross-chain L2 cases
+- analyst-report support for member-level cross-chain summaries
+- tests for routing and report rendering
+
+The intended Phase 3 cross-chain reason families include:
+
+- repeated contract-service patterns observed across multiple L2s
+- broad operational-hub patterns observed across multiple L2s
+- bridge / stablecoin operational-surface consistency across multiple L2s
+
+The design goal is to keep cross-chain scoring:
+
+- bounded
+- explainable
+- additive on top of per-chain evidence
+- explicitly separate from any claim of generalized live multi-chain graph scoring
 
 ---
 
@@ -660,6 +731,15 @@ That makes it good for:
 - case studies
 - scoring-rule development
 
+### Dataset mode readiness layers
+
+The repo now also has two prepared dataset-mode expansion layers:
+
+- L2 Phase 2 semantic enrichment, which is designed to merge receipt/log/registry context into existing L2 extracts
+- L2 Phase 3 cross-chain normalization, which is designed to build curated cross-chain L2 benchmark cases from populated Phase 2 outputs
+
+These layers are scaffolded now, but they should still be treated as prepared architecture until production semantic extracts and curated cases are generated.
+
 ### What dataset mode does not do
 
 It does not currently:
@@ -673,13 +753,13 @@ It does not currently:
 
 Future work includes:
 
+- broader Phase 2 semantic population for Optimism and Arbitrum plus a narrower or alternative-source Polygon path
+- expansion of cross-chain L2 benchmark cases beyond the initial pilot families
 - broader graph coverage and richer graph-derived scoring
 - value-weighted concentration
 - fresh-wallet plus immediate large-flow reasoning
 - richer Solana and Bitcoin live-flow reasoning
-- Optimism event-aware or selector-plus-event enrichment once cost/ROI supports it
-- Polygon event-aware enhancement once cost/ROI supports it
-- Arbitrum event-aware enhancement once cost/ROI supports it
+- targeted decoded-events enrichment where Phase 2 semantic coverage still leaves material ambiguity
 
 ---
 

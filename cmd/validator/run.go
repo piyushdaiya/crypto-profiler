@@ -18,6 +18,11 @@ import (
 	"github.com/piyushdaiya/crypto-profiler/internal/model"
 )
 
+type datasetProbe struct {
+	Chain      string `json:"chain"`
+	CaseFamily string `json:"case_family"`
+}
+
 func defaultStrategies() []address.ChainStrategy {
 	return []address.ChainStrategy{
 		&address.EVMStrategy{},
@@ -142,16 +147,14 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 		return nil, nil, fmt.Errorf("Error probing dataset: %v", err)
 	}
 
-	var chain string
-	if chainRaw, ok := probe["chain"]; ok {
-		_ = json.Unmarshal(chainRaw, &chain)
-	}
+	var meta datasetProbe
+	_ = json.Unmarshal(raw, &meta)
 
 	_, hasStablecoinSummary := probe["stablecoin_summary"]
 	_, hasUTXOSummary := probe["utxo_summary"]
 	_, hasERC20Summary := probe["erc20_summary"]
 
-	if strings.EqualFold(chain, "SOLANA") && hasStablecoinSummary {
+	if strings.EqualFold(meta.Chain, "SOLANA") && hasStablecoinSummary {
 		cc, err := datasets.LoadSolanaCuratedStablecoinCase(path)
 		if err != nil {
 			return nil, nil, fmt.Errorf("Error loading Solana curated dataset: %v", err)
@@ -168,7 +171,7 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 		return profile, buildReportContextFromSolanaCase(cc), nil
 	}
 
-	if strings.EqualFold(chain, "BITCOIN") && hasUTXOSummary {
+	if strings.EqualFold(meta.Chain, "BITCOIN") && hasUTXOSummary {
 		cc, err := datasets.LoadBitcoinCuratedLayer1Case(path)
 		if err != nil {
 			return nil, nil, fmt.Errorf("Error loading Bitcoin curated dataset: %v", err)
@@ -185,7 +188,7 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 		return profile, buildReportContextFromBitcoinCase(cc), nil
 	}
 
-	if strings.EqualFold(chain, "EVM") && hasERC20Summary {
+	if strings.EqualFold(meta.Chain, "EVM") && hasERC20Summary {
 		cc, err := datasets.LoadERC20CuratedLayer1Case(path)
 		if err != nil {
 			return nil, nil, fmt.Errorf("Error loading ERC-20 curated dataset: %v", err)
@@ -201,7 +204,22 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 
 		return profile, buildReportContextFromERC20Case(cc), nil
 	}
-	if looksLikeArbitrumCase(string(raw)) {
+
+	// Cross-chain must be checked before chain-specific L2 loaders.
+	if strings.EqualFold(meta.CaseFamily, "crosschain_l2") {
+		var cc crosschainL2Case
+		if err := json.Unmarshal(raw, &cc); err != nil {
+			return nil, nil, fmt.Errorf("Error loading cross-chain L2 curated dataset: %v", err)
+		}
+
+		profile := buildWalletProfileFromCrosschainL2Case(&cc)
+		applyCrosschainL2Context(profile, &cc)
+		attribution.ApplyTier1Attribution(profile)
+
+		return profile, buildReportContextFromCrosschainL2Case(&cc), nil
+	}
+
+	if strings.EqualFold(meta.Chain, "ARBITRUM") {
 		var cc arbitrumCuratedLayer2Case
 		if err := json.Unmarshal(raw, &cc); err != nil {
 			return nil, nil, fmt.Errorf("Error loading Arbitrum curated dataset: %v", err)
@@ -213,7 +231,8 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 
 		return profile, buildReportContextFromArbitrumCase(&cc), nil
 	}
-	if looksLikeOptimismCase(string(raw)) {
+
+	if strings.EqualFold(meta.Chain, "OPTIMISM") {
 		var cc optimismCuratedLayer2Case
 		if err := json.Unmarshal(raw, &cc); err != nil {
 			return nil, nil, fmt.Errorf("Error loading Optimism curated dataset: %v", err)
@@ -225,7 +244,8 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 
 		return profile, buildReportContextFromOptimismCase(&cc), nil
 	}
-	if looksLikePolygonCase(string(raw)) {
+
+	if strings.EqualFold(meta.Chain, "POLYGON") {
 		var cc polygonCuratedLayer2Case
 		if err := json.Unmarshal(raw, &cc); err != nil {
 			return nil, nil, fmt.Errorf("Error loading Polygon curated dataset: %v", err)
@@ -237,6 +257,7 @@ func loadDatasetMode(path string) (*model.WalletProfile, *reportContext, error) 
 
 		return profile, buildReportContextFromPolygonCase(&cc), nil
 	}
+
 	cc, err := datasets.LoadCuratedCase(path)
 	if err != nil {
 		return nil, nil, fmt.Errorf("Error loading dataset: %v", err)

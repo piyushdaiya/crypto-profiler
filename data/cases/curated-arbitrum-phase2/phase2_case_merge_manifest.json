@@ -1,0 +1,13 @@
+{
+  "script": "merge_l2_phase2_case_context.py",
+  "curated_dir": "data/cases/curated-arbitrum-phase2",
+  "phase2_dir": "/Volumes/Extreme SSD/crypto-profiler/arbitrum/extracted-phase2",
+  "out_dir": "data/cases/curated-arbitrum-phase2",
+  "written_count": 2,
+  "skipped_count": 0,
+  "written_files": [
+    "arbitrum-broad-operational-hub.json",
+    "arbitrum-repeated-contract-service-like.json"
+  ],
+  "skipped_files": []
+}

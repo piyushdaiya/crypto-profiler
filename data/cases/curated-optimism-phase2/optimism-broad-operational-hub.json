@@ -1,0 +1,1880 @@
+{
+  "chain": "OPTIMISM",
+  "case_id": "optimism-broad-operational-hub",
+  "title": "Optimism Broad Operational Hub",
+  "description": "Optimism Layer 2 case showing broad mixed-flow operational activity across a very large counterparty surface.",
+  "risk_posture": "REVIEWABLE_BROAD_OPERATIONAL_SURFACE",
+  "address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+  "window_start": "2025-03-16 00:11:35",
+  "window_end": "2025-06-16 23:54:55",
+  "layer2_summary": {
+    "first_seen": "2025-03-16 00:11:35",
+    "last_seen": "2025-06-16 23:54:55",
+    "tx_count": 157459,
+    "inbound_count": 90821,
+    "outbound_count": 66638,
+    "unique_counterparties": 55416,
+    "unique_to_addresses": 31003,
+    "unique_from_addresses": 37274,
+    "unique_function_selectors": 585,
+    "dominant_direction": "inbound",
+    "dominant_counterparty_share": 0.15,
+    "dominant_contract_share": 57.68,
+    "dominant_function_selector_share": 0.0
+  },
+  "top_counterparties": [
+    {
+      "key": "0xadae27c960a77aec6a27f3601ae7621e3611fa7e",
+      "count": 232
+    },
+    {
+      "key": "0x2500129e7b2cfc0d98bc01ff57cb1589c4cf5b32",
+      "count": 204
+    },
+    {
+      "key": "0xf1ae1a2146c5c8bf2be78fa3ff583a25b592add6",
+      "count": 189
+    },
+    {
+      "key": "0x32c2eaf5f527d1a183ec376f8f6da74098ae5443",
+      "count": 150
+    },
+    {
+      "key": "0x1604743a62bb94615b8f17dc6be1a5f6e5092c83",
+      "count": 108
+    },
+    {
+      "key": "0x352ad0cda211f870644db07f33351d7f51b350eb",
+      "count": 95
+    },
+    {
+      "key": "0x860078e42fcd17f7b3275d952626200597d73df5",
+      "count": 78
+    },
+    {
+      "key": "0x316771f0b8bff7a23477d15c57da489b0eb0b406",
+      "count": 69
+    },
+    {
+      "key": "0x62efd94526f0ee0f22735a75bad59d00a53d3732",
+      "count": 66
+    },
+    {
+      "key": "0xf1a5c24bce906a8afe6c2327fb766a1ca59f04c5",
+      "count": 63
+    },
+    {
+      "key": "0x1ef4a97e159a71887ad23252efed69f89cee3c53",
+      "count": 57
+    },
+    {
+      "key": "0x39ecb84c80d36179fcf3d1a99112069a99a7b750",
+      "count": 55
+    },
+    {
+      "key": "0xde2f5e642016c48063f4f1676955179d0acd965c",
+      "count": 54
+    },
+    {
+      "key": "0x7ed590d4e2c8a302f3fca5c8886fc4681ce794de",
+      "count": 53
+    },
+    {
+      "key": "0xa8f9cab83b2a2193e1dd597d675733c738323074",
+      "count": 53
+    },
+    {
+      "key": "0x3a28734fba4780c93ad3b6b4f5d786c009324927",
+      "count": 52
+    },
+    {
+      "key": "0xc3953d8ccbc418c70c6a581f7ab923aa56745d45",
+      "count": 52
+    },
+    {
+      "key": "0x3738b93e3189dcc585141e71535b2793d8512b1c",
+      "count": 52
+    },
+    {
+      "key": "0xf0148ddc86784c51f3071646dc5ccf7af5e9706b",
+      "count": 52
+    },
+    {
+      "key": "0x1452cf8ec4e04f081bf5c0c6fb6297ae437d7cdf",
+      "count": 52
+    },
+    {
+      "key": "0x1c0cd2e34432b1b9f3f831c4a767304f286107e9",
+      "count": 52
+    },
+    {
+      "key": "0x9dfc0c1efc86c9102d7e104e74aa9eb9898eb5e2",
+      "count": 52
+    },
+    {
+      "key": "0x4a7112261a881127bdeb699059fc9c9700068698",
+      "count": 51
+    },
+    {
+      "key": "0x8c2d61cac8677e1f795c0f320994e6ff3c02de6f",
+      "count": 48
+    },
+    {
+      "key": "0x2a39c80c5dd5669028fcc012926cbbc86b1c383d",
+      "count": 46
+    }
+  ],
+  "top_to_addresses": [
+    {
+      "key": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "count": 90821
+    },
+    {
+      "key": "0xadae27c960a77aec6a27f3601ae7621e3611fa7e",
+      "count": 223
+    },
+    {
+      "key": "0x2500129e7b2cfc0d98bc01ff57cb1589c4cf5b32",
+      "count": 153
+    },
+    {
+      "key": "0x32c2eaf5f527d1a183ec376f8f6da74098ae5443",
+      "count": 141
+    },
+    {
+      "key": "0x1604743a62bb94615b8f17dc6be1a5f6e5092c83",
+      "count": 102
+    },
+    {
+      "key": "0xf1ae1a2146c5c8bf2be78fa3ff583a25b592add6",
+      "count": 91
+    },
+    {
+      "key": "0x352ad0cda211f870644db07f33351d7f51b350eb",
+      "count": 90
+    },
+    {
+      "key": "0x860078e42fcd17f7b3275d952626200597d73df5",
+      "count": 67
+    },
+    {
+      "key": "0x62efd94526f0ee0f22735a75bad59d00a53d3732",
+      "count": 63
+    },
+    {
+      "key": "0x316771f0b8bff7a23477d15c57da489b0eb0b406",
+      "count": 62
+    },
+    {
+      "key": "0x1ef4a97e159a71887ad23252efed69f89cee3c53",
+      "count": 56
+    },
+    {
+      "key": "0x5f8ee6b3de44c066aa48625084b5860c15a980b7",
+      "count": 42
+    },
+    {
+      "key": "0x9ff222bdab2bdf4bffedd7ce5dba3957ca3a711d",
+      "count": 41
+    },
+    {
+      "key": "0x78b48029a9b17b6e3ed3126241e64d15bd3bf542",
+      "count": 33
+    },
+    {
+      "key": "0xdbb976e564dab620f38c33138de6c5a238e2f251",
+      "count": 30
+    },
+    {
+      "key": "0x2729cb91c73a16758d2e47d54f36ea200442e118",
+      "count": 27
+    },
+    {
+      "key": "0xba55f27a17c8c2d9a211b6144afb60165f43ca62",
+      "count": 27
+    },
+    {
+      "key": "0x25a04bc7379faabc0be0421da74191ea51713c8c",
+      "count": 27
+    },
+    {
+      "key": "0x3a28734fba4780c93ad3b6b4f5d786c009324927",
+      "count": 26
+    },
+    {
+      "key": "0xc3953d8ccbc418c70c6a581f7ab923aa56745d45",
+      "count": 26
+    },
+    {
+      "key": "0x3738b93e3189dcc585141e71535b2793d8512b1c",
+      "count": 26
+    },
+    {
+      "key": "0xf0148ddc86784c51f3071646dc5ccf7af5e9706b",
+      "count": 26
+    },
+    {
+      "key": "0x1452cf8ec4e04f081bf5c0c6fb6297ae437d7cdf",
+      "count": 26
+    },
+    {
+      "key": "0x1c0cd2e34432b1b9f3f831c4a767304f286107e9",
+      "count": 26
+    },
+    {
+      "key": "0x9dfc0c1efc86c9102d7e104e74aa9eb9898eb5e2",
+      "count": 26
+    }
+  ],
+  "top_from_addresses": [
+    {
+      "key": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "count": 66638
+    },
+    {
+      "key": "0xf1ae1a2146c5c8bf2be78fa3ff583a25b592add6",
+      "count": 98
+    },
+    {
+      "key": "0xf1a5c24bce906a8afe6c2327fb766a1ca59f04c5",
+      "count": 63
+    },
+    {
+      "key": "0x39ecb84c80d36179fcf3d1a99112069a99a7b750",
+      "count": 54
+    },
+    {
+      "key": "0xde2f5e642016c48063f4f1676955179d0acd965c",
+      "count": 53
+    },
+    {
+      "key": "0xa8f9cab83b2a2193e1dd597d675733c738323074",
+      "count": 52
+    },
+    {
+      "key": "0x2500129e7b2cfc0d98bc01ff57cb1589c4cf5b32",
+      "count": 51
+    },
+    {
+      "key": "0x4a7112261a881127bdeb699059fc9c9700068698",
+      "count": 48
+    },
+    {
+      "key": "0x7ed590d4e2c8a302f3fca5c8886fc4681ce794de",
+      "count": 40
+    },
+    {
+      "key": "0x3ea795d0e3a4937a0412aa8ef3569830864266c5",
+      "count": 38
+    },
+    {
+      "key": "0x28efe1515de4f0bdf10abf758338112aaeb72492",
+      "count": 38
+    },
+    {
+      "key": "0x715bb23f525520eecce7bb483d750cc6c6186e74",
+      "count": 35
+    },
+    {
+      "key": "0xb8920e475e32b807ce51e0ef823fe070d7d96e8c",
+      "count": 34
+    },
+    {
+      "key": "0xd1c0a93a2bc96b36702d22a62de1a96c7ae11f7a",
+      "count": 34
+    },
+    {
+      "key": "0xe24d424fe88d14b42bd9293a6a6c4bed7a5c160a",
+      "count": 33
+    },
+    {
+      "key": "0x3c06ddfe06f923c5e05ea61d614350db941c4676",
+      "count": 33
+    },
+    {
+      "key": "0x17e322c433267c87ed1a97c8aa3bfde99cc06b9f",
+      "count": 33
+    },
+    {
+      "key": "0xb3a203aa1bb8c6dc5efe4da74f90562a6b0fec9f",
+      "count": 32
+    },
+    {
+      "key": "0x0a6039027a1ff6e03e59be8e3749492f02950cb5",
+      "count": 32
+    },
+    {
+      "key": "0xb791888c1387d88958e5b58546230c9c44874706",
+      "count": 31
+    },
+    {
+      "key": "0x98f9b4f355e102f716311c512d57893556323d17",
+      "count": 30
+    },
+    {
+      "key": "0xea9d9aec82d7dc604f0215c304ae7ba31f598a9d",
+      "count": 30
+    },
+    {
+      "key": "0x4a176cd4d4e564ab5986508f23e426635e16116b",
+      "count": 30
+    },
+    {
+      "key": "0xad4c25e1e3758701c2284232f01a62c0142fae56",
+      "count": 30
+    },
+    {
+      "key": "0xc1a0f519df1c6dfad8d3aa75f2dd074e3d8fc06b",
+      "count": 30
+    }
+  ],
+  "top_function_selectors": [
+    {
+      "key": "0xf373fadd",
+      "count": 6
+    },
+    {
+      "key": "0xef5cdcf1",
+      "count": 4
+    },
+    {
+      "key": "0x3ea795d0",
+      "count": 3
+    },
+    {
+      "key": "0xc255fafc",
+      "count": 3
+    },
+    {
+      "key": "0xe1b83db3",
+      "count": 3
+    },
+    {
+      "key": "0x70f53b97",
+      "count": 3
+    },
+    {
+      "key": "0x8c36716e",
+      "count": 3
+    },
+    {
+      "key": "0xe1962921",
+      "count": 3
+    },
+    {
+      "key": "0x4bf76e4a",
+      "count": 2
+    },
+    {
+      "key": "0x67223b78",
+      "count": 2
+    },
+    {
+      "key": "0x9ef8d399",
+      "count": 2
+    },
+    {
+      "key": "0xdbafae4d",
+      "count": 2
+    },
+    {
+      "key": "0x37d986b4",
+      "count": 2
+    },
+    {
+      "key": "0xa9ae5229",
+      "count": 2
+    },
+    {
+      "key": "0x20354710",
+      "count": 2
+    },
+    {
+      "key": "0xc250fc2d",
+      "count": 2
+    },
+    {
+      "key": "0x7a570caf",
+      "count": 2
+    },
+    {
+      "key": "0x9efb3b3a",
+      "count": 2
+    },
+    {
+      "key": "0xf9cc0698",
+      "count": 2
+    },
+    {
+      "key": "0x80e00ab5",
+      "count": 2
+    },
+    {
+      "key": "0x7d91c74a",
+      "count": 2
+    },
+    {
+      "key": "0xb36f5814",
+      "count": 2
+    },
+    {
+      "key": "0x9db95752",
+      "count": 2
+    },
+    {
+      "key": "0x2655ed2f",
+      "count": 2
+    },
+    {
+      "key": "0x5e3977e4",
+      "count": 2
+    }
+  ],
+  "sample_transfers": [
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 23:54:55",
+      "transaction_hash": "0x36926d4f76da03cfc92c4e7470d85cd5ce60bd6683e506289782752c32ed4597",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xf6d496f0f8de41caff58290c4690316e6d356ce1",
+      "value_wei": "1901000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xf6d496f0f8de41caff58290c4690316e6d356ce1"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 23:52:55",
+      "transaction_hash": "0xc150944acc6995401985e5b9254451a9a3645369dabf94d60777816288450907",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x90672e9290319bb760e121af4b3fe7a1f02fb64b",
+      "value_wei": "8000000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x90672e9290319bb760e121af4b3fe7a1f02fb64b"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 23:38:07",
+      "transaction_hash": "0x0bdb13fc2730a68635cf33baf98c5e28192df70ebb214614f270ec14b7926ec8",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x246bdb0e1255700abcc2eb9317e0d82d85c063e6",
+      "value_wei": "1296000000001005",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x246bdb0e1255700abcc2eb9317e0d82d85c063e6"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 23:21:13",
+      "transaction_hash": "0x906d8080d913813bec6d0a6051301a850470003c811d2a147b5909c1e723d47b",
+      "from_address": "0x0a6ab6e019838bbe6ec06774ca04317ba207258f",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "118000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 31500,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0x0a6ab6e019838bbe6ec06774ca04317ba207258f"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 22:53:09",
+      "transaction_hash": "0x36f7e24556e7e3368c56e29ef3ba5c28d7245eefe5b9f4e211c22dd68f8f4e8c",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x344cfbc46bd61a963d919850626cbca38ada742a",
+      "value_wei": "1969000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x344cfbc46bd61a963d919850626cbca38ada742a"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 22:48:51",
+      "transaction_hash": "0xe1cef2bd634b03fab5a0cde2f1b877ea5a66cdfda917a7dd6928b5645092aba3",
+      "from_address": "0x01bdc0f505555b9f51ef3557d13d15518fc0eaad",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "106000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 31500,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0x01bdc0f505555b9f51ef3557d13d15518fc0eaad"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 22:38:37",
+      "transaction_hash": "0xe497f0ab98052ba3c4dfbb5bf7e550163206cec81c46936f093405334661822f",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x1292194abba28df3512cd7e916b176125ea2323d",
+      "value_wei": "21871000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x1292194abba28df3512cd7e916b176125ea2323d"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 22:37:31",
+      "transaction_hash": "0x5b26bf5d3ca55f4c44c92d57ad927e862078fb95fabc24fe13312f41e412a77c",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x93b4e42176a5df83d37b41b191bdddc19b1a39be",
+      "value_wei": "354000000001005",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x93b4e42176a5df83d37b41b191bdddc19b1a39be"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 22:36:45",
+      "transaction_hash": "0xdb74f98647b387614d3cee3122195d7c4c9ec3b045ce5ba6ae1710b4f3501210",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xff809e742d498c3a81ffee36f426d93dcd94b4b7",
+      "value_wei": "1691000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xff809e742d498c3a81ffee36f426d93dcd94b4b7"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 22:30:01",
+      "transaction_hash": "0x31556217e7d7b89cd60674bacea7e72e5f007a5656fdea644822683d62d574df",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x83639b69bee5f8f3f50581fea56b8cd2a8aa5803",
+      "value_wei": "279000000001005",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x83639b69bee5f8f3f50581fea56b8cd2a8aa5803"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 22:28:53",
+      "transaction_hash": "0xf72af0a882c83c132785b53ae84e0f3813199cfa86906831a260fd1cc21e2c67",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x25ca75c60eeecb6d24bfa67be87ac54b4c471707",
+      "value_wei": "990000000001001",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x25ca75c60eeecb6d24bfa67be87ac54b4c471707"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 22:24:41",
+      "transaction_hash": "0xa644a76fd29f25dc0ac16d242cea9320ab88a650a71158ef89180c7bd12c5406",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xf47effc91b32ba3982d58a2604445def4a4428e2",
+      "value_wei": "2160000000001001",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xf47effc91b32ba3982d58a2604445def4a4428e2"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 22:20:11",
+      "transaction_hash": "0xefa0a5d97e4e1fd7240c4feef63bc8fea8474c4e0dfe9c24246cef1cacb2ee88",
+      "from_address": "0xf47effc91b32ba3982d58a2604445def4a4428e2",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "2299000000001001",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0xf47effc91b32ba3982d58a2604445def4a4428e2"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 22:19:41",
+      "transaction_hash": "0x6565b03c2a3438fca457c7accbeece26f1985b55bb36e456e21e66493023a6df",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x328f23c09684d9c77dee28fa8a85ff40caa8f214",
+      "value_wei": "4210000000001001",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x328f23c09684d9c77dee28fa8a85ff40caa8f214"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 22:05:53",
+      "transaction_hash": "0x0ff7031df2b5cc6d4a03255b96721a744ebe3416a6e1c4ebde0afddf767a56a2",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xfdf716ce365ba044d06d9cb83d51510e6012ca87",
+      "value_wei": "30999000000001019",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xfdf716ce365ba044d06d9cb83d51510e6012ca87"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 21:54:17",
+      "transaction_hash": "0x56ac0b3eed317414814fb18cb6f74aa6d612a03f89cdc30df1008dc2a1d844e7",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xbdeabb252067afb817f6afc929deb1d9c8b40ef4",
+      "value_wei": "1961000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xbdeabb252067afb817f6afc929deb1d9c8b40ef4"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 21:50:59",
+      "transaction_hash": "0x2f91813e4c0614dc8a94e8aa2360a1509d2613b1f1da6b5289e70fc94fbd3703",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xe85e43b529053e330a63785ad811a287917bd914",
+      "value_wei": "1546000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xe85e43b529053e330a63785ad811a287917bd914"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 21:22:45",
+      "transaction_hash": "0xd36650d06a5ba0e387234bd708e6a8840b4a4ee7a2f6ed5a540f94cd62716df2",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xe65fa11d5345ad8d2b55ded9c4a54e6ec0b3f7ee",
+      "value_wei": "1619000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xe65fa11d5345ad8d2b55ded9c4a54e6ec0b3f7ee"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 21:10:45",
+      "transaction_hash": "0x8088917990aa8b55fd89fb30977a48ada7efe5302fb1054e3263154859c64838",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xff551ad74e003ad9014eae99cddee6c5755907fd",
+      "value_wei": "1580000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xff551ad74e003ad9014eae99cddee6c5755907fd"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 20:53:45",
+      "transaction_hash": "0x63f0ece2689479cec3c6bd158dbb6792c2703eac01b61cf2b3e4209e9cf95374",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x6b47d917d0f7850aeb774a13e1ca0faaf0899504",
+      "value_wei": "10502000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x6b47d917d0f7850aeb774a13e1ca0faaf0899504"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 20:22:01",
+      "transaction_hash": "0xaf77dbf2b7512c1dcaae5f8ea99d2c2a84caa9bcb4df4da8e1af3be07c1af9a1",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x872b7b6bbed107e6b30b6801095fd0cba38d04c2",
+      "value_wei": "1504000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x872b7b6bbed107e6b30b6801095fd0cba38d04c2"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 20:13:15",
+      "transaction_hash": "0x232c1ed8b5bf072a599af58d2aded9a7c334e1f9d0d2f76f700552d96f4096e4",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xde3dafed9abeab3eb57db97c71bffbbd41e270dd",
+      "value_wei": "972000000001005",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xde3dafed9abeab3eb57db97c71bffbbd41e270dd"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 20:09:35",
+      "transaction_hash": "0x37fcf6792411f0eec377cf2ed2ce5493b6ee34e5fd47a5faee83675dbf4daa94",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x70d6ff7849088f931fff9eef5d7d47153ea0a414",
+      "value_wei": "7280000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x70d6ff7849088f931fff9eef5d7d47153ea0a414"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 20:01:55",
+      "transaction_hash": "0xc8f65b7f3ac5a303e1a46346e53cfc92858c2469a67a0e9705c5e88b049d056d",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x1fe74fa212caf70778e684cbc8bdbf3e46dee436",
+      "value_wei": "54000000001001",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x1fe74fa212caf70778e684cbc8bdbf3e46dee436"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 19:53:05",
+      "transaction_hash": "0x0177d94d00b2f30367ed8190977e90e87ba805515305f6ad65aa216ca6c62920",
+      "from_address": "0x5961a4fa7ca200bb0cf4c2cdf0874970a8bbee71",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "20426000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0x5961a4fa7ca200bb0cf4c2cdf0874970a8bbee71"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 19:39:43",
+      "transaction_hash": "0x951c68f30cb6806a9165624206c5d456081dfa34111e8540d0045b13d68cbbd9",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x5f0748dbb3c121a4408494728a736ffa2be4bd66",
+      "value_wei": "140000000001034",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x5f0748dbb3c121a4408494728a736ffa2be4bd66"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 19:34:21",
+      "transaction_hash": "0xf4495736a81bdbb7cd759f882094d04681ed0b774758333cc8f58e473b1388ce",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x5f0748dbb3c121a4408494728a736ffa2be4bd66",
+      "value_wei": "150000000001034",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x5f0748dbb3c121a4408494728a736ffa2be4bd66"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 19:09:55",
+      "transaction_hash": "0x1f8dd9513a11d3f63982cc0579293baab58330aac972daea0766b43ff433c6e5",
+      "from_address": "0xbf24033d6f89c360ef157d57d98a05d0bac1068b",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "17314000000001001",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0xbf24033d6f89c360ef157d57d98a05d0bac1068b"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 19:03:47",
+      "transaction_hash": "0xb42f2165b9c4b0ab9a60c7745ac144b447128ddc6d690b3ee03c9bf2464651ab",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xa630d96cd6876bee4707b9a286f2437e3e1815f8",
+      "value_wei": "5080000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xa630d96cd6876bee4707b9a286f2437e3e1815f8"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 19:03:21",
+      "transaction_hash": "0xb6ae3b5fa67c16bece806bbda9e5709092f791175d3d64cf0b97becbc2e9f01b",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xa630d96cd6876bee4707b9a286f2437e3e1815f8",
+      "value_wei": "1783000000001013",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xa630d96cd6876bee4707b9a286f2437e3e1815f8"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 18:47:23",
+      "transaction_hash": "0x37e7aa19cbe38fdb81f5f74ccaf54ffee3c2995f5c7815f53b11b1503e1c7ce0",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xb873242ea28f76ada937b31375821a55c4718848",
+      "value_wei": "230000000001034",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xb873242ea28f76ada937b31375821a55c4718848"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 18:45:27",
+      "transaction_hash": "0x1106bd9414dab113003f4e74916adbafe3649ec11bf456983cf49d50175c43f2",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x7189ae5e0c7b48e173a8d006264c5fb6b411fee2",
+      "value_wei": "29999000000001029",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21220,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x7189ae5e0c7b48e173a8d006264c5fb6b411fee2"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 18:32:57",
+      "transaction_hash": "0xc70df542c3486c1af0d6bfc1aaeb49e73b56b60fc7f9a707c8fd91aa40959032",
+      "from_address": "0x99d5cebc34f77cfa1218d80d016cdebb00fef4c2",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "3006000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 31500,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0x99d5cebc34f77cfa1218d80d016cdebb00fef4c2"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 18:05:11",
+      "transaction_hash": "0xe6aa21ba9f3f973786438d6b11bf48337fa47e584465d9e455205a6efb41c64c",
+      "from_address": "0x151a1efd6485cf125944dfb543c1ce6cfd62f382",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "1406000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0x151a1efd6485cf125944dfb543c1ce6cfd62f382"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 18:04:53",
+      "transaction_hash": "0x5be987ade22a6f8b325737166be0430648b0b8842bf2d1b36ee9f0781df6936e",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x151a1efd6485cf125944dfb543c1ce6cfd62f382",
+      "value_wei": "370000000001033",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x151a1efd6485cf125944dfb543c1ce6cfd62f382"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 17:35:27",
+      "transaction_hash": "0x87b59fadcee643bf4d072fe9b63c3683d4007fefa3c164eecacb448f25bf4531",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x984145dd0d13974a567fe909298240086f33b4aa",
+      "value_wei": "154488000000001008",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x984145dd0d13974a567fe909298240086f33b4aa"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 17:35:07",
+      "transaction_hash": "0x443f28034d894834d76dbc908bdd85b76ec241d0a792e17d281c615395ff0a29",
+      "from_address": "0xbe4bd854ba06bcb64e1e5d9040d09c6dfc606c00",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "383000000001001",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0xbe4bd854ba06bcb64e1e5d9040d09c6dfc606c00"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 17:35:01",
+      "transaction_hash": "0x8fe668b9f8b8caa5f26d09856c9e1a1cee2556b21287d1af0ca7908a4963e74f",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x4e07b203b84f8b8d13c5fb16d83e88ef83a693d3",
+      "value_wei": "5100000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x4e07b203b84f8b8d13c5fb16d83e88ef83a693d3"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 17:30:59",
+      "transaction_hash": "0xe84bd41b461b2a9160dd57521daced1c2839355a58ae5252ea868422d710c9fe",
+      "from_address": "0x7de183543abd2429e907647bfbc57d101f411223",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "6022000000001104",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0x7de183543abd2429e907647bfbc57d101f411223"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 17:30:19",
+      "transaction_hash": "0x7ea08c49c7225dc32e871d52bb9d552119a950d86582142460a6c726dedd2378",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x7de183543abd2429e907647bfbc57d101f411223",
+      "value_wei": "6000000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x7de183543abd2429e907647bfbc57d101f411223"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 17:25:13",
+      "transaction_hash": "0x2441c78b7ff061ca8fd773b8f4706652d4d38fe0674aada807e456d67cda013d",
+      "from_address": "0x7de183543abd2429e907647bfbc57d101f411223",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "906000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0x7de183543abd2429e907647bfbc57d101f411223"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 17:23:31",
+      "transaction_hash": "0x897a6a3693e288d24905789384553d02d1c9b5c99dfc6cfaf91b8a67a44efdc0",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x509e7f450db4f553eefb5d6a9ead39f27192e337",
+      "value_wei": "181408000000001008",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x509e7f450db4f553eefb5d6a9ead39f27192e337"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 17:11:53",
+      "transaction_hash": "0x2a2a1de54d94497b6d9cfacc6e154080530e9f1cfecbd0e1196ed9f87874cc22",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x3ea795d0e3a4937a0412aa8ef3569830864266c5",
+      "value_wei": "1200000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x3ea795d0e3a4937a0412aa8ef3569830864266c5"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 17:08:03",
+      "transaction_hash": "0x2cb644fe4ec8c390f771abf5387a7c33095c635e0670e7dd29768efd41875049",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xe50f9523b8fe64a5b312a3b6ca5312b55956bd59",
+      "value_wei": "5050000000001034",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21220,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xe50f9523b8fe64a5b312a3b6ca5312b55956bd59"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 17:04:55",
+      "transaction_hash": "0xe1380b060092a6ca3c04c56eaa8ad74b39f2b5eaa81eab9e2eebec0294663a2b",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xf4b6ec599dd03fc90391c4ed508d745d09ff9f85",
+      "value_wei": "1924000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xf4b6ec599dd03fc90391c4ed508d745d09ff9f85"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 17:03:55",
+      "transaction_hash": "0xa177b4a199808d4cabf150a6b0d80d942d80c7b1e99b1840c942a1b554f08eb3",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x1729932a814289de71486990b71d8c08e2055202",
+      "value_wei": "899000000001003",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x1729932a814289de71486990b71d8c08e2055202"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 17:03:17",
+      "transaction_hash": "0xc520ac1571c485da3840d4671688843af54c628e7d291b0ebd9d65dbadab2fc5",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x1729932a814289de71486990b71d8c08e2055202",
+      "value_wei": "63025000000001008",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x1729932a814289de71486990b71d8c08e2055202"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 17:01:39",
+      "transaction_hash": "0x0af58bfbce1ecc531b0b2a7720f25d91f7ff1088fc9047a10d13d2b9bf37e120",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x1729932a814289de71486990b71d8c08e2055202",
+      "value_wei": "200000000000001008",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x1729932a814289de71486990b71d8c08e2055202"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 17:00:59",
+      "transaction_hash": "0x04d04ce44d744c69712f86c168a9ed2d3eda64bee1416edb436658f1f86a859e",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x1729932a814289de71486990b71d8c08e2055202",
+      "value_wei": "18529000000001011",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x1729932a814289de71486990b71d8c08e2055202"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 17:00:19",
+      "transaction_hash": "0xc19aedd26965ea41bc0d75ecb51e0426e73e339a1dbeba3989c3cfd7ff3c68d7",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x1729932a814289de71486990b71d8c08e2055202",
+      "value_wei": "182000000001005",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x1729932a814289de71486990b71d8c08e2055202"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:59:15",
+      "transaction_hash": "0x096014fe9db3fbb695412c4507c3f7e6ce12e760f99b9677f41c466ea0054308",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x0f70827daab0ace37717b90e2ad41fffb3dfc0d2",
+      "value_wei": "1770000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x0f70827daab0ace37717b90e2ad41fffb3dfc0d2"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:57:07",
+      "transaction_hash": "0x3c8f651d748b938331a9c351b01b68861a7e5ec6948bf0dabc683b3ba5d3169b",
+      "from_address": "0x8eda9fdcabf82deeb8961c80c6b0febdf638369a",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "1846000000001006",
+      "input": "0x3ea795d0e3a4937a0412aa8ef3569830864266c5",
+      "function_selector": "0x3ea795d0",
+      "gas": 21966,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0x8eda9fdcabf82deeb8961c80c6b0febdf638369a"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:56:39",
+      "transaction_hash": "0xea4a96bb9506bb43d82538a81fe875cee91adf2542ec5eee96862ade7588b254",
+      "from_address": "0xc5987f3a14ecaf5870408b3f1279b633811e2221",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "1910000000001006",
+      "input": "0x3ea795d0e3a4937a0412aa8ef3569830864266c5",
+      "function_selector": "0x3ea795d0",
+      "gas": 21966,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0xc5987f3a14ecaf5870408b3f1279b633811e2221"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:56:11",
+      "transaction_hash": "0x9c63a827d7e537befdea54f78690967c8af7fd58e44d2ad7aa60ff01c917eedf",
+      "from_address": "0x043ad52705e93b5e9323256fb1ed6de07697512c",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "2015000000001006",
+      "input": "0x3ea795d0e3a4937a0412aa8ef3569830864266c5",
+      "function_selector": "0x3ea795d0",
+      "gas": 21966,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0x043ad52705e93b5e9323256fb1ed6de07697512c"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:54:53",
+      "transaction_hash": "0xfb75adea164a12ed542ddb2f0c9927f12d85e6e87ecde3147d5a4f65a6d25de5",
+      "from_address": "0x7ac70e2e7bce0ecee522ca39cdc6aef94078fdf7",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "499000000001001",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0x7ac70e2e7bce0ecee522ca39cdc6aef94078fdf7"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:46:57",
+      "transaction_hash": "0xeea6af0ff5bd3c1546e12309d67d6913d4894b4420ecfc9d876a8b82089c9370",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x6e6e002e8448a119bb6658b0ed434066f67f7db9",
+      "value_wei": "31240000000001007",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x6e6e002e8448a119bb6658b0ed434066f67f7db9"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:46:31",
+      "transaction_hash": "0xc81daf7884ec4d73160c317fd427294b8cfd3a5d06ad75a20f5258138be1777c",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x200d55196f8c0af45c88f2001cdeadafb55387e2",
+      "value_wei": "1686000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x200d55196f8c0af45c88f2001cdeadafb55387e2"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:42:25",
+      "transaction_hash": "0x25df62fa17a727df52f47b82aff1fd15dfb32d997016cb77bd5030804b2da8df",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x0fd51a89dbe7a46e5a5dd80f6560e2d64374d083",
+      "value_wei": "8214000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x0fd51a89dbe7a46e5a5dd80f6560e2d64374d083"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:37:21",
+      "transaction_hash": "0x560c98d864022bfce36110079a9fe6bb89f676c88fde90c0742d0af112918928",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xd20239fd67b181cdace4c9d05720a2e54518bc5f",
+      "value_wei": "2100000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xd20239fd67b181cdace4c9d05720a2e54518bc5f"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:30:47",
+      "transaction_hash": "0xc6691a2b4f561bf6c962c5434685c0c3a4beec2e82c1ed65c960dd29f852c3c7",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x1893746f004ae5ce6efb6bab0aa7c14ac542fc77",
+      "value_wei": "21584000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x1893746f004ae5ce6efb6bab0aa7c14ac542fc77"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:30:33",
+      "transaction_hash": "0xc7a823853829dbb9378743286b8da7c2e0fe18ec58af92046db108a23d831be5",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x49813ffe5790529867035fbfef02856d5a1ceee0",
+      "value_wei": "1942000000001003",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x49813ffe5790529867035fbfef02856d5a1ceee0"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:30:19",
+      "transaction_hash": "0x6d7bfac03e0299a7812c883e8c7fff65432e1a6acbfe4ad8f922835cd8845c89",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x16453ba9c68810763e20f544c6754c6721dcb392",
+      "value_wei": "5695000000001003",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x16453ba9c68810763e20f544c6754c6721dcb392"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:30:09",
+      "transaction_hash": "0x1bf732f6fb83d9d33760e9befacb418ed9370c1899949e10d775ce103ccd96e0",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xba01a5b1aa2819bdd648490e5cb136f2ad4958b1",
+      "value_wei": "2233000000001003",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xba01a5b1aa2819bdd648490e5cb136f2ad4958b1"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:29:55",
+      "transaction_hash": "0x5bdb076b5e9cf078e9af1e8d09ab01c3a0320302b940f44fad94ff64a2e9d5e5",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x245825392d7210034fd4a53c133835b56a4cebff",
+      "value_wei": "3072000000001003",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x245825392d7210034fd4a53c133835b56a4cebff"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:29:41",
+      "transaction_hash": "0x78287af3fde4beca06ee0c0aa38e712d94f85bad2c187fb1dd1d9b233dfefaa4",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x99c1203721ac9d34da839f3e950302005387b717",
+      "value_wei": "1924000000001003",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x99c1203721ac9d34da839f3e950302005387b717"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:29:19",
+      "transaction_hash": "0x9e7cec3b8ae5ae64bb3ea01cee55d2c8ec2ed22a4865d4b29a4a647406104daf",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x6f9afeff7f10fce1e1858e3257afccb61b18b51e",
+      "value_wei": "2238000000001003",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x6f9afeff7f10fce1e1858e3257afccb61b18b51e"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:22:11",
+      "transaction_hash": "0xf3def21b7f0f7d4840de9e5745533c2dc387d6017c093e12cf581fae3866627c",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x0574f40bd452db95b5b402b329687e60679042e0",
+      "value_wei": "1400000000001007",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x0574f40bd452db95b5b402b329687e60679042e0"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:06:19",
+      "transaction_hash": "0x67af608e72a669dec7e9d6568b359407593dd428b2a7eb14a2eff59542f6c349",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xfe45b8a27382466d4c8c4b74bf24be8ccc0e691f",
+      "value_wei": "4732000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xfe45b8a27382466d4c8c4b74bf24be8ccc0e691f"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 16:00:33",
+      "transaction_hash": "0x263c769ca76d4c74409db4b141a4cc59013b18671b570a9fbc8dcbd5071c0efb",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x564660f918b00fc551cdcdde6b5bd2d49d9d25c4",
+      "value_wei": "40735000000001030",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x564660f918b00fc551cdcdde6b5bd2d49d9d25c4"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 15:59:55",
+      "transaction_hash": "0xc87d045893a4fe633a8ff3b98d667add5acfe82fd60b52109a9497fcd877f675",
+      "from_address": "0xba4418ccd216bf24b8b29a14754c622e149c4fa6",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "1706000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0xba4418ccd216bf24b8b29a14754c622e149c4fa6"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 15:56:55",
+      "transaction_hash": "0x6ebc3925972e07f5ac6013b29cf3629fc97878a4232b25a068369d37ccff4ead",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x8cd1b7bfd67b12c6a2c59bbc658c4a7c9a6de425",
+      "value_wei": "1649000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x8cd1b7bfd67b12c6a2c59bbc658c4a7c9a6de425"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 15:43:57",
+      "transaction_hash": "0xd4ef8141f8e0c8d3b6a8db7d9ed164cdb73576d79b459a85625ce6f631e91b92",
+      "from_address": "0x9e0fc2bba0a0a2bb683047f4eacde74056fe8232",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "201468000000001001",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0x9e0fc2bba0a0a2bb683047f4eacde74056fe8232"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 15:38:09",
+      "transaction_hash": "0x75e8d5ebf6f22870dffbae5dd35da7d1fb70c853c3003c19de35ee9e31bb147e",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x5f8eefb88c2b97ebdc93fabe193fc39bd9da2f86",
+      "value_wei": "2000000000000000000",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x5f8eefb88c2b97ebdc93fabe193fc39bd9da2f86"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 15:20:39",
+      "transaction_hash": "0xb4db8b9cb977662e26887831fa1b562224c9231a609be6ab7c552d8cc0f39785",
+      "from_address": "0xecf6f8e3e371f46e8ad337a79f666ed0706440ee",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "2849000000001006",
+      "input": "0x4b825fd1cb423089cdaf13faa661956d904ec44b",
+      "function_selector": "0x4b825fd1",
+      "gas": 65898,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0xecf6f8e3e371f46e8ad337a79f666ed0706440ee"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 15:18:55",
+      "transaction_hash": "0x59ba66817496bd80e47a1bb6be2c92e6b734512829db6b3e3155dcc1d16de1c4",
+      "from_address": "0xeeec93e1ad050c714a7ba01c6d261a25d3b3eba3",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "2554000000001006",
+      "input": "0x458fdff140f4753e7f0fabb3c03cbf5600715168",
+      "function_selector": "0x458fdff1",
+      "gas": 65808,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0xeeec93e1ad050c714a7ba01c6d261a25d3b3eba3"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 15:15:57",
+      "transaction_hash": "0xa353e1e1250e8238bd638f1a93d5d0f2fc817c3a312dfd2ac30ca933a6e39c33",
+      "from_address": "0x478a0bb215a9cb8b52528b42eeeeb08c8aa41cd7",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "2536000000001006",
+      "input": "0x2efbf6ad7a3cea93a26c11ce3e0144b2df17087b",
+      "function_selector": "0x2efbf6ad",
+      "gas": 65898,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0x478a0bb215a9cb8b52528b42eeeeb08c8aa41cd7"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 15:13:21",
+      "transaction_hash": "0xa80e8a4120a8bf46b8e7f4ce8805cbf43908cd20fc66216e06b944d7a56ab24e",
+      "from_address": "0x4263e23edd40749848dc5e539e30f2f5b6ca9b78",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "6308000000001006",
+      "input": "0xa04a68b6b6f35e2f4d266f68da1d7e5a1b03ea17",
+      "function_selector": "0xa04a68b6",
+      "gas": 65898,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0x4263e23edd40749848dc5e539e30f2f5b6ca9b78"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 15:11:21",
+      "transaction_hash": "0x64c886d6c4c67cbefbc74d414d4767f5346977d4fcd6a62ab1d395815e4c45db",
+      "from_address": "0x765b6efd08ad354892858f020f6b784729382d47",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "2845000000001006",
+      "input": "0x74275d37f5a6d4fc98e019bf52c09256d6aae5e8",
+      "function_selector": "0x74275d37",
+      "gas": 65898,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0x765b6efd08ad354892858f020f6b784729382d47"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 15:09:25",
+      "transaction_hash": "0xcf62491cc971b3c341b4e7d4940f90a51e22f6b6e5949db37405f6cb83f3265c",
+      "from_address": "0x7fd7b0c166565173a396e9b4c3915965e89b10bd",
+      "to_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "value_wei": "3587000000001006",
+      "input": "0x152083036808418cedc7b4fb0934ff304fd32189",
+      "function_selector": "0x15208303",
+      "gas": 65898,
+      "transaction_type": -1,
+      "direction": "inbound",
+      "counterparty": "0x7fd7b0c166565173a396e9b4c3915965e89b10bd"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:49:19",
+      "transaction_hash": "0x1ce025e7ac518cde447e598a71ee8846f4fbf6c5ab62613d9c6159bddd26afc2",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x117c718160b1f8e49695fc82b42c438ea74b471c",
+      "value_wei": "965000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x117c718160b1f8e49695fc82b42c438ea74b471c"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:48:53",
+      "transaction_hash": "0xfdfde84b97e71e85d182ad92042d4d8da62bde40f9a5e54f999c05978e7dfaca",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xd30c777a9b2936aaff3dbc97a79878411cd1a5dd",
+      "value_wei": "15000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xd30c777a9b2936aaff3dbc97a79878411cd1a5dd"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:48:37",
+      "transaction_hash": "0x12f623b64caacb88254830a8c86d3c8162293918c5f86293645d1ac1da91fbc7",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xfd230e3edf127fb89374822d7b7368ac0c42f9da",
+      "value_wei": "66000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xfd230e3edf127fb89374822d7b7368ac0c42f9da"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:48:35",
+      "transaction_hash": "0xbdf799912b77796bb8ea972fa0d9bf346ed5e0427df77b2b4e5a86d77cd9d30b",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x5d860c9775437f528d91f09a554ea8c300a0b747",
+      "value_wei": "991000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x5d860c9775437f528d91f09a554ea8c300a0b747"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:47:49",
+      "transaction_hash": "0x922068e91d05ed5caa8ee33dc92531999f39374f78417fa9152b4551b3edce86",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x742a65c759c785779e5936c1ef9ab69684becfdc",
+      "value_wei": "708000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x742a65c759c785779e5936c1ef9ab69684becfdc"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:47:35",
+      "transaction_hash": "0x22a718ac8ed55e8bb86b172e109c87d9ce6d494c166d508269cdb2d17380f056",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x7c5d3ab31e11707f3f54e3be890c5b66625eea59",
+      "value_wei": "958000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x7c5d3ab31e11707f3f54e3be890c5b66625eea59"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:47:27",
+      "transaction_hash": "0x595ee1bbc78bebe988340692387783d2ea74bfd4550d565289fdd9e48abaf809",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xf09bbbd6dc409290928d081992d414faccfe7f2b",
+      "value_wei": "821000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xf09bbbd6dc409290928d081992d414faccfe7f2b"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:47:17",
+      "transaction_hash": "0xb7020ce1b3d2acd5057c6932f94e50c435398a9b3697bc28c6e5516a6aa4b871",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x714eb410d4b6408a1f34c6cf52a527148ec35f79",
+      "value_wei": "564000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x714eb410d4b6408a1f34c6cf52a527148ec35f79"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:47:11",
+      "transaction_hash": "0x0b6515c61deb4935f367712a53db611c7885effef743d9909016fe8700a74fc0",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x6a14af8dfcd26b58c7e60e30f13bad9984525507",
+      "value_wei": "545000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x6a14af8dfcd26b58c7e60e30f13bad9984525507"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:46:57",
+      "transaction_hash": "0x73d3edaa852dbba9b9f72783ae9a07ee0fbfc83cbcc6f2b4fd4973b5ae34161e",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x17bc809467f8aa0b29e47034f12c98246efe47fa",
+      "value_wei": "1047000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x17bc809467f8aa0b29e47034f12c98246efe47fa"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:46:55",
+      "transaction_hash": "0x93b58e4f28fc79aef0ac4adbc3702bffdec98caf7c7f6330640300504e11c3db",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x5b7379cd79700843a87719ba2276e626664ce1fe",
+      "value_wei": "855000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x5b7379cd79700843a87719ba2276e626664ce1fe"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:46:39",
+      "transaction_hash": "0x9fe2cac5a42dd6b6a7346b2c88dd71a87bc139ba38c2dd1160f350431ab356a0",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x151020cea3b8234f1e4dc75883d1c9ff24b6bfd8",
+      "value_wei": "899000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x151020cea3b8234f1e4dc75883d1c9ff24b6bfd8"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:46:21",
+      "transaction_hash": "0x4f4bb9b8f746b0b4731148ae32a3b16393d05881dd85c98e20b322da8a7abb3a",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xdd2701187040ccf6e428b02738d24ad9679d898b",
+      "value_wei": "747000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xdd2701187040ccf6e428b02738d24ad9679d898b"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:46:11",
+      "transaction_hash": "0x20dd49b4bf53fbe0a2d760ebcbbe3583680cd683a13049b7363b8e94bcb5e3ed",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x131715ac969aa0a70069211c26759f46a772011b",
+      "value_wei": "928000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x131715ac969aa0a70069211c26759f46a772011b"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:46:07",
+      "transaction_hash": "0x1652f5a9a82cee63f9db09242e14e132980033f4e75cdc2ac789947e6677f829",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x9473a0e919869f1d3f49dcddab577a836e76ad83",
+      "value_wei": "1050000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x9473a0e919869f1d3f49dcddab577a836e76ad83"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:46:03",
+      "transaction_hash": "0x78008906c97a4ed72ac310362dbaddca15a12ef5c728fe1825594e8d80ef235c",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xea7b6d5b7efaca92e920f59bb844e008e9b6d87b",
+      "value_wei": "76000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xea7b6d5b7efaca92e920f59bb844e008e9b6d87b"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:46:01",
+      "transaction_hash": "0xda2cb4e2e7f9b10b4067051af5f42a3c263d63f63626050d651f03ef7712a640",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xf43cdd267d56f789df115fd3b95bcb3373fb289d",
+      "value_wei": "935000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xf43cdd267d56f789df115fd3b95bcb3373fb289d"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:45:47",
+      "transaction_hash": "0x6d20a6b124416773ce78dd46593fd7b83ef7662a3b62e82af49e1910f60dee14",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xbeb11c93a8ee05868e18875781d54b2f433bdcc4",
+      "value_wei": "1029000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xbeb11c93a8ee05868e18875781d54b2f433bdcc4"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:45:45",
+      "transaction_hash": "0xe388bdf9c4abf1012edff9b2da3e2d4213cb35c0848e4e85e7ccb3f3cc4ef4fa",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xeffe192784036edf9f2a0b390445ecc543e03a0c",
+      "value_wei": "928000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xeffe192784036edf9f2a0b390445ecc543e03a0c"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:45:37",
+      "transaction_hash": "0xde30ab71ee01a6b8f45fa85e8d2aa54ac5a20ee2fc49a32dcdcd24df53c4603e",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0x543b2cecb150312a217b850f1f07d350427aa669",
+      "value_wei": "945000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0x543b2cecb150312a217b850f1f07d350427aa669"
+    },
+    {
+      "profiled_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "block_timestamp": "2025-06-16 14:45:29",
+      "transaction_hash": "0x22f23a1bde1f60c192f7bc7ae366b7daade626782ea31aa59e5809fe04dc2c7c",
+      "from_address": "0x623777cc098c6058a46cf7530f45150ff6a8459d",
+      "to_address": "0xc341eb54b57e5ef95b49a95550994a1ff33c579f",
+      "value_wei": "774000000001006",
+      "input": "0x",
+      "function_selector": "0x",
+      "gas": 21000,
+      "transaction_type": -1,
+      "direction": "outbound",
+      "counterparty": "0xc341eb54b57e5ef95b49a95550994a1ff33c579f"
+    }
+  ],
+  "dataset_notes": {
+    "source": "BigQuery export from Google Cloud Blockchain Analytics",
+    "extraction_mode": "transactions_plus_phase2_semantics",
+    "phase2_enrichment_mode": "receipts_logs_registry",
+    "phase2_semantics_status": "receipt_and_registry_context_only",
+    "logs_deferred_due_scan_cost": true
+  },
+  "curation_notes": {
+    "narrative": "This wallet shows broad mixed inbound/outbound behavior across a very large counterparty surface and many function selectors. It is useful for demonstrating operational-hub style Layer 2 behavior that should be reviewed but not treated as illicit by default.",
+    "selection_basis": "Selected because it combined broad unique counterparties, mixed flow direction, many function selectors, and low dominant-counterparty concentration.",
+    "phase2_refresh_note": "Refreshed from extracted-phase2. Receipt summaries and registry hits are populated. Log summaries remain deferred for this pass where scan cost was not acceptable."
+  },
+  "receipt_summary": {
+    "tx_count": 158381,
+    "success_count": 158380,
+    "failure_count": 1,
+    "failure_rate_pct": 0.0006
+  },
+  "log_summary": {
+    "unique_emitters": 0,
+    "unique_topic0s": 0,
+    "top_emitters": [],
+    "top_topic0s": []
+  },
+  "registry_hits": {
+    "bridge_contract_hits": [],
+    "protocol_contract_hits": [],
+    "stablecoin_contract_hits": [],
+    "service_contract_hits": [],
+    "bridge_topic_hits": [],
+    "protocol_topic_hits": [],
+    "summary": {
+      "observed_address_count": 138,
+      "observed_topic0_count": 0,
+      "bridge_contract_match_count": 0,
+      "protocol_contract_match_count": 0,
+      "stablecoin_contract_match_count": 0,
+      "service_contract_match_count": 0,
+      "bridge_topic_match_count": 0,
+      "protocol_topic_match_count": 0,
+      "matched_bridge_families": [],
+      "matched_protocol_families": [],
+      "matched_topic_families": []
+    }
+  }
+}

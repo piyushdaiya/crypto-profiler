@@ -1,0 +1,125 @@
+{
+  "schema_version": "0.1.0",
+  "address_format": "lowercase",
+  "notes": [
+    "Starter bridge registry for Optimism, Polygon, and Arbitrum.",
+    "Keep this intentionally small and high-confidence.",
+    "Use this for registry-hit enrichment before any wider decoded-events work."
+  ],
+  "families": [
+    {
+      "bridge_family_id": "optimism_standard_bridge",
+      "display_name": "Optimism Standard Bridge",
+      "source_tier": "official",
+      "chain": "optimism",
+      "contracts": [
+        {
+          "network_scope": "l2",
+          "role": "l2_standard_bridge",
+          "address": "0x4200000000000000000000000000000000000010",
+          "confidence": "high"
+        }
+      ],
+      "tags": [
+        "bridge",
+        "canonical",
+        "optimism",
+        "l2"
+      ]
+    },
+    {
+      "bridge_family_id": "arbitrum_token_bridge",
+      "display_name": "Arbitrum Token Bridge",
+      "source_tier": "official",
+      "chain": "arbitrum",
+      "contracts": [
+        {
+          "network_scope": "ethereum_l1",
+          "role": "l1_gateway_router",
+          "address": "0x72ce9c846789fdb6fc1f34ac4ad25dd9ef7031ef",
+          "confidence": "high"
+        },
+        {
+          "network_scope": "arbitrum_l2",
+          "role": "l2_gateway_router",
+          "address": "0x5288c571fd7ad117bea99bf60fe0846c4e84f933",
+          "confidence": "high"
+        },
+        {
+          "network_scope": "arbitrum_l2",
+          "role": "l2_erc20_gateway",
+          "address": "0x09e9222e96e7b4ae2a407b98d48e330053351eee",
+          "confidence": "high"
+        },
+        {
+          "network_scope": "arbitrum_l2",
+          "role": "l2_weth_gateway",
+          "address": "0x6c411ad3e74de3e7bd422b94a27770f5b86c623b",
+          "confidence": "high"
+        }
+      ],
+      "tags": [
+        "bridge",
+        "canonical",
+        "arbitrum",
+        "token-bridge"
+      ]
+    },
+    {
+      "bridge_family_id": "polygon_pos_bridge",
+      "display_name": "Polygon PoS Bridge",
+      "source_tier": "official",
+      "chain": "polygon",
+      "contracts": [
+        {
+          "network_scope": "ethereum_l1",
+          "role": "root_chain",
+          "address": "0x536c55cfe4892e581806e10b38dfe8083551bd03",
+          "confidence": "high"
+        },
+        {
+          "network_scope": "ethereum_l1",
+          "role": "root_chain_proxy",
+          "address": "0x86e4dc95c7fbdbf52e33d563bbdb00823894c287",
+          "confidence": "high"
+        },
+        {
+          "network_scope": "ethereum_l1",
+          "role": "state_sender",
+          "address": "0x28e4f3a7f651294b9564800b2d01f35189a5bfbe",
+          "confidence": "high"
+        },
+        {
+          "network_scope": "ethereum_l1",
+          "role": "deposit_manager",
+          "address": "0xddac6d3a2a787b1f4bf26ab6faf519ae3f1a94cf",
+          "confidence": "high"
+        },
+        {
+          "network_scope": "ethereum_l1",
+          "role": "erc20_predicate",
+          "address": "0x158d5fa3ef8e4dda8a5367decf76b94e7effce95",
+          "confidence": "high"
+        },
+        {
+          "network_scope": "ethereum_l1",
+          "role": "withdraw_manager_proxy",
+          "address": "0x2a88696e0ffa76baa1338f2c74497cc013495922",
+          "confidence": "high"
+        },
+        {
+          "network_scope": "polygon_l2",
+          "role": "child_chain",
+          "address": "0xd9c7c4ed4b66858301d0cb28cc88bf655fe34861",
+          "confidence": "high"
+        }
+      ],
+      "tags": [
+        "bridge",
+        "canonical",
+        "polygon",
+        "pos"
+      ]
+    }
+  ]
+}

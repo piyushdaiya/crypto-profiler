@@ -1,0 +1,53 @@
+{
+"$schema": "https://json-schema.org/draft/2020-12/schema",
+"$id": "https://crypto-profiler.local/schemas/l2-crosschain-feature-mart-manifest.schema.json",
+"title": "Crypto Profiler L2 Cross-Chain Feature Mart Manifest",
+"type": "object",
+"additionalProperties": false,
+"required": [
+"script",
+"row_count",
+"chains",
+"json_path",
+"csv_path"
+],
+"properties": {
+"script": {
+"type": "string",
+"const": "build_l2_crosschain_feature_mart.py"
+},
+"row_count": {
+"type": "integer",
+"minimum": 0
+},
+"chains": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"OPTIMISM",
+"POLYGON",
+"ARBITRUM"
+],
+"properties": {
+"OPTIMISM": {
+"type": "integer",
+"minimum": 0
+},
+"POLYGON": {
+"type": "integer",
+"minimum": 0
+},
+"ARBITRUM": {
+"type": "integer",
+"minimum": 0
+}
+}
+},
+"json_path": {
+"type": "string"
+},
+"csv_path": {
+"type": "string"
+}
+}
+}

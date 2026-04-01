@@ -1,0 +1,178 @@
+{
+  "schema_version": "0.1.0",
+  "address_format": "lowercase",
+  "notes": [
+    "Starter protocol registry for L2 Phase 2 enrichment.",
+    "Includes only high-confidence stablecoin and service-like markers to begin with.",
+    "Expand this after the first receipt/log-based Phase 2 pass."
+  ],
+  "families": [
+    {
+      "family_id": "official_usdc",
+      "display_name": "Official USDC",
+      "actor_class": "stablecoin",
+      "source_tier": "official",
+      "contracts": [
+        {
+          "chain": "optimism",
+          "address": "0x0b2c639c533813f4aa9d7837caf62653d097ff85",
+          "label": "usdc",
+          "canonical": true,
+          "confidence": "high"
+        },
+        {
+          "chain": "polygon",
+          "address": "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+          "label": "usdc",
+          "canonical": true,
+          "confidence": "high"
+        },
+        {
+          "chain": "arbitrum",
+          "address": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+          "label": "usdc",
+          "canonical": true,
+          "confidence": "high"
+        }
+      ],
+      "tags": [
+        "stablecoin",
+        "usdc",
+        "official"
+      ]
+    },
+    {
+      "family_id": "legacy_or_bridged_usdc",
+      "display_name": "Legacy or Bridged USDC",
+      "actor_class": "stablecoin",
+      "source_tier": "official",
+      "contracts": [
+        {
+          "chain": "optimism",
+          "address": "0x7f5c764cbc14f9669b88837ca1490cca17c31607",
+          "label": "usdc.e",
+          "canonical": false,
+          "status": "deprecated",
+          "confidence": "high"
+        },
+        {
+          "chain": "polygon",
+          "address": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+          "label": "usdc.e",
+          "canonical": false,
+          "status": "active",
+          "confidence": "high"
+        }
+      ],
+      "tags": [
+        "stablecoin",
+        "usdc.e",
+        "bridged"
+      ]
+    },
+    {
+      "family_id": "polygon_bridged_usdt",
+      "display_name": "Polygon PoS USDT",
+      "actor_class": "stablecoin",
+      "source_tier": "official",
+      "contracts": [
+        {
+          "chain": "polygon",
+          "address": "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
+          "label": "usdt",
+          "canonical": false,
+          "bridge_family": "polygon_pos_bridge",
+          "confidence": "high"
+        }
+      ],
+      "tags": [
+        "stablecoin",
+        "usdt",
+        "polygon"
+      ]
+    },
+    {
+      "family_id": "polygon_bridged_dai",
+      "display_name": "Polygon PoS DAI",
+      "actor_class": "stablecoin",
+      "source_tier": "official",
+      "contracts": [
+        {
+          "chain": "polygon",
+          "address": "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
+          "label": "dai",
+          "canonical": false,
+          "bridge_family": "polygon_pos_bridge",
+          "confidence": "high"
+        }
+      ],
+      "tags": [
+        "stablecoin",
+        "dai",
+        "polygon"
+      ]
+    },
+    {
+      "family_id": "erc4337_entrypoint_v06",
+      "display_name": "ERC-4337 EntryPoint v0.6",
+      "actor_class": "account_abstraction_service",
+      "source_tier": "secondary",
+      "contracts": [
+        {
+          "chain": "optimism",
+          "address": "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
+          "label": "entrypoint_v06",
+          "confidence": "medium"
+        },
+        {
+          "chain": "polygon",
+          "address": "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
+          "label": "entrypoint_v06",
+          "confidence": "medium"
+        },
+        {
+          "chain": "arbitrum",
+          "address": "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
+          "label": "entrypoint_v06",
+          "confidence": "medium"
+        }
+      ],
+      "tags": [
+        "erc4337",
+        "entrypoint",
+        "service-like"
+      ]
+    },
+    {
+      "family_id": "erc4337_entrypoint_v07",
+      "display_name": "ERC-4337 EntryPoint v0.7",
+      "actor_class": "account_abstraction_service",
+      "source_tier": "secondary",
+      "contracts": [
+        {
+          "chain": "optimism",
+          "address": "0x0000000071727de22e5e9d8baf0edac6f37da032",
+          "label": "entrypoint_v07",
+          "confidence": "medium"
+        },
+        {
+          "chain": "polygon",
+          "address": "0x0000000071727de22e5e9d8baf0edac6f37da032",
+          "label": "entrypoint_v07",
+          "confidence": "medium"
+        },
+        {
+          "chain": "arbitrum",
+          "address": "0x0000000071727de22e5e9d8baf0edac6f37da032",
+          "label": "entrypoint_v07",
+          "confidence": "medium"
+        }
+      ],
+      "tags": [
+        "erc4337",
+        "entrypoint",
+        "service-like"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+"$schema": "https://json-schema.org/draft/2020-12/schema",
+"$id": "https://crypto-profiler.local/schemas/l2-phase2-extract-manifest.schema.json",
+"title": "Crypto Profiler L2 Phase 2 Extract Manifest",
+"type": "object",
+"additionalProperties": false,
+"required": [
+"script",
+"input_dir",
+"out_dir",
+"bridge_registry",
+"protocol_registry",
+"topic_registry",
+"written_count",
+"skipped_count",
+"written_files",
+"skipped_files",
+"chains"
+],
+"properties": {
+"script": {
+"type": "string"
+},
+"input_dir": {
+"type": "string"
+},
+"out_dir": {
+"type": "string"
+},
+"bridge_registry": {
+"type": "string"
+},
+"protocol_registry": {
+"type": "string"
+},
+"topic_registry": {
+"type": "string"
+},
+"written_count": {
+"type": "integer",
+"minimum": 0
+},
+"skipped_count": {
+"type": "integer",
+"minimum": 0
+},
+"written_files": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"skipped_files": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"chains": {
+"type": "object",
+"additionalProperties": false,
+"properties": {
+"optimism": {
+"type": "integer",
+"minimum": 0
+},
+"polygon": {
+"type": "integer",
+"minimum": 0
+},
+"arbitrum": {
+"type": "integer",
+"minimum": 0
+}
+}
+}
+}
+}

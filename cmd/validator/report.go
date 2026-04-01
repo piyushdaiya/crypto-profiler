@@ -25,6 +25,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"math"
 	"sort"
@@ -43,12 +44,27 @@ type reportContext struct {
 	Interpretation    string
 	ChainContext      []string
 	TopCounterparties []reportCounterparty
+	MemberSummaries   []reportMemberSummary
 }
 
 type reportCounterparty struct {
 	Address string
 	Label   string
 	Detail  string
+}
+
+type reportMemberSummary struct {
+	Chain                 string
+	Address               string
+	TxCount               int
+	InboundCount          int
+	OutboundCount         int
+	UniqueCounterparties  int
+	DominantContractShare float64
+	FailureRatePct        float64
+	TopBridgeFamily       string
+	TopProtocolFamily     string
+	TopStablecoinFamily   string
 }
 
 func buildLiveReportContext(profile *model.WalletProfile) *reportContext {
@@ -203,7 +219,7 @@ func buildReportContextFromERC20Case(cc *datasets.ERC20CuratedLayer1Case) *repor
 
 func renderReport(profile *model.WalletProfile, ctx *reportContext) string {
 	if profile == nil {
-		return "Crypto Profiler Analyst Report\nNo profile available.\n"
+		return "Crypto Profiler Analyst Report\n\nNo profile available."
 	}
 
 	lines := []string{
@@ -213,106 +229,65 @@ func renderReport(profile *model.WalletProfile, ctx *reportContext) string {
 		fmt.Sprintf("Network: %s", blankFallback(profile.Network, "unknown")),
 	}
 
-	if ctx != nil && ctx.Mode != "" {
-		lines = append(lines, fmt.Sprintf("Mode: %s", strings.Title(ctx.Mode)))
-	}
-	if ctx != nil && ctx.DatasetType != "" {
-		lines = append(lines, fmt.Sprintf("Dataset Context: %s", ctx.DatasetType))
-	}
-	if ctx != nil && ctx.CaseTitle != "" {
-		caseLine := fmt.Sprintf("Case: %s", ctx.CaseTitle)
-		if ctx.CaseID != "" {
-			caseLine += fmt.Sprintf(" (%s)", ctx.CaseID)
+	if ctx != nil {
+		if strings.TrimSpace(ctx.Mode) != "" {
+			lines = append(lines, fmt.Sprintf("Mode: %s", strings.Title(strings.ToLower(ctx.Mode))))
 		}
-		lines = append(lines, caseLine)
+		if strings.TrimSpace(ctx.DatasetType) != "" {
+			lines = append(lines, fmt.Sprintf("Dataset Context: %s", ctx.DatasetType))
+		}
+		if strings.TrimSpace(ctx.CaseTitle) != "" || strings.TrimSpace(ctx.CaseID) != "" {
+			lines = append(lines, fmt.Sprintf("Case: %s (%s)", blankFallback(ctx.CaseTitle, "Untitled Case"), blankFallback(ctx.CaseID, "unknown-case")))
+		}
 	}
 
 	lines = append(lines,
 		fmt.Sprintf("Risk Score: %.2f", profile.RiskScore),
-		fmt.Sprintf("Risk Grade: %s", blankFallback(profile.RiskGrade, "ungraded")),
+		fmt.Sprintf("Risk Grade: %s", blankFallback(profile.RiskGrade, "UNKNOWN")),
 		fmt.Sprintf("Review Recommended: %s", yesNo(profile.ReviewRecommended)),
 	)
 
-	if profile.Attribution != nil {
-		lines = append(lines, "", "Attribution:")
-		lines = append(lines, fmt.Sprintf("Resolved Label: %s", blankFallback(profile.Attribution.Label, "unknown")))
-		if profile.Attribution.Actor != "" {
-			lines = append(lines, fmt.Sprintf("Actor: %s", profile.Attribution.Actor))
-		}
-		lines = append(lines,
-			fmt.Sprintf("Category: %s", blankFallback(string(profile.Attribution.Category), "UNKNOWN")),
-			fmt.Sprintf("Risk Class: %s", blankFallback(string(profile.Attribution.RiskClass), "UNKNOWN")),
-			fmt.Sprintf("Confidence: %.2f", profile.Attribution.Confidence),
-			fmt.Sprintf("Primary Source: %s (%s / %s)", profile.Attribution.SourceName, profile.Attribution.SourceTier, profile.Attribution.SourceType),
-			fmt.Sprintf("Disposition: %s", attributionDisposition(profile.Attribution)),
-		)
-		if profile.Attribution.BaseConfidence > 0 && math.Abs(profile.Attribution.Confidence-profile.Attribution.BaseConfidence) >= 0.01 {
-			lines = append(lines, fmt.Sprintf("Confidence Basis: base %.2f, resolved %.2f", profile.Attribution.BaseConfidence, profile.Attribution.Confidence))
-		}
-		if len(profile.Attribution.CorroboratingSources) > 0 {
-			lines = append(lines, fmt.Sprintf("Corroborating Sources: %s", joinAttributionSources(profile.Attribution.CorroboratingSources)))
-		} else if len(profile.Attribution.SupportingSources) > 1 {
-			lines = append(lines, fmt.Sprintf("Supporting Sources: %s", joinAttributionSources(profile.Attribution.SupportingSources[1:])))
-		}
-		if len(profile.Attribution.ConflictingSources) > 0 {
-			lines = append(lines, fmt.Sprintf("Conflicting Sources: %s", joinAttributionSources(profile.Attribution.ConflictingSources)))
-		}
+	if attributionLines := renderAttributionSummary(profile); len(attributionLines) > 0 {
+		lines = append(lines, attributionLines...)
 	}
 
-	if reasons := topRiskReasons(profile.RiskReasons, 5); len(reasons) > 0 {
-		lines = append(lines, "", "Top Reasons:")
-		for idx, reason := range reasons {
-			lines = append(lines, fmt.Sprintf(
-				"%d. [%s] %s (offset %s%.1f)",
-				idx+1,
-				blankFallback(reason.Category, "UNKNOWN"),
-				reason.Description,
-				offsetPrefix(reason.Offset),
-				math.Abs(reason.Offset),
-			))
-		}
+	if topReasons := renderTopReasons(profile); len(topReasons) > 0 {
+		lines = append(lines, topReasons...)
 	}
 
-	if insights := topAttributionInsights(profile.AttributionInsights, 4); len(insights) > 0 {
-		lines = append(lines, "", "Actor / Exposure Findings:")
-		for idx, insight := range insights {
-			lines = append(lines, fmt.Sprintf("%d. %s", idx+1, renderAttributionInsight(insight)))
-		}
-	}
-	lines = append(lines, renderGraphSummary(profile.GraphSummary)...)
-	if ctx != nil && len(ctx.TopCounterparties) > 0 {
-		lines = append(lines, "", "Top Counterparties:")
-		for idx, cp := range limitCounterparties(ctx.TopCounterparties, 5) {
-			entry := fmt.Sprintf("%d. %s", idx+1, cp.Address)
-			if cp.Label != "" {
-				entry += " [" + cp.Label + "]"
-			}
-			if cp.Detail != "" {
-				entry += " - " + cp.Detail
-			}
-			lines = append(lines, entry)
-		}
+	if insightLines := renderAttributionInsights(profile); len(insightLines) > 0 {
+		lines = append(lines, insightLines...)
 	}
 
-	narrative := ""
+	if topCounterpartyLines := renderTopCounterparties(ctx); len(topCounterpartyLines) > 0 {
+		lines = append(lines, topCounterpartyLines...)
+	}
+
+	if ctx != nil && strings.TrimSpace(ctx.Interpretation) != "" {
+		lines = append(lines, "", "Interpretation:", ctx.Interpretation)
+	}
+
 	if ctx != nil {
-		narrative = firstNonEmpty(ctx.Narrative, ctx.Interpretation)
+		if memberLines := renderMemberSummaries(ctx.MemberSummaries); len(memberLines) > 0 {
+			lines = append(lines, memberLines...)
+		}
 	}
-	if narrative == "" {
-		narrative = profile.ValidationDetails
-	}
-	if narrative != "" {
-		lines = append(lines, "", "Interpretation:", narrative)
+
+	if graphLines := renderGraphSummary(profile.GraphSummary); len(graphLines) > 0 {
+		lines = append(lines, graphLines...)
 	}
 
 	if ctx != nil && len(ctx.ChainContext) > 0 {
 		lines = append(lines, "", "Chain Context:")
 		for _, item := range ctx.ChainContext {
-			lines = append(lines, "- "+item)
+			if strings.TrimSpace(item) == "" {
+				continue
+			}
+			lines = append(lines, fmt.Sprintf("- %s", item))
 		}
 	}
 
-	return strings.Join(lines, "\n") + "\n"
+	return strings.Join(lines, "\n")
 }
 
 func topRiskReasons(reasons []model.RiskReason, limit int) []model.RiskReason {
@@ -524,6 +499,7 @@ func insightPriority(insight model.AttributionInsight) int {
 		return 5
 	}
 }
+
 func renderGraphSummary(summary *model.GraphSummary) []string {
 	if summary == nil {
 		return nil
@@ -586,4 +562,300 @@ func renderGraphSummary(summary *model.GraphSummary) []string {
 	}
 
 	return lines
+}
+
+func renderMemberSummaries(members []reportMemberSummary) []string {
+	if len(members) == 0 {
+		return nil
+	}
+
+	sorted := make([]reportMemberSummary, len(members))
+	copy(sorted, members)
+
+	sort.SliceStable(sorted, func(i, j int) bool {
+		if sorted[i].TxCount == sorted[j].TxCount {
+			if sorted[i].Chain == sorted[j].Chain {
+				return sorted[i].Address < sorted[j].Address
+			}
+			return sorted[i].Chain < sorted[j].Chain
+		}
+		return sorted[i].TxCount > sorted[j].TxCount
+	})
+
+	lines := []string{"", "Cross-Chain Members:"}
+
+	limit := len(sorted)
+	if limit > 5 {
+		limit = 5
+	}
+
+	for i := 0; i < limit; i++ {
+		m := sorted[i]
+
+		base := fmt.Sprintf(
+			"%d. [%s] %s - %d txs (%d inbound / %d outbound, %d counterparties, %.2f%% dominant contract, %.2f%% failure rate)",
+			i+1,
+			blankFallback(m.Chain, "UNKNOWN"),
+			blankFallback(m.Address, "unknown"),
+			m.TxCount,
+			m.InboundCount,
+			m.OutboundCount,
+			m.UniqueCounterparties,
+			m.DominantContractShare,
+			m.FailureRatePct,
+		)
+
+		families := make([]string, 0, 3)
+		if strings.TrimSpace(m.TopBridgeFamily) != "" {
+			families = append(families, fmt.Sprintf("bridge=%s", m.TopBridgeFamily))
+		}
+		if strings.TrimSpace(m.TopProtocolFamily) != "" {
+			families = append(families, fmt.Sprintf("protocol=%s", m.TopProtocolFamily))
+		}
+		if strings.TrimSpace(m.TopStablecoinFamily) != "" {
+			families = append(families, fmt.Sprintf("stablecoin=%s", m.TopStablecoinFamily))
+		}
+
+		if len(families) > 0 {
+			base = fmt.Sprintf("%s [%s]", base, strings.Join(families, ", "))
+		}
+
+		lines = append(lines, base)
+	}
+
+	return lines
+}
+
+func buildReportContextFromCrosschainL2Case(cc *crosschainL2Case) *reportContext {
+	if cc == nil {
+		return nil
+	}
+
+	s := cc.CrosschainSummary
+
+	memberSummaries := make([]reportMemberSummary, 0, len(cc.Members))
+	for _, m := range cc.Members {
+		memberSummaries = append(memberSummaries, reportMemberSummary{
+			Chain:                 m.Chain,
+			Address:               m.Address,
+			TxCount:               m.TxCount,
+			InboundCount:          m.InboundCount,
+			OutboundCount:         m.OutboundCount,
+			UniqueCounterparties:  m.UniqueCounterparties,
+			DominantContractShare: m.DominantContractShare,
+			FailureRatePct:        m.FailureRatePct,
+			TopBridgeFamily:       m.TopBridgeFamily,
+			TopProtocolFamily:     m.TopProtocolFamily,
+			TopStablecoinFamily:   m.TopStablecoinFamily,
+		})
+	}
+
+	chainContext := []string{
+		fmt.Sprintf("Chains included: %s", strings.Join(cc.ChainsIncluded, ", ")),
+		fmt.Sprintf("Members: %d", cc.MemberCount),
+		fmt.Sprintf("Unique addresses: %d", s.AddressCount),
+		fmt.Sprintf("Total transactions: %d", s.TotalTxCount),
+	}
+	if s.MaxDominantContractShare > 0 {
+		chainContext = append(chainContext, fmt.Sprintf("Max dominant contract share: %.2f%%", s.MaxDominantContractShare))
+	}
+	if s.MaxUniqueCounterparties > 0 {
+		chainContext = append(chainContext, fmt.Sprintf("Max unique counterparties: %d", s.MaxUniqueCounterparties))
+	}
+	if s.BridgeOrStablecoinMemberCount > 0 {
+		chainContext = append(chainContext, fmt.Sprintf("Bridge/stablecoin members: %d", s.BridgeOrStablecoinMemberCount))
+	}
+
+	return &reportContext{
+		Mode:            "dataset",
+		DatasetType:     "Cross-chain L2 dataset",
+		CaseID:          cc.CaseID,
+		CaseTitle:       cc.Title,
+		Narrative:       cc.CurationNotes.Narrative,
+		Interpretation:  cc.CurationNotes.Narrative,
+		MemberSummaries: memberSummaries,
+		ChainContext:    chainContext,
+	}
+}
+
+func renderTopReasons(profile *model.WalletProfile) []string {
+	if profile == nil || len(profile.RiskReasons) == 0 {
+		return nil
+	}
+
+	reasons := topRiskReasons(profile.RiskReasons, 5)
+	if len(reasons) == 0 {
+		return nil
+	}
+
+	lines := []string{"", "Top Reasons:"}
+	for i, r := range reasons {
+		lines = append(lines,
+			fmt.Sprintf(
+				"%d. [%s] %s (offset %+0.1f)",
+				i+1,
+				blankFallback(string(r.Category), "UNKNOWN"),
+				blankFallback(r.Description, r.Code),
+				r.Offset,
+			),
+		)
+	}
+
+	return lines
+}
+
+func renderAttributionSummary(profile *model.WalletProfile) []string {
+	if profile == nil || profile.Attribution == nil {
+		return nil
+	}
+
+	resolved := profile.Attribution
+	lines := []string{"", "Attribution:"}
+
+	resolvedLabel := blankFallback(resolved.Label, resolved.Actor)
+	if strings.TrimSpace(resolvedLabel) != "" && resolvedLabel != "unknown" {
+		lines = append(lines, fmt.Sprintf("Resolved Label: %s", resolvedLabel))
+	}
+	if actor := strings.TrimSpace(resolved.Actor); actor != "" {
+		lines = append(lines, fmt.Sprintf("Actor: %s", actor))
+	}
+	if category := strings.TrimSpace(string(resolved.Category)); category != "" {
+		lines = append(lines, fmt.Sprintf("Category: %s", category))
+	}
+	if riskClass := strings.TrimSpace(string(resolved.RiskClass)); riskClass != "" {
+		lines = append(lines, fmt.Sprintf("Risk Class: %s", riskClass))
+	}
+	if resolved.Confidence > 0 {
+		lines = append(lines, fmt.Sprintf("Confidence: %.2f", resolved.Confidence))
+	}
+
+	if sourceName := strings.TrimSpace(resolved.SourceName); sourceName != "" {
+		lines = append(lines, fmt.Sprintf(
+			"Primary Source: %s (%s / %s)",
+			sourceName,
+			blankFallback(string(resolved.SourceTier), "UNKNOWN"),
+			blankFallback(string(resolved.SourceType), "UNKNOWN"),
+		))
+	}
+
+	lines = append(lines, fmt.Sprintf("Disposition: %s", attributionDisposition(resolved)))
+
+	if resolved.BaseConfidence > 0 || resolved.Confidence > 0 {
+		lines = append(lines, fmt.Sprintf(
+			"Confidence Basis: base %.2f, resolved %.2f",
+			resolved.BaseConfidence,
+			resolved.Confidence,
+		))
+	}
+
+	if len(resolved.CorroboratingSources) > 0 {
+		lines = append(lines, fmt.Sprintf(
+			"Corroborating Sources: %s",
+			joinAttributionSources(resolved.CorroboratingSources),
+		))
+	}
+
+	if len(resolved.ConflictingSources) > 0 {
+		lines = append(lines, fmt.Sprintf(
+			"Conflicting Sources: %s",
+			joinAttributionSources(resolved.ConflictingSources),
+		))
+	}
+
+	return lines
+}
+
+func renderAttributionInsights(profile *model.WalletProfile) []string {
+	if profile == nil || len(profile.AttributionInsights) == 0 {
+		return nil
+	}
+
+	insights := topAttributionInsights(profile.AttributionInsights, 5)
+	if len(insights) == 0 {
+		return nil
+	}
+
+	lines := []string{"", "Actor / Exposure Findings:"}
+	for i, insight := range insights {
+		lines = append(lines, fmt.Sprintf("%d. %s", i+1, renderAttributionInsight(insight)))
+	}
+
+	return lines
+}
+
+func renderTopCounterparties(ctx *reportContext) []string {
+	if ctx == nil || len(ctx.TopCounterparties) == 0 {
+		return nil
+	}
+
+	counterparties := limitCounterparties(ctx.TopCounterparties, 5)
+	if len(counterparties) == 0 {
+		return nil
+	}
+
+	lines := []string{"", "Top Counterparties:"}
+	for i, cp := range counterparties {
+		address := blankFallback(cp.Address, "unknown")
+		detail := blankFallback(cp.Detail, "observed")
+		lines = append(lines, fmt.Sprintf("%d. %s - %s", i+1, address, detail))
+	}
+
+	return lines
+}
+func asInt64(v any) int64 {
+	switch t := v.(type) {
+	case int:
+		return int64(t)
+	case int64:
+		return t
+	case float64:
+		return int64(t)
+	case json.Number:
+		i, _ := t.Int64()
+		return i
+	default:
+		return 0
+	}
+}
+
+func asFloat64(v any) float64 {
+	switch t := v.(type) {
+	case float64:
+		return t
+	case float32:
+		return float64(t)
+	case int:
+		return float64(t)
+	case int64:
+		return float64(t)
+	case json.Number:
+		f, _ := t.Float64()
+		return f
+	default:
+		return 0
+	}
+}
+
+func formatCrosschainSummaryValue(key string, value any) string {
+	switch key {
+	case "max_dominant_contract_share", "max_failure_rate_pct":
+		return fmt.Sprintf("%.2f%%", asFloat64(value))
+	case "address_count",
+		"chain_count",
+		"total_tx_count",
+		"max_unique_counterparties",
+		"bridge_or_stablecoin_member_count",
+		"member_count",
+		"unique_address_count":
+		return fmt.Sprintf("%d", asInt64(value))
+	default:
+		switch value.(type) {
+		case int, int64:
+			return fmt.Sprintf("%d", asInt64(value))
+		case float64, float32:
+			return fmt.Sprintf("%.2f", asFloat64(value))
+		default:
+			return fmt.Sprintf("%v", value)
+		}
+	}
 }

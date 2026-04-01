@@ -1,0 +1,84 @@
+{
+  "schema_version": "0.1.0",
+  "notes": [
+    "Starter topic registry for Phase 2 log enrichment.",
+    "This is intentionally signature-first.",
+    "Only the most universal topic0 hashes are prefilled.",
+    "For chain-specific bridge or protocol events, extend this file after the first April 1 semantic pass."
+  ],
+  "topics": [
+    {
+      "topic_family_id": "erc20_transfer",
+      "display_name": "ERC-20 Transfer",
+      "event_signature": "Transfer(address,address,uint256)",
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "match_mode": "topic0_only",
+      "actor_class": "fungible_token_flow"
+    },
+    {
+      "topic_family_id": "erc20_approval",
+      "display_name": "ERC-20 Approval",
+      "event_signature": "Approval(address,address,uint256)",
+      "topic0": "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+      "match_mode": "topic0_only",
+      "actor_class": "fungible_token_approval"
+    },
+    {
+      "topic_family_id": "weth_deposit",
+      "display_name": "WETH Deposit",
+      "event_signature": "Deposit(address,uint256)",
+      "topic0": null,
+      "match_mode": "event_signature_only",
+      "actor_class": "wrapped_native_token_flow"
+    },
+    {
+      "topic_family_id": "weth_withdrawal",
+      "display_name": "WETH Withdrawal",
+      "event_signature": "Withdrawal(address,uint256)",
+      "topic0": null,
+      "match_mode": "event_signature_only",
+      "actor_class": "wrapped_native_token_flow"
+    },
+    {
+      "topic_family_id": "proxy_upgraded",
+      "display_name": "Proxy Upgraded",
+      "event_signature": "Upgraded(address)",
+      "topic0": null,
+      "match_mode": "event_signature_only",
+      "actor_class": "upgradeability_signal"
+    },
+    {
+      "topic_family_id": "proxy_admin_changed",
+      "display_name": "Proxy Admin Changed",
+      "event_signature": "AdminChanged(address,address)",
+      "topic0": null,
+      "match_mode": "event_signature_only",
+      "actor_class": "upgradeability_signal"
+    },
+    {
+      "topic_family_id": "ownership_transferred",
+      "display_name": "Ownership Transferred",
+      "event_signature": "OwnershipTransferred(address,address)",
+      "topic0": null,
+      "match_mode": "event_signature_only",
+      "actor_class": "ownership_signal"
+    }
+  ],
+  "chain_specific_placeholders": [
+    {
+      "chain": "optimism",
+      "topic_family_id": "optimism_bridge_events",
+      "entries": []
+    },
+    {
+      "chain": "polygon",
+      "topic_family_id": "polygon_pos_bridge_events",
+      "entries": []
+    },
+    {
+      "chain": "arbitrum",
+      "topic_family_id": "arbitrum_bridge_events",
+      "entries": []
+    }
+  ]
+}

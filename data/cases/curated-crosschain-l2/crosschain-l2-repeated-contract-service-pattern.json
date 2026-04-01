@@ -1,0 +1,82 @@
+{
+  "schema_version": "0.3.0",
+  "case_family": "crosschain_l2",
+  "case_id": "crosschain-l2-repeated-contract-service-pattern",
+  "title": "Cross-Chain L2 Repeated Contract Service Pattern",
+  "description": "Cross-chain case showing repeated service-like contract concentration across multiple L2s.",
+  "chains_included": [
+    "ARBITRUM",
+    "OPTIMISM",
+    "POLYGON"
+  ],
+  "member_count": 3,
+  "members": [
+    {
+      "chain": "ARBITRUM",
+      "address": "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
+      "tx_count": 2313946,
+      "inbound_count": 2313946,
+      "outbound_count": 0,
+      "unique_counterparties": 333,
+      "dominant_contract_share": 100.0,
+      "failure_rate_pct": 0.0,
+      "unique_emitters": 0,
+      "unique_topic0s": 0,
+      "bridge_hit_count": 0,
+      "protocol_hit_count": 1,
+      "stablecoin_hit_count": 0,
+      "service_hit_count": 1,
+      "top_bridge_family": "",
+      "top_protocol_family": "erc4337_entrypoint_v06",
+      "top_stablecoin_family": ""
+    },
+    {
+      "chain": "OPTIMISM",
+      "address": "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
+      "tx_count": 764546,
+      "inbound_count": 764546,
+      "outbound_count": 0,
+      "unique_counterparties": 281,
+      "dominant_contract_share": 100.0,
+      "failure_rate_pct": 0.4302,
+      "unique_emitters": 0,
+      "unique_topic0s": 0,
+      "bridge_hit_count": 0,
+      "protocol_hit_count": 1,
+      "stablecoin_hit_count": 0,
+      "service_hit_count": 1,
+      "top_bridge_family": "",
+      "top_protocol_family": "erc4337_entrypoint_v06",
+      "top_stablecoin_family": ""
+    },
+    {
+      "chain": "POLYGON",
+      "address": "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
+      "tx_count": 7517514,
+      "inbound_count": 7517514,
+      "outbound_count": 0,
+      "unique_counterparties": 963,
+      "dominant_contract_share": 100.0,
+      "failure_rate_pct": 0.0,
+      "unique_emitters": 0,
+      "unique_topic0s": 0,
+      "bridge_hit_count": 0,
+      "protocol_hit_count": 1,
+      "stablecoin_hit_count": 0,
+      "service_hit_count": 1,
+      "top_bridge_family": "",
+      "top_protocol_family": "erc4337_entrypoint_v06",
+      "top_stablecoin_family": ""
+    }
+  ],
+  "crosschain_summary": {
+    "address_count": 1,
+    "chain_count": 3,
+    "total_tx_count": 10596006,
+    "max_dominant_contract_share": 100.0
+  },
+  "curation_notes": {
+    "narrative": "This case captures the same or very similar service-like repeated-contract pattern across multiple L2s.",
+    "selection_basis": "Selected from Phase 2 mart rows where dominant contract share is extremely high and counterparty diversity remains relatively constrained for very large transaction volume."
+  }
+}

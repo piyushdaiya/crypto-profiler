@@ -1,0 +1,11 @@
+{
+  "script": "build_l2_crosschain_feature_mart.py",
+  "row_count": 7,
+  "chains": {
+    "OPTIMISM": 3,
+    "POLYGON": 2,
+    "ARBITRUM": 2
+  },
+  "json_path": "data/cases/crosschain-l2-mart/l2_crosschain_feature_mart.json",
+  "csv_path": "data/cases/crosschain-l2-mart/l2_crosschain_feature_mart.csv"
+}

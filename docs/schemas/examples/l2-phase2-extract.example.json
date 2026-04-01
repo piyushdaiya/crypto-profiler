@@ -1,0 +1,151 @@
+{
+"schema_version": "0.2.0",
+"chain": "OPTIMISM",
+"address": "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
+"window_start": "2025-03-16T00:00:00Z",
+"window_end": "2025-06-17T00:00:00Z",
+"summary": {
+"first_seen": "2025-03-16T00:00:01Z",
+"last_seen": "2025-06-16T23:59:59Z",
+"tx_count": 764546,
+"inbound_count": 764546,
+"outbound_count": 0,
+"unique_counterparties": 281,
+"unique_to_addresses": 1,
+"unique_from_addresses": 281,
+"dominant_direction": "inbound",
+"dominant_counterparty_share": 3.5,
+"dominant_contract_share": 100.0
+},
+"top_counterparties": [
+{
+"key": "0x596680f2ea1bdb041570c74fb5fc8c0c0a9fad80",
+"count": 26750
+}
+],
+"top_to_addresses": [
+{
+"key": "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
+"count": 764546
+}
+],
+"top_from_addresses": [
+{
+"key": "0x596680f2ea1bdb041570c74fb5fc8c0c0a9fad80",
+"count": 26750
+}
+],
+"sample_transfers": [
+{
+"profiled_address": "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
+"block_timestamp": "2025-06-16T23:59:59Z",
+"from_address": "0x596680f2ea1bdb041570c74fb5fc8c0c0a9fad80",
+"to_address": "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
+"direction": "inbound",
+"counterparty": "0x596680f2ea1bdb041570c74fb5fc8c0c0a9fad80"
+}
+],
+"dataset_notes": {
+"source": "BigQuery export from Google Cloud Blockchain Analytics",
+"extraction_mode": "transactions_plus_phase2_semantics",
+"phase2_enrichment_mode": "receipts_logs_registry"
+},
+"receipt_summary": {
+"tx_count": 764546,
+"success_count": 764120,
+"failure_count": 426,
+"failure_rate_pct": 0.06
+},
+"log_summary": {
+"unique_emitters": 7,
+"unique_topic0s": 12,
+"top_emitters": [
+{
+"key": "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
+"count": 700000
+}
+],
+"top_topic0s": [
+{
+"key": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+"count": 620000
+}
+]
+},
+"registry_hits": {
+"bridge_contract_hits": [],
+"protocol_contract_hits": [
+{
+"family_id": "erc4337_entrypoint_v06",
+"display_name": "ERC-4337 EntryPoint v0.6",
+"actor_class": "account_abstraction_service",
+"address": "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
+"label": "entrypoint_v06",
+"canonical": false,
+"status": "",
+"bridge_family": "",
+"source_tier": "secondary",
+"confidence": "medium",
+"observed_count": 764547,
+"tags": [
+"erc4337",
+"entrypoint",
+"service-like"
+],
+"match_source": "address"
+}
+],
+"stablecoin_contract_hits": [],
+"service_contract_hits": [
+{
+"family_id": "erc4337_entrypoint_v06",
+"display_name": "ERC-4337 EntryPoint v0.6",
+"actor_class": "account_abstraction_service",
+"address": "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
+"label": "entrypoint_v06",
+"canonical": false,
+"status": "",
+"bridge_family": "",
+"source_tier": "secondary",
+"confidence": "medium",
+"observed_count": 764547,
+"tags": [
+"erc4337",
+"entrypoint",
+"service-like"
+],
+"match_source": "address"
+}
+],
+"bridge_topic_hits": [],
+"protocol_topic_hits": [
+{
+"topic_family_id": "erc20_transfer",
+"display_name": "ERC-20 Transfer",
+"event_signature": "Transfer(address,address,uint256)",
+"topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+"actor_class": "fungible_token_flow",
+"match_mode": "topic0_only",
+"observed_count": 620000,
+"match_source": "topic0"
+}
+],
+"summary": {
+"observed_address_count": 283,
+"observed_topic0_count": 1,
+"bridge_contract_match_count": 0,
+"protocol_contract_match_count": 1,
+"stablecoin_contract_match_count": 0,
+"service_contract_match_count": 1,
+"bridge_topic_match_count": 0,
+"protocol_topic_match_count": 1,
+"matched_bridge_families": [],
+"matched_protocol_families": [
+"erc4337_entrypoint_v06"
+],
+"matched_topic_families": [
+"erc20_transfer"
+]
+}
+}
+}

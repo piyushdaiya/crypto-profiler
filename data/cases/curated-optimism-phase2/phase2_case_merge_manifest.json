@@ -1,0 +1,13 @@
+{
+  "script": "merge_l2_phase2_case_context.py",
+  "curated_dir": "data/cases/curated-optimism-phase2",
+  "phase2_dir": "/Volumes/Extreme SSD/crypto-profiler/optimism/extracted-phase2",
+  "out_dir": "data/cases/curated-optimism-phase2",
+  "written_count": 2,
+  "skipped_count": 0,
+  "written_files": [
+    "optimism-broad-operational-hub.json",
+    "optimism-repeated-contract-router-like.json"
+  ],
+  "skipped_files": []
+}

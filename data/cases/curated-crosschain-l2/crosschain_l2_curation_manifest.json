@@ -1,0 +1,10 @@
+{
+  "script": "curate_crosschain_l2_cases.py",
+  "mart_file": "data/cases/crosschain-l2-mart/l2_crosschain_feature_mart.json",
+  "out_dir": "data/cases/curated-crosschain-l2",
+  "case_count": 2,
+  "case_ids": [
+    "crosschain-l2-repeated-contract-service-pattern",
+    "crosschain-l2-broad-operational-hub"
+  ]
+}

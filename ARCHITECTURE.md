@@ -13,8 +13,12 @@ The current implementation picture is that Crypto Profiler has:
 - an attribution resolver with Tier 1 precedence, bounded secondary corroboration, and actor/exposure refinement
 - a bounded graph summary and graph-aware scoring layer
 - an analyst-facing report layer on top of the validator output
+- partial Phase 2 semantic enrichment now populated for Optimism and Arbitrum, with Polygon intentionally left tx-first / registry-aware for the current pass
+- an initial populated Phase 3 cross-chain L2 mart, curated case set, and report path
+- scaffolded Phase 2 L2 semantic enrichment for Optimism, Polygon, and Arbitrum
+- scaffolded Phase 3 cross-chain L2 dataset routing and report support
 
-It does not yet have one fully unified graph-aware engine across all chains, and Optimism, Polygon, and Arbitrum Phase 1 are intentionally transactions-only while decoded-events remain deferred due scan-cost / ROI.
+It does not yet have one fully unified graph-aware engine across all chains, and Optimism, Polygon, and Arbitrum Phase 1 remain the production L2 path today while Phase 2 / Phase 3 semantic datasets are still being prepared.
 
 ---
 
@@ -81,6 +85,9 @@ Curated dataset mode is not a toy in this repo. It is the main delivery path for
 - current Solana scoring
 - current Bitcoin scoring
 - reproducible graph-aware and attribution-aware report output
+- partial Phase 2 semantic enrichment for Optimism and Arbitrum, with Polygon kept tx-first / registry-aware for the current pass
+- initial populated Phase 3 cross-chain L2 case routing and report output
+
 
 ### Portfolio-ready outputs matter
 
@@ -121,11 +128,12 @@ Dataset mode currently dispatches to:
 - Optimism Phase 1 curated cases
 - Polygon Phase 1 curated cases
 - Arbitrum Phase 1 curated cases
+- initial curated cross-chain L2 pilot cases
 - ERC-20 curated cases
 - Solana curated stablecoin-flow cases
 - Bitcoin curated UTXO-flow cases
 
-This is where the repo currently delivers its multi-chain dataset-mode story.
+The important nuance is that cross-chain L2 routing and reporting are no longer just scaffolded: the repo now has an initial populated cross-chain mart and first curated benchmark cases built from best-available L2 inputs rather than full semantic parity across all three chains.
 
 ### 3. Analyst-facing report flow
 
@@ -459,6 +467,53 @@ Even without decoded-events, the current Arbitrum implementation can already sho
 - broad mixed-flow surface across many counterparties
 - a practical Layer 2 dataset-mode workflow built under cost constraints
 
+## L2 Phase 2 Semantic Enrichment Architecture (Scaffolded)
+
+The next L2 layer is designed as a bounded semantic enrichment pass rather than a broad decoded-events-first warehouse.
+
+Prepared now:
+
+- shared bridge / protocol / stablecoin / topic registries
+- shared Phase 2 extract schema
+- registry-hit enrichment helper
+- chain-specific Phase 2 merge scripts for Optimism, Polygon, and Arbitrum
+
+The intended Phase 2 architecture is:
+
+1. keep the current tx-only Phase 1 extracts as the base
+2. merge per-address receipt summaries
+3. merge per-address log emitter and topic0 summaries
+4. enrich with registry hits
+5. refresh curated L2 cases with stronger semantic evidence
+
+This architecture is intentionally cost-aware:
+
+- it preserves the current homelab-first workflow
+- it improves semantic precision without requiring broad decoded-events exports as the default path
+- it keeps decoded-events as a targeted enhancement path rather than a mandatory dependency
+
+## L2 Phase 3 Cross-Chain Mart Architecture (Scaffolded)
+
+Phase 3 is designed as a normalization layer above the three L2 Phase 2 outputs.
+
+Prepared now:
+
+- cross-chain feature mart builder
+- curated cross-chain case generator
+- cross-chain mart schema
+- curated cross-chain case schema
+- validator routing and report scaffolding for cross-chain L2 cases
+
+The intended Phase 3 architecture is:
+
+1. read populated Phase 2 extracts from Optimism, Polygon, and Arbitrum
+2. normalize them into one cross-chain feature mart
+3. derive cross-chain candidate patterns
+4. generate curated cross-chain benchmark cases
+5. route those through `cmd/validator --dataset`
+6. render cross-chain analyst reports with member-level summaries
+
+This keeps cross-chain reasoning additive and explainable rather than pretending the repo already has a generalized live multi-chain graph engine.
 ---
 
 ## Solana Architecture
@@ -652,14 +707,16 @@ The repo deliberately keeps the committed artifacts small enough to support demo
 
 The architecture is set up so the next stage can add:
 
+- populated L2 Phase 2 receipt/log semantic summaries
+- refreshed Optimism, Polygon, and Arbitrum curated cases using semantic enrichment
+- the first populated cross-chain L2 feature mart
+- the first curated cross-chain L2 benchmark cases
 - richer value-weighted graph scoring
 - broader graph coverage where attributed graph support is currently sparse
 - fresh-wallet plus immediate large-flow reasoning
 - richer Solana and Bitcoin live-path reasoning
 - broader protocol-intent interpretation for ERC-20 and trace-enriched EVM paths
-- Optimism event-aware enhancement once scan-cost / ROI becomes favorable
-- Polygon event-aware enhancement once scan-cost / ROI becomes favorable
-- Arbitrum event-aware enhancement once scan-cost / ROI becomes favorable
+- targeted decoded-events enhancement only where Phase 2 semantic coverage is still too ambiguous
 
 Those are next-stage additions, not claims about the current implementation.
 

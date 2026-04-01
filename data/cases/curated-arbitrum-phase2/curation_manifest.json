@@ -1,0 +1,9 @@
+{
+  "script": "curate_arbitrum_layer2.py",
+  "input_dir": "/Volumes/Extreme SSD/crypto-profiler/arbitrum/extracted-phase2",
+  "out_dir": "data/cases/curated-arbitrum-phase2",
+  "case_ids": [
+    "arbitrum-repeated-contract-service-like",
+    "arbitrum-broad-operational-hub"
+  ]
+}

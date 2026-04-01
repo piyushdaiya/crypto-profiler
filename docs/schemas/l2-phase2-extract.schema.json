@@ -1,0 +1,616 @@
+{
+"$schema": "https://json-schema.org/draft/2020-12/schema",
+"$id": "https://crypto-profiler.local/schemas/l2-phase2-extract.schema.json",
+"title": "Crypto Profiler L2 Phase 2 Extract",
+"description": "Shared Phase 2 extract schema for Optimism, Polygon, and Arbitrum transactions-only plus receipt/log/registry enrichment.",
+"type": "object",
+"additionalProperties": false,
+"required": [
+"schema_version",
+"chain",
+"address",
+"window_start",
+"window_end",
+"summary",
+"top_counterparties",
+"top_to_addresses",
+"top_from_addresses",
+"sample_transfers",
+"dataset_notes",
+"receipt_summary",
+"log_summary",
+"registry_hits"
+],
+"properties": {
+"schema_version": {
+"type": "string",
+"const": "0.2.0"
+},
+"chain": {
+"type": "string",
+"enum": [
+"OPTIMISM",
+"POLYGON",
+"ARBITRUM"
+]
+},
+"address": {
+"type": "string",
+"pattern": "^0x[a-f0-9]{40}$"
+},
+"window_start": {
+"type": "string",
+"format": "date-time"
+},
+"window_end": {
+"type": "string",
+"format": "date-time"
+},
+"summary": {
+"$ref": "#/$defs/baseSummary"
+},
+"top_counterparties": {
+"type": "array",
+"items": {
+"$ref": "#/$defs/keyCountItem"
+}
+},
+"top_to_addresses": {
+"type": "array",
+"items": {
+"$ref": "#/$defs/keyCountItem"
+}
+},
+"top_from_addresses": {
+"type": "array",
+"items": {
+"$ref": "#/$defs/keyCountItem"
+}
+},
+"sample_transfers": {
+"type": "array",
+"items": {
+"$ref": "#/$defs/sampleTransfer"
+}
+},
+"dataset_notes": {
+"$ref": "#/$defs/datasetNotes"
+},
+"receipt_summary": {
+"$ref": "#/$defs/receiptSummary"
+},
+"log_summary": {
+"$ref": "#/$defs/logSummary"
+},
+"registry_hits": {
+"$ref": "#/$defs/registryHits"
+}
+},
+"$defs": {
+"keyCountItem": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"key",
+"count"
+],
+"properties": {
+"key": {
+"type": "string"
+},
+"count": {
+"type": "integer",
+"minimum": 0
+}
+}
+},
+"sampleTransfer": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"profiled_address",
+"block_timestamp",
+"from_address",
+"to_address",
+"direction",
+"counterparty"
+],
+"properties": {
+"profiled_address": {
+"type": "string",
+"pattern": "^0x[a-f0-9]{40}$"
+},
+"block_timestamp": {
+"type": "string",
+"format": "date-time"
+},
+"from_address": {
+"type": "string",
+"pattern": "^0x[a-f0-9]{40}$"
+},
+"to_address": {
+"type": "string",
+"pattern": "^0x[a-f0-9]{40}$"
+},
+"direction": {
+"type": "string",
+"enum": [
+"inbound",
+"outbound"
+]
+},
+"counterparty": {
+"type": "string",
+"pattern": "^0x[a-f0-9]{40}$"
+}
+}
+},
+"datasetNotes": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"source",
+"extraction_mode"
+],
+"properties": {
+"source": {
+"type": "string"
+},
+"extraction_mode": {
+"type": "string",
+"enum": [
+"transactions_only_phase1_minimal",
+"transactions_plus_phase2_semantics"
+]
+},
+"phase2_enrichment_mode": {
+"type": "string",
+"enum": [
+"none",
+"receipts_logs_registry"
+]
+}
+}
+},
+"baseSummary": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"first_seen",
+"last_seen",
+"tx_count",
+"inbound_count",
+"outbound_count",
+"unique_counterparties",
+"unique_to_addresses",
+"unique_from_addresses",
+"dominant_direction",
+"dominant_counterparty_share",
+"dominant_contract_share"
+],
+"properties": {
+"first_seen": {
+"type": "string",
+"format": "date-time"
+},
+"last_seen": {
+"type": "string",
+"format": "date-time"
+},
+"tx_count": {
+"type": "integer",
+"minimum": 0
+},
+"inbound_count": {
+"type": "integer",
+"minimum": 0
+},
+"outbound_count": {
+"type": "integer",
+"minimum": 0
+},
+"unique_counterparties": {
+"type": "integer",
+"minimum": 0
+},
+"unique_to_addresses": {
+"type": "integer",
+"minimum": 0
+},
+"unique_from_addresses": {
+"type": "integer",
+"minimum": 0
+},
+"dominant_direction": {
+"type": "string",
+"enum": [
+"inbound",
+"outbound",
+"mixed"
+]
+},
+"dominant_counterparty_share": {
+"type": "number",
+"minimum": 0
+},
+"dominant_contract_share": {
+"type": "number",
+"minimum": 0
+}
+}
+},
+"receiptSummary": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"tx_count",
+"success_count",
+"failure_count",
+"failure_rate_pct"
+],
+"properties": {
+"tx_count": {
+"type": "integer",
+"minimum": 0
+},
+"success_count": {
+"type": "integer",
+"minimum": 0
+},
+"failure_count": {
+"type": "integer",
+"minimum": 0
+},
+"failure_rate_pct": {
+"type": "number",
+"minimum": 0,
+"maximum": 100
+}
+}
+},
+"logSummary": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"unique_emitters",
+"unique_topic0s",
+"top_emitters",
+"top_topic0s"
+],
+"properties": {
+"unique_emitters": {
+"type": "integer",
+"minimum": 0
+},
+"unique_topic0s": {
+"type": "integer",
+"minimum": 0
+},
+"top_emitters": {
+"type": "array",
+"items": {
+"$ref": "#/$defs/keyCountItem"
+}
+},
+"top_topic0s": {
+"type": "array",
+"items": {
+"$ref": "#/$defs/keyCountItem"
+}
+}
+}
+},
+"bridgeContractHit": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"bridge_family_id",
+"display_name",
+"role",
+"address",
+"network_scope",
+"source_tier",
+"confidence",
+"observed_count",
+"tags",
+"match_source"
+],
+"properties": {
+"bridge_family_id": {
+"type": "string"
+},
+"display_name": {
+"type": "string"
+},
+"role": {
+"type": "string"
+},
+"address": {
+"type": "string",
+"pattern": "^0x[a-f0-9]{40}$"
+},
+"network_scope": {
+"type": "string"
+},
+"source_tier": {
+"type": "string",
+"enum": [
+"official",
+"secondary",
+"local"
+]
+},
+"confidence": {
+"type": "string",
+"enum": [
+"high",
+"medium",
+"low"
+]
+},
+"observed_count": {
+"type": "integer",
+"minimum": 0
+},
+"tags": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"match_source": {
+"type": "string",
+"enum": [
+"address"
+]
+}
+}
+},
+"protocolContractHit": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"family_id",
+"display_name",
+"actor_class",
+"address",
+"label",
+"canonical",
+"status",
+"bridge_family",
+"source_tier",
+"confidence",
+"observed_count",
+"tags",
+"match_source"
+],
+"properties": {
+"family_id": {
+"type": "string"
+},
+"display_name": {
+"type": "string"
+},
+"actor_class": {
+"type": "string"
+},
+"address": {
+"type": "string",
+"pattern": "^0x[a-f0-9]{40}$"
+},
+"label": {
+"type": "string"
+},
+"canonical": {
+"type": "boolean"
+},
+"status": {
+"type": "string"
+},
+"bridge_family": {
+"type": "string"
+},
+"source_tier": {
+"type": "string",
+"enum": [
+"official",
+"secondary",
+"local"
+]
+},
+"confidence": {
+"type": "string",
+"enum": [
+"high",
+"medium",
+"low"
+]
+},
+"observed_count": {
+"type": "integer",
+"minimum": 0
+},
+"tags": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"match_source": {
+"type": "string",
+"enum": [
+"address"
+]
+}
+}
+},
+"topicHit": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"topic_family_id",
+"display_name",
+"event_signature",
+"topic0",
+"actor_class",
+"match_mode",
+"observed_count",
+"match_source"
+],
+"properties": {
+"topic_family_id": {
+"type": "string"
+},
+"display_name": {
+"type": "string"
+},
+"event_signature": {
+"type": "string"
+},
+"topic0": {
+"type": "string",
+"pattern": "^0x[a-f0-9]{64}$"
+},
+"actor_class": {
+"type": "string"
+},
+"match_mode": {
+"type": "string"
+},
+"observed_count": {
+"type": "integer",
+"minimum": 0
+},
+"match_source": {
+"type": "string",
+"enum": [
+"topic0"
+]
+}
+}
+},
+"registryHitSummary": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"observed_address_count",
+"observed_topic0_count",
+"bridge_contract_match_count",
+"protocol_contract_match_count",
+"stablecoin_contract_match_count",
+"service_contract_match_count",
+"bridge_topic_match_count",
+"protocol_topic_match_count",
+"matched_bridge_families",
+"matched_protocol_families",
+"matched_topic_families"
+],
+"properties": {
+"observed_address_count": {
+"type": "integer",
+"minimum": 0
+},
+"observed_topic0_count": {
+"type": "integer",
+"minimum": 0
+},
+"bridge_contract_match_count": {
+"type": "integer",
+"minimum": 0
+},
+"protocol_contract_match_count": {
+"type": "integer",
+"minimum": 0
+},
+"stablecoin_contract_match_count": {
+"type": "integer",
+"minimum": 0
+},
+"service_contract_match_count": {
+"type": "integer",
+"minimum": 0
+},
+"bridge_topic_match_count": {
+"type": "integer",
+"minimum": 0
+},
+"protocol_topic_match_count": {
+"type": "integer",
+"minimum": 0
+},
+"matched_bridge_families": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"matched_protocol_families": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"matched_topic_families": {
+"type": "array",
+"items": {
+"type": "string"
+}
+}
+}
+},
+"registryHits": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"bridge_contract_hits",
+"protocol_contract_hits",
+"stablecoin_contract_hits",
+"service_contract_hits",
+"bridge_topic_hits",
+"protocol_topic_hits",
+"summary"
+],
+"properties": {
+"bridge_contract_hits": {
+"type": "array",
+"items": {
+"$ref": "#/$defs/bridgeContractHit"
+}
+},
+"protocol_contract_hits": {
+"type": "array",
+"items": {
+"$ref": "#/$defs/protocolContractHit"
+}
+},
+"stablecoin_contract_hits": {
+"type": "array",
+"items": {
+"$ref": "#/$defs/protocolContractHit"
+}
+},
+"service_contract_hits": {
+"type": "array",
+"items": {
+"$ref": "#/$defs/protocolContractHit"
+}
+},
+"bridge_topic_hits": {
+"type": "array",
+"items": {
+"$ref": "#/$defs/topicHit"
+}
+},
+"protocol_topic_hits": {
+"type": "array",
+"items": {
+"$ref": "#/$defs/topicHit"
+}
+},
+"summary": {
+"$ref": "#/$defs/registryHitSummary"
+}
+}
+}
+}
+}

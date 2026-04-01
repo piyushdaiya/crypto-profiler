@@ -291,6 +291,7 @@ func TestRun_DatasetModeReportIncludesChainSpecificContext(t *testing.T) {
 		})
 	}
 }
+
 func TestRenderReport_IncludesGraphScoringSignals(t *testing.T) {
 	profile := &model.WalletProfile{
 		Address:           "0xprofile",
@@ -380,5 +381,64 @@ func TestRenderReport_IncludesGraphScoringSignals(t *testing.T) {
 		if !strings.Contains(strings.ToLower(out), strings.ToLower(snippet)) {
 			t.Fatalf("expected report to contain %q, got:\n%s", snippet, out)
 		}
+	}
+}
+
+func TestRenderReport_CrosschainChainContextFormatsCountsWithoutPercent(t *testing.T) {
+	profile := &model.WalletProfile{
+		Address:           "multiple",
+		Network:           "MULTI-CHAIN",
+		IsValid:           true,
+		RiskScore:         11.9,
+		RiskGrade:         "LOW (Reviewable)",
+		ReviewRecommended: true,
+		RiskReasons: []model.RiskReason{
+			{
+				Code:        "crosschain_operational_hub",
+				Category:    "FRAUD",
+				Description: "Broad operational-hub pattern observed across 3 L2s",
+				Offset:      16.0,
+			},
+		},
+	}
+
+	ctx := &reportContext{
+		Mode:           "dataset",
+		DatasetType:    "Cross-chain L2 dataset",
+		CaseID:         "crosschain-l2-broad-operational-hub",
+		CaseTitle:      "Cross-Chain L2 Broad Operational Hub",
+		Interpretation: "This case captures operational-hub style behavior across more than one L2, with broad counterparty reach and mixed inbound/outbound flows.",
+		MemberSummaries: []reportMemberSummary{
+			{
+				Chain:                 "POLYGON",
+				Address:               "0x2b92478666516ef5d997490981aa3e00e9c8da9a",
+				TxCount:               2504895,
+				InboundCount:          1243392,
+				OutboundCount:         1261503,
+				UniqueCounterparties:  1244465,
+				DominantContractShare: 49.64,
+				FailureRatePct:        0.00,
+			},
+		},
+		ChainContext: []string{
+			"Chains included: ARBITRUM, OPTIMISM, POLYGON",
+			"Members: 3",
+			"Unique addresses: 3",
+			"Total transactions: 6209383",
+			"Max dominant contract share: 77.51%",
+			"Max unique counterparties: 1244465",
+		},
+	}
+
+	report := renderReport(profile, ctx)
+
+	if !strings.Contains(report, "Max dominant contract share: 77.51%") {
+		t.Fatalf("expected dominant contract share percent in report, got:\n%s", report)
+	}
+	if !strings.Contains(report, "Max unique counterparties: 1244465") {
+		t.Fatalf("expected unique counterparty count without percent in report, got:\n%s", report)
+	}
+	if strings.Contains(report, "Max unique counterparties: 1244465%") {
+		t.Fatalf("did not expect percent suffix on unique counterparties, got:\n%s", report)
 	}
 }

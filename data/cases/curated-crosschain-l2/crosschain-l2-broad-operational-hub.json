@@ -1,0 +1,82 @@
+{
+  "schema_version": "0.3.0",
+  "case_family": "crosschain_l2",
+  "case_id": "crosschain-l2-broad-operational-hub",
+  "title": "Cross-Chain L2 Broad Operational Hub",
+  "description": "Cross-chain case showing very broad mixed-flow operational surfaces across multiple L2s.",
+  "chains_included": [
+    "ARBITRUM",
+    "OPTIMISM",
+    "POLYGON"
+  ],
+  "member_count": 3,
+  "members": [
+    {
+      "chain": "POLYGON",
+      "address": "0x2b92478666516ef5d997490981aa3e00e9c8da9a",
+      "tx_count": 2504895,
+      "inbound_count": 1243392,
+      "outbound_count": 1261503,
+      "unique_counterparties": 1244465,
+      "dominant_contract_share": 49.64,
+      "failure_rate_pct": 0.0,
+      "unique_emitters": 0,
+      "unique_topic0s": 0,
+      "bridge_hit_count": 0,
+      "protocol_hit_count": 0,
+      "stablecoin_hit_count": 0,
+      "service_hit_count": 0,
+      "top_bridge_family": "",
+      "top_protocol_family": "",
+      "top_stablecoin_family": ""
+    },
+    {
+      "chain": "OPTIMISM",
+      "address": "0xf70da97812cb96acdf810712aa562db8dfa3dbef",
+      "tx_count": 2707237,
+      "inbound_count": 149,
+      "outbound_count": 2707088,
+      "unique_counterparties": 248045,
+      "dominant_contract_share": 77.51,
+      "failure_rate_pct": 0.0,
+      "unique_emitters": 0,
+      "unique_topic0s": 0,
+      "bridge_hit_count": 0,
+      "protocol_hit_count": 1,
+      "stablecoin_hit_count": 1,
+      "service_hit_count": 0,
+      "top_bridge_family": "",
+      "top_protocol_family": "official_usdc",
+      "top_stablecoin_family": "official_usdc"
+    },
+    {
+      "chain": "ARBITRUM",
+      "address": "0x3bdb03ad7363152dfbc185ee23ebc93f0cf93fd1",
+      "tx_count": 997251,
+      "inbound_count": 416642,
+      "outbound_count": 580609,
+      "unique_counterparties": 187218,
+      "dominant_contract_share": 41.78,
+      "failure_rate_pct": 0.0,
+      "unique_emitters": 0,
+      "unique_topic0s": 0,
+      "bridge_hit_count": 0,
+      "protocol_hit_count": 0,
+      "stablecoin_hit_count": 0,
+      "service_hit_count": 0,
+      "top_bridge_family": "",
+      "top_protocol_family": "",
+      "top_stablecoin_family": ""
+    }
+  ],
+  "crosschain_summary": {
+    "address_count": 3,
+    "chain_count": 3,
+    "total_tx_count": 6209383,
+    "max_unique_counterparties": 1244465
+  },
+  "curation_notes": {
+    "narrative": "This case captures operational-hub style behavior across more than one L2, with broad counterparty reach and mixed inbound/outbound flows.",
+    "selection_basis": "Selected from mart rows that show high counterparty breadth, material inbound and outbound flow, and operational-hub style transaction shape."
+  }
+}

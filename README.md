@@ -6,7 +6,7 @@ Portfolio-grade multi-chain crypto risk profiling for AML, sanctions, fraud, and
 [![CI](https://github.com/piyushdaiya/crypto-profiler/actions/workflows/ci.yml/badge.svg)](https://github.com/piyushdaiya/crypto-profiler/actions/workflows/ci.yml)
 [![Go Version](https://img.shields.io/badge/Go-1.25+-00ADD8)](#tech-stack)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-active%20mvp-blue)](#current-implementation-status)
+[![Status](https://img.shields.io/badge/status-portfolio%20ready-success)](#current-implementation-status)
 
 Crypto Profiler is a Go-based wallet risk and exposure intelligence project for AML, sanctions, fraud, and crypto investigations.
 
@@ -21,7 +21,7 @@ The repository currently combines:
 - bounded graph-aware score adjustments for selected motifs and concentration patterns
 - a watchlist-driven sanctions path
 
-Near-term future work is deeper value-aware path scoring, richer live-path reasoning, broader L2 coverage, and broader graph coverage on top of the current multi-chain base.
+Possible future work is deeper value-aware path scoring, richer live-path reasoning, broader L2 coverage, and broader graph coverage on top of the current multi-chain base.
 
 ---
 
